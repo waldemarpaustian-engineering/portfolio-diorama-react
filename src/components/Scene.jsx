@@ -7,7 +7,8 @@ import Model from './Model.jsx'
 import Sign from './Sign.jsx'
 import Screen from './Screen.jsx'
 import Board from './Board.jsx'
-import { SIGNS, LANTERNS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
+import Fireflies from './Fireflies.jsx'
+import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
 // default camera position derived from the framing in data/signs.js
@@ -167,6 +168,9 @@ function FloatingWorld({ disabled, onSelect }) {
       ))}
       {[...LANTERNS, ...placed].map((l, i) => (
         <Lantern key={i} {...l} />
+      ))}
+      {SWARMS.map((s, i) => (
+        <Fireflies key={i} {...s} />
       ))}
       {SCREEN && <Screen tech={TECH} {...SCREEN} />}
       {BOARDS.map((b, i) => (
