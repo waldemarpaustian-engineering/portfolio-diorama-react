@@ -8,6 +8,7 @@ import Sign from './Sign.jsx'
 import Screen from './Screen.jsx'
 import Board from './Board.jsx'
 import Fireflies from './Fireflies.jsx'
+import SoundToggle from './SoundToggle.jsx'
 import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
@@ -189,6 +190,7 @@ export default function Scene() {
     <div className="stage">
       <nav className="nav">
         <div className="brand"><span className="mk" /> Waldemar&nbsp;Paustian</div>
+        <SoundToggle />
       </nav>
 
       <div className="intro">
