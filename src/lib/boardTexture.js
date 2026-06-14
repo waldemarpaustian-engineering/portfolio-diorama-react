@@ -1,10 +1,9 @@
-import * as THREE from 'three'
-
 const FONT = (n) => `700 ${n}px Georgia, 'Times New Roman', serif`
 
-// Composites the framed-board content onto a canvas.
+// Composites the framed-board content onto a canvas and returns that canvas.
 // mode 'paper': warm paper background + line-art sketch (multiply) + dark text below.
 // mode 'cover': the artwork fills the whole board + "Dream / Plan / Do" overlaid on top.
+// mode 'top':   the artwork fills the top area + text below on the paper.
 export function makeBoardTexture(img, { lines = ['Dream', 'Plan', 'Do'], bg = '#dcd0b5', mode = 'paper' } = {}) {
   const W = 768
   const H = 1024
@@ -95,9 +94,5 @@ export function makeBoardTexture(img, { lines = ['Dream', 'Plan', 'Do'], bg = '#
     x.fillText('\u2665', W / 2, ty + lines.length * lh + lh * 0.1)
   }
 
-  const tex = new THREE.CanvasTexture(cv)
-  tex.colorSpace = THREE.SRGBColorSpace
-  tex.anisotropy = 8
-  tex.needsUpdate = true
-  return tex
+  return cv
 }
