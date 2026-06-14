@@ -1,18 +1,18 @@
+import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 
 export default function About() {
+  const { t } = useTranslation()
+  const chips = t('about.chips', { returnObjects: true })
   return (
     <div className="page">
       <PageNav />
       <main className="wrap">
-        <div className="eyebrow">About me</div>
-        <h1 className="title">Hi, I’m Waldemar.</h1>
-        <p className="lead">
-          I design and build interactive things for the web — somewhere between code, 3D and a good story.
-          Replace this placeholder with your own.
-        </p>
+        <div className="eyebrow">{t('about.eyebrow')}</div>
+        <h1 className="title">{t('about.title')}</h1>
+        <p className="lead">{t('about.lead')}</p>
         <div className="chips" style={{ marginTop: 36 }}>
-          <span>Three.js</span><span>WebGL</span><span>React</span><span>Design</span><span>Animation</span>
+          {chips.map((c) => <span key={c}>{c}</span>)}
         </div>
       </main>
     </div>

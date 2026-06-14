@@ -1,19 +1,16 @@
+import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 
-const posts = [
-  { date: 'June 2026', title: 'Building a 3D portfolio with react-three-fiber' },
-  { date: 'May 2026', title: 'Optimizing huge GLB models for the web' },
-  { date: 'April 2026', title: 'Smooth camera motion in the browser' },
-]
-
 export default function Blog() {
+  const { t } = useTranslation()
+  const posts = t('blog.posts', { returnObjects: true })
   return (
     <div className="page">
       <PageNav />
       <main className="wrap">
-        <div className="eyebrow">Blog</div>
-        <h1 className="title">Notes &amp; writing.</h1>
-        <p className="lead">Placeholder posts — swap in your own.</p>
+        <div className="eyebrow">{t('blog.eyebrow')}</div>
+        <h1 className="title">{t('blog.title')}</h1>
+        <p className="lead">{t('blog.lead')}</p>
         <div style={{ marginTop: 34 }}>
           {posts.map((p) => (
             <div key={p.title} style={{ padding: '22px 0', borderTop: '1px solid #e9e1d6' }}>

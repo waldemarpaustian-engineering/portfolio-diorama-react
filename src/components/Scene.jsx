@@ -2,6 +2,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Loader } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import * as THREE from 'three'
 import Model from './Model.jsx'
 import Sign from './Sign.jsx'
@@ -9,6 +10,7 @@ import Screen from './Screen.jsx'
 import Board from './Board.jsx'
 import Fireflies from './Fireflies.jsx'
 import SoundToggle from './SoundToggle.jsx'
+import LanguageSwitcher from './LanguageSwitcher.jsx'
 import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
@@ -125,6 +127,7 @@ function Lantern({
 function FloatingWorld({ disabled, onSelect }) {
   const group = useRef()
   const [placed, setPlaced] = useState([])
+  const { t } = useTranslation()
 
   useFrame((state) => {
     if (group.current) {
@@ -165,7 +168,7 @@ function FloatingWorld({ disabled, onSelect }) {
     >
       <Model />
       {SIGNS.map((s) => (
-        <Sign key={s.to} {...s} disabled={disabled} onSelect={() => onSelect(s)} />
+        <Sign key={s.to} {...s} label={t(`signs.${s.to.slice(1)}`)} disabled={disabled} onSelect={() => onSelect(s)} />
       ))}
       {[...LANTERNS, ...placed].map((l, i) => (
         <Lantern key={i} {...l} />
@@ -185,17 +188,21 @@ export default function Scene() {
   const navigate = useNavigate()
   const controlsRef = useRef()
   const [flyTarget, setFlyTarget] = useState(null)
+  const { t } = useTranslation()
 
   return (
     <div className="stage">
       <nav className="nav">
         <div className="brand"><span className="mk" /> Waldemar&nbsp;Paustian</div>
-        <SoundToggle />
+        <div className="nav-actions">
+          <LanguageSwitcher />
+          <SoundToggle />
+        </div>
       </nav>
 
       <div className="intro">
-        <h1>A little world<br />of things I’ve made.</h1>
-        <p>Drag to look around. Click a sign to open a page.</p>
+        <h1>{t('nav.title')}</h1>
+        <p>{t('nav.subtitle')}</p>
       </div>
 
       <Canvas shadows camera={{ position: camPos, fov: 35 }}>

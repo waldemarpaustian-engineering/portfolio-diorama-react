@@ -1,13 +1,15 @@
+import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 
 export default function Contact() {
+  const { t } = useTranslation()
   return (
     <div className="page">
       <PageNav />
       <main className="wrap">
-        <div className="eyebrow">Contact</div>
-        <h1 className="title">Let’s build<br />something.</h1>
-        <p className="lead">Got a project or just want to say hi? I’d love to hear from you.</p>
+        <div className="eyebrow">{t('contact.eyebrow')}</div>
+        <h1 className="title">{t('contact.title')}</h1>
+        <p className="lead">{t('contact.lead')}</p>
         <a className="mail" href="mailto:waldemar.paustian@googlemail.com">✉ waldemar.paustian@googlemail.com</a>
       </main>
     </div>
