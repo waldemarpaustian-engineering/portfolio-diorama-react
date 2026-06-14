@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import * as THREE from 'three'
 import Model from './Model.jsx'
 import Sign from './Sign.jsx'
-import { SIGNS, LANTERNS, MODEL_SCALE, VIEW } from '../data/signs.js'
+import Screen from './Screen.jsx'
+import { SIGNS, LANTERNS, SCREEN, MODEL_SCALE, VIEW } from '../data/signs.js'
+import { TECH } from '../data/tech.js'
 
 // default camera position derived from the framing in data/signs.js
 const camPos = [
@@ -114,7 +116,8 @@ function FloatingWorld({ disabled, onSelect }) {
     }
   })
 
-  // In placement mode, clicking the model drops a lantern and logs its model-space coords.
+  // In placement mode, clicking the model logs the model-space position (and surface
+  // normal) of the click — used to place lanterns and the screen overlay precisely.
   const handleProbeClick = (e) => {
     if (!group.current) return
     e.stopPropagation()
@@ -124,8 +127,17 @@ function FloatingWorld({ disabled, onSelect }) {
       Number(local.y.toFixed(4)),
       Number(local.z.toFixed(4)),
     ]
+
+    let nrmStr = ''
+    if (e.face) {
+      const nWorld = e.face.normal.clone().transformDirection(e.object.matrixWorld).normalize()
+      const inv = new THREE.Matrix4().copy(group.current.matrixWorld).invert()
+      const nLocal = nWorld.transformDirection(inv).normalize()
+      nrmStr = `, nrm: [${nLocal.x.toFixed(3)}, ${nLocal.y.toFixed(3)}, ${nLocal.z.toFixed(3)}]`
+    }
+
     // eslint-disable-next-line no-console
-    console.log(`{ p: [${p.join(', ')}] },`)
+    console.log(`{ p: [${p.join(', ')}]${nrmStr} },`)
     setPlaced((prev) => [...prev, { p }])
   }
 
@@ -142,6 +154,7 @@ function FloatingWorld({ disabled, onSelect }) {
       {[...LANTERNS, ...placed].map((l, i) => (
         <Lantern key={i} {...l} />
       ))}
+      {SCREEN && <Screen tech={TECH} {...SCREEN} />}
     </group>
   )
 }
