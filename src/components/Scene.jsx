@@ -6,7 +6,8 @@ import * as THREE from 'three'
 import Model from './Model.jsx'
 import Sign from './Sign.jsx'
 import Screen from './Screen.jsx'
-import { SIGNS, LANTERNS, SCREEN, MODEL_SCALE, VIEW } from '../data/signs.js'
+import Board from './Board.jsx'
+import { SIGNS, LANTERNS, SCREEN, BOARD, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
 // default camera position derived from the framing in data/signs.js
@@ -155,6 +156,7 @@ function FloatingWorld({ disabled, onSelect }) {
         <Lantern key={i} {...l} />
       ))}
       {SCREEN && <Screen tech={TECH} {...SCREEN} />}
+      {BOARD && <Board src="/castle-sketch.png" {...BOARD} />}
     </group>
   )
 }
