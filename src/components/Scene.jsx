@@ -156,7 +156,7 @@ function FloatingWorld({ disabled, onSelect }) {
         <Lantern key={i} {...l} />
       ))}
       {SCREEN && <Screen tech={TECH} {...SCREEN} />}
-      {BOARD && <Board src="/castle-sketch.png" {...BOARD} />}
+      {BOARD && <Board {...BOARD} />}
     </group>
   )
 }

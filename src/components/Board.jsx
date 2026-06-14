@@ -6,17 +6,17 @@ import { MODEL_SCALE } from '../data/signs.js'
 // A crisp overlay on the chalkboard/easel: sketch + "Dream / Plan / Do" text.
 // `down` / `side` nudge the plane along the board surface (in model units) without
 // changing its depth, so it always stays flush on the (tilted) board.
-export default function Board({ src, p, nrm, hw, hh, lines, bg, down = 0, side = 0, roll = 0 }) {
+export default function Board({ src, p, nrm, hw, hh, lines, bg, mode, down = 0, side = 0, roll = 0 }) {
   const [texture, setTexture] = useState(null)
 
   useEffect(() => {
     const img = new Image()
-    img.onload = () => setTexture(makeBoardTexture(img, lines, bg))
+    img.onload = () => setTexture(makeBoardTexture(img, { lines, bg, mode }))
     img.src = src
     return () => {
       img.onload = null
     }
-  }, [src, lines, bg])
+  }, [src, lines, bg, mode])
 
   // Orthonormal basis on the board surface: r = right, u = up, f = outward normal.
   const basis = useMemo(() => {

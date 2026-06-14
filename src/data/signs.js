@@ -29,7 +29,7 @@ export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.89
 // The framed board next to the bicycle (sketch + "Dream / Plan / Do" text). Place it the
 // same way as the screen: open with `?lights`, click the CENTER of the board, copy the
 // logged `p` and `nrm` here. Leave as null to disable.
-export const BOARD = { p: [0.4358, -0.4051, 0.5849], nrm: [-0.606, 0.48, 0.635], hw: 0.21, hh: 0.3, down: 0.008, bg: '#dcd0b5', roll: 3 }
+export const BOARD = { src: '/board-art.png', mode: 'top', p: [0.4358, -0.4051, 0.5849], nrm: [-0.606, 0.48, 0.635], hw: 0.21, hh: 0.3, down: 0.008, bg: '#f5f0e6', roll: 3 }
 
 // Model is scaled so its largest dimension ≈ 6 units (maxDim of this GLB ≈ 1.893).
 export const MODEL_SCALE = 6 / 1.893
