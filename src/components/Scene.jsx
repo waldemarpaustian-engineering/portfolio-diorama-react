@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import * as THREE from 'three'
 import Model from './Model.jsx'
 import Sign from './Sign.jsx'
-import { SIGNS, MODEL_SCALE, VIEW } from '../data/signs.js'
+import { SIGNS, LANTERNS, MODEL_SCALE, VIEW } from '../data/signs.js'
 
 // default camera position derived from the framing in data/signs.js
 const camPos = [
@@ -68,9 +68,33 @@ function CameraRig({ controlsRef, target, onArrive }) {
 const FLOAT_AMPLITUDE = 0.12
 const FLOAT_SPEED = 0.9
 
-// The model + signs, gently bobbing up and down like the original site.
+// Default look of a glowing lantern (values are in the model's own coordinate space).
+const LANTERN_COLOR = '#ffb14d'
+const LANTERN_INTENSITY = 9
+const LANTERN_DISTANCE = 1.6
+// Placement mode: open the site with `?lights` to click lanterns into place.
+const LANTERN_PROBE =
+  typeof window !== 'undefined' && /[?&]lights\b/.test(window.location.search)
+
+// A warm point light that lights the model's own lantern from its position — no fake bulb.
+function Lantern({ p, color = LANTERN_COLOR, intensity = LANTERN_INTENSITY }) {
+  const light = useRef()
+  useFrame((state) => {
+    // subtle flicker on the light itself so the glow feels alive
+    if (light.current) {
+      const f = 0.9 + Math.sin(state.clock.elapsedTime * 7 + p[0] * 10) * 0.1
+      light.current.intensity = intensity * f
+    }
+  })
+  return (
+    <pointLight ref={light} position={p} color={color} intensity={intensity} distance={LANTERN_DISTANCE} decay={2} />
+  )
+}
+
+// The model + signs + lanterns, gently bobbing up and down like the original site.
 function FloatingWorld({ disabled, onSelect }) {
   const group = useRef()
+  const [placed, setPlaced] = useState([])
 
   useFrame((state) => {
     if (group.current) {
@@ -78,11 +102,33 @@ function FloatingWorld({ disabled, onSelect }) {
     }
   })
 
+  // In placement mode, clicking the model drops a lantern and logs its model-space coords.
+  const handleProbeClick = (e) => {
+    if (!group.current) return
+    e.stopPropagation()
+    const local = group.current.worldToLocal(e.point.clone())
+    const p = [
+      Number(local.x.toFixed(4)),
+      Number(local.y.toFixed(4)),
+      Number(local.z.toFixed(4)),
+    ]
+    // eslint-disable-next-line no-console
+    console.log(`{ p: [${p.join(', ')}] },`)
+    setPlaced((prev) => [...prev, { p }])
+  }
+
   return (
-    <group ref={group} scale={MODEL_SCALE}>
+    <group
+      ref={group}
+      scale={MODEL_SCALE}
+      onClick={LANTERN_PROBE ? handleProbeClick : undefined}
+    >
       <Model />
       {SIGNS.map((s) => (
         <Sign key={s.to} {...s} disabled={disabled} onSelect={() => onSelect(s)} />
+      ))}
+      {[...LANTERNS, ...placed].map((l, i) => (
+        <Lantern key={i} {...l} />
       ))}
     </group>
   )
