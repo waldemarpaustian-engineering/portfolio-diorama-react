@@ -30,7 +30,7 @@ export function drawTech(ctx, W, H, icon, alpha = 1) {
   ctx.fillRect(0, 0, W, H)
 
   // logo (24x24 viewBox path), centered in the upper area
-  const target = Math.min(W, H) * 0.46
+  const target = Math.min(W, H) * 0.62
   const s = target / 24
   ctx.save()
   ctx.translate((W - target) / 2, H * 0.4 - target / 2)
