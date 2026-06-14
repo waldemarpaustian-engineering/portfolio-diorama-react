@@ -48,6 +48,7 @@ export const BOARDS = [
     symbolColor: '#b62f2f',
     pulse: true,
     shimmer: false,
+    heartbeat: true,
     p: [0.2479, -0.0125, -0.4347],
     nrm: [0.031, 0.003, 1.0],
     hw: 0.215,
