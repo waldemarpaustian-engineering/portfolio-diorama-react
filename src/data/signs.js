@@ -24,7 +24,7 @@ export const LANTERNS = [
 // Cozy firefly swarms drifting around a lantern. `p` is in the model's own coordinate space
 // (same as a lantern's `p`). Tweak `count`, `radius` (spread), `size`, `color`, `speed`.
 export const SWARMS = [
-  { p: [0.7907, 0.0843, -0.1496], count: 9, radius: 0.09, color: '#141008', size: 0.005, speed: 1.3, glow: false },
+  { p: [0.7907, 0.0843, -0.1496], count: 9, radius: 0.09, color: '#141008', size: 0.005, speed: 1.3, glow: false, buzz: true },
 ]
 
 // The monitor overlay (crisp tech-logo slideshow). Set once we know where the screen is:

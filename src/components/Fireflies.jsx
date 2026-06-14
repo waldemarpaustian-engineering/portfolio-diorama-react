@@ -1,6 +1,7 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { createInsectBuzz } from '../lib/insectBuzz.js'
 
 // Two shared sprite textures: a soft warm glow (fireflies) and a soft dark dot (insects).
 const texCache = {}
@@ -33,10 +34,22 @@ function getSprite(glow) {
 
 // A small swarm of motes that drift around a point (e.g. a lantern). With `glow` (default)
 // they look like warm fireflies; with `glow: false` they're small dark insects buzzing nearby.
-// All values are in the model's own coordinate space (like a lantern's `p`).
-export default function Fireflies({ p, count = 12, radius = 0.22, color = '#ffd9a0', size = 0.05, speed = 1, glow = true }) {
+// With `buzz`, hovering the swarm plays a gentle wing hum.
+export default function Fireflies({
+  p, count = 12, radius = 0.22, color = '#ffd9a0', size = 0.05, speed = 1, glow = true, buzz = false,
+}) {
   const tex = useMemo(() => getSprite(glow), [glow])
   const refs = useRef([])
+  const buzzSound = useRef(null)
+
+  useEffect(() => {
+    if (!buzz) return undefined
+    buzzSound.current = createInsectBuzz()
+    return () => {
+      buzzSound.current?.dispose()
+      buzzSound.current = null
+    }
+  }, [buzz])
 
   // Per-mote wander parameters: an ellipsoidal orbit + random offset, phase and twinkle.
   const parts = useMemo(
@@ -87,6 +100,20 @@ export default function Fireflies({ p, count = 12, radius = 0.22, color = '#ffd9
 
   return (
     <group position={p}>
+      {buzz && (
+        <mesh
+          onPointerOver={(e) => {
+            e.stopPropagation()
+            buzzSound.current?.start()
+          }}
+          onPointerOut={() => {
+            buzzSound.current?.stop()
+          }}
+        >
+          <sphereGeometry args={[radius * 2.4, 14, 14]} />
+          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+        </mesh>
+      )}
       {parts.map((d, i) => (
         <sprite key={i} ref={(el) => { refs.current[i] = el }}>
           <spriteMaterial
