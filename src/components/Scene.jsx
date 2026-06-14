@@ -91,6 +91,7 @@ function Lantern({
   distance = LANTERN_DISTANCE,
   pulseAmount = 0.1,
   pulseSpeed = 7,
+  pulseFloor,
 }) {
   const light = useRef()
 
@@ -101,10 +102,15 @@ function Lantern({
     return v
   }, [p])
 
+  // Pulse between `floor` (darkest) and `peak` (brightest). `pulseFloor` lets the dark dip
+  // drop deeper than the bright peak rises, for a stronger "breathing" feel.
+  const floor = pulseFloor != null ? pulseFloor : 1 - pulseAmount
+  const peak = 1 + pulseAmount
+
   useFrame((state) => {
     if (light.current) {
-      const f = 1 + Math.sin(state.clock.elapsedTime * pulseSpeed + p[0] * 10) * pulseAmount
-      light.current.intensity = intensity * f
+      const s = 0.5 + 0.5 * Math.sin(state.clock.elapsedTime * pulseSpeed + p[0] * 10)
+      light.current.intensity = intensity * (floor + (peak - floor) * s)
     }
   })
 
