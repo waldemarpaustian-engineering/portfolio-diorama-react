@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Loader } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom'
@@ -72,13 +72,24 @@ const FLOAT_SPEED = 0.9
 const LANTERN_COLOR = '#ffb14d'
 const LANTERN_INTENSITY = 9
 const LANTERN_DISTANCE = 1.6
+// How far to push the light from the clicked (front) surface toward the model's
+// center, so it sits inside the lantern and glows in every direction, not just forward.
+const LANTERN_INWARD = 0.07
 // Placement mode: open the site with `?lights` to click lanterns into place.
 const LANTERN_PROBE =
   typeof window !== 'undefined' && /[?&]lights\b/.test(window.location.search)
 
-// A warm point light that lights the model's own lantern from its position — no fake bulb.
+// A warm point light that lights the model's own lantern from its center — no fake bulb.
 function Lantern({ p, color = LANTERN_COLOR, intensity = LANTERN_INTENSITY }) {
   const light = useRef()
+
+  // Nudge the light inward (toward origin) so it radiates around the lantern, incl. behind.
+  const pos = useMemo(() => {
+    const v = new THREE.Vector3(p[0], p[1], p[2])
+    if (v.lengthSq() > 1e-6) v.addScaledVector(v.clone().normalize(), -LANTERN_INWARD)
+    return v
+  }, [p])
+
   useFrame((state) => {
     // subtle flicker on the light itself so the glow feels alive
     if (light.current) {
@@ -86,8 +97,9 @@ function Lantern({ p, color = LANTERN_COLOR, intensity = LANTERN_INTENSITY }) {
       light.current.intensity = intensity * f
     }
   })
+
   return (
-    <pointLight ref={light} position={p} color={color} intensity={intensity} distance={LANTERN_DISTANCE} decay={2} />
+    <pointLight ref={light} position={pos} color={color} intensity={intensity} distance={LANTERN_DISTANCE} decay={2} />
   )
 }
 
