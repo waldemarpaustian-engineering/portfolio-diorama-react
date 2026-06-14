@@ -64,6 +64,30 @@ function CameraRig({ controlsRef, target, onArrive }) {
   return null
 }
 
+// Amplitude / speed of the idle up-and-down float (ported from the old HTML version).
+const FLOAT_AMPLITUDE = 0.12
+const FLOAT_SPEED = 0.9
+
+// The model + signs, gently bobbing up and down like the original site.
+function FloatingWorld({ disabled, onSelect }) {
+  const group = useRef()
+
+  useFrame((state) => {
+    if (group.current) {
+      group.current.position.y = Math.sin(state.clock.elapsedTime * FLOAT_SPEED) * FLOAT_AMPLITUDE
+    }
+  })
+
+  return (
+    <group ref={group} scale={MODEL_SCALE}>
+      <Model />
+      {SIGNS.map((s) => (
+        <Sign key={s.to} {...s} disabled={disabled} onSelect={() => onSelect(s)} />
+      ))}
+    </group>
+  )
+}
+
 export default function Scene() {
   const navigate = useNavigate()
   const controlsRef = useRef()
@@ -101,17 +125,7 @@ export default function Scene() {
         <directionalLight position={[-7, 5, -7]} intensity={0.4} color="#cfe0ff" />
 
         <Suspense fallback={null}>
-          <group scale={MODEL_SCALE}>
-            <Model />
-            {SIGNS.map((s) => (
-              <Sign
-                key={s.to}
-                {...s}
-                disabled={!!flyTarget}
-                onSelect={() => setFlyTarget(s)}
-              />
-            ))}
-          </group>
+          <FloatingWorld disabled={!!flyTarget} onSelect={setFlyTarget} />
         </Suspense>
 
         <OrbitControls
