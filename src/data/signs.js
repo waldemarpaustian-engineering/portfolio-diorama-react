@@ -1,0 +1,16 @@
+// The four navigation signs.
+// p   = position in the model's own coordinate space (read from the GLB)
+// nrm = the direction the sign faces (front of the diorama)
+// hw/hh = half width / half height of the plaque (world units, before model scale)
+export const SIGNS = [
+  { label: 'About Me', to: '/about',   p: [-0.6935, -0.1042, -0.1743], hw: 0.36, hh: 0.09, nrm: [0.248, -0.034, 0.968] },
+  { label: 'Works',    to: '/works',   p: [-0.6983, -0.1990, -0.1727], hw: 0.36, hh: 0.08, nrm: [0.173,  0.048, 0.984] },
+  { label: 'Blog',     to: '/blog',    p: [-0.6946, -0.2912, -0.1738], hw: 0.36, hh: 0.08, nrm: [0.536, -0.050, 0.843] },
+  { label: 'Contact',  to: '/contact', p: [-0.6961, -0.3867, -0.1736], hw: 0.34, hh: 0.08, nrm: [0.503,  0.152, 0.851] },
+]
+
+// Model is scaled so its largest dimension ≈ 6 units (maxDim of this GLB ≈ 1.893).
+export const MODEL_SCALE = 6 / 1.893
+
+// Default camera framing (looks at the front of the diorama).
+export const VIEW = { theta: 0.38, phi: 1.15, radius: 11.0 }
