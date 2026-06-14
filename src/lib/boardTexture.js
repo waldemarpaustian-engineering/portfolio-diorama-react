@@ -63,7 +63,7 @@ export function makeBoardTexture(
       x.restore()
       blockTop = iy + ih + H * 0.04
     } else {
-      blockTop = (H - (lines.length * lh + lh)) / 2
+      blockTop = (H - (lines.length * lh + lh)) / 2 - H * 0.06
     }
   }
 
