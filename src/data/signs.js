@@ -17,7 +17,8 @@ export const LANTERNS = [
   { p: [0.7907, 0.0843, -0.1496] },
   { p: [0.6612, 0.0758, -0.1548] },
   { p: [-0.8913, -0.1882, -0.1546] },
-  { p: [0.162, -0.2368, -0.3553] },
+  // lantern on the desk — dimmer + a clear breathing pulse that lights the poster
+  { p: [0.162, -0.2368, -0.3553], intensity: 5.5, distance: 1.4, pulseAmount: 0.3, pulseSpeed: 3 },
 ]
 
 // The monitor overlay (crisp tech-logo slideshow). Set once we know where the screen is:
@@ -26,10 +27,29 @@ export const LANTERNS = [
 // Leave as null to disable the overlay.
 export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.890], hw: 0.3, hh: 0.175 }
 
-// The framed board next to the bicycle (sketch + "Dream / Plan / Do" text). Place it the
-// same way as the screen: open with `?lights`, click the CENTER of the board, copy the
-// logged `p` and `nrm` here. Leave as null to disable.
-export const BOARD = { src: '/board-art.png', mode: 'top', p: [0.4358, -0.4051, 0.5849], nrm: [-0.606, 0.48, 0.635], hw: 0.21, hh: 0.3, down: 0.008, bg: '#f5f0e6', roll: 3 }
+// Framed boards/posters with crisp image + text overlays. Place each one the same way as
+// the screen: open with `?lights`, click the CENTER of the board, copy the logged `p` and
+// `nrm`. `src` = image (omit for text-only), `mode` = 'top' | 'cover' | 'paper',
+// `lines` = the text, `symbol` = the little glyph below it.
+export const BOARDS = [
+  // board next to the bicycle
+  { src: '/board-art.png', mode: 'top', p: [0.4358, -0.4051, 0.5849], nrm: [-0.606, 0.48, 0.635], hw: 0.21, hh: 0.3, down: 0.008, bg: '#f5f0e6', roll: 3 },
+  // poster in front of the desk (text only for now — image to follow, then set src + mode:'top')
+  {
+    mode: 'paper',
+    lines: ['Ideas', 'become', 'magic.'],
+    symbol: '\u2665',
+    symbolColor: '#e23b3b',
+    pulse: true,
+    shimmer: false,
+    p: [0.2479, -0.0125, -0.4347],
+    nrm: [0.031, 0.003, 1.0],
+    hw: 0.215,
+    hh: 0.3,
+    bg: '#e3d8bf',
+    textColor: '#15110c',
+  },
+]
 
 // Model is scaled so its largest dimension ≈ 6 units (maxDim of this GLB ≈ 1.893).
 export const MODEL_SCALE = 6 / 1.893

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { makeBoardTexture } from '../lib/boardTexture.js'
+import { makeBoardTexture, drawSymbol } from '../lib/boardTexture.js'
 import { MODEL_SCALE } from '../data/signs.js'
 
 const CW = 768
@@ -9,6 +9,9 @@ const CH = 1024
 // Glanz-Sweep timing: a light streak crosses every PERIOD seconds, taking SWEEP seconds.
 const PERIOD = 5
 const SWEEP = 1.1
+// Hover pulse: how fast/strong the symbol beats while hovered.
+const PULSE_SPEED = 6
+const PULSE_AMOUNT = 0.18
 
 // Draws a soft diagonal light streak across the board at a given progress (0..1).
 function drawShimmer(ctx, progress) {
@@ -28,13 +31,17 @@ function drawShimmer(ctx, progress) {
 }
 
 // A crisp overlay on the chalkboard/easel with an automatic, decorative glint sweep.
-// `down` / `side` nudge the plane along the board surface (in model units) without
-// changing its depth, so it always stays flush on the (tilted) board.
-export default function Board({ src, p, nrm, hw, hh, lines, bg, mode, down = 0, side = 0, roll = 0 }) {
+// With `pulse`, the symbol (e.g. a heart) beats while the cursor hovers the board.
+// `down` / `side` nudge the plane along the board surface (model units) without changing depth.
+export default function Board({
+  src, p, nrm, hw, hh, lines, bg, mode, symbol, symbolColor, textColor, pulse = false, shimmer = true, down = 0, side = 0, roll = 0,
+}) {
   const baseRef = useRef(null)
-  const anim = useRef({ t: 0, idleDrawn: false })
+  const symRef = useRef(null)
+  const hoverRef = useRef(false)
+  const anim = useRef({ t: 0, beat: 1, idleDrawn: false })
 
-  // The canvas we actually display (base content + animated shimmer composited on top).
+  // The canvas we actually display (base content + animated shimmer/symbol on top).
   const display = useMemo(() => {
     const c = document.createElement('canvas')
     c.width = CW
@@ -50,16 +57,24 @@ export default function Board({ src, p, nrm, hw, hh, lines, bg, mode, down = 0, 
   }, [display])
 
   useEffect(() => {
-    const img = new Image()
-    img.onload = () => {
-      baseRef.current = makeBoardTexture(img, { lines, bg, mode })
+    const opts = { lines, bg, mode, symbol, symbolColor, textColor, omitSymbol: pulse }
+    const apply = (img) => {
+      const r = makeBoardTexture(img, opts)
+      baseRef.current = r.canvas
+      symRef.current = r.symbol
       anim.current.idleDrawn = false
     }
+    if (!src) {
+      apply(null)
+      return undefined
+    }
+    const img = new Image()
+    img.onload = () => apply(img)
     img.src = src
     return () => {
       img.onload = null
     }
-  }, [src, lines, bg, mode])
+  }, [src, lines, bg, mode, symbol, symbolColor, textColor, pulse])
 
   // Orthonormal basis on the board surface: r = right, u = up, f = outward normal.
   const basis = useMemo(() => {
@@ -70,8 +85,6 @@ export default function Board({ src, p, nrm, hw, hh, lines, bg, mode, down = 0, 
     return { r, u, f }
   }, [nrm])
 
-  // Base orientation from the surface, then an optional roll around the normal (in
-  // degrees) so the overlay can be aligned with a tilted board frame.
   const quaternion = useMemo(() => {
     const q = new THREE.Quaternion().setFromRotationMatrix(
       new THREE.Matrix4().makeBasis(basis.r, basis.u, basis.f),
@@ -82,8 +95,6 @@ export default function Board({ src, p, nrm, hw, hh, lines, bg, mode, down = 0, 
     return q
   }, [basis, roll])
 
-  // Lift slightly off the surface (along the normal) to avoid z-fighting, then slide
-  // along the board's own up/right axes so a "down" shift never sinks it into the model.
   const pos = useMemo(() => {
     const v = new THREE.Vector3(...p).addScaledVector(basis.f, 0.008)
     if (down) v.addScaledVector(basis.u, -down)
@@ -98,17 +109,26 @@ export default function Board({ src, p, nrm, hw, hh, lines, bg, mode, down = 0, 
     const a = anim.current
     a.t += delta
     const phase = a.t % PERIOD
+    const sweeping = shimmer && phase < SWEEP
 
-    if (phase < SWEEP) {
+    // pulse factor for the symbol
+    if (pulse) {
+      const target = hoverRef.current ? 1 + Math.sin(a.t * PULSE_SPEED) * PULSE_AMOUNT : 1
+      a.beat += (target - a.beat) * (hoverRef.current ? 1 : 0.15)
+    }
+    const beating = pulse && (hoverRef.current || Math.abs(a.beat - 1) > 0.004)
+
+    if (sweeping || beating) {
       ctx.clearRect(0, 0, CW, CH)
       ctx.drawImage(base, 0, 0)
-      drawShimmer(ctx, phase / SWEEP)
+      if (sweeping) drawShimmer(ctx, phase / SWEEP)
+      if (pulse && symRef.current) drawSymbol(ctx, symRef.current, a.beat)
       texture.needsUpdate = true
       a.idleDrawn = false
     } else if (!a.idleDrawn) {
-      // draw the clean base once after the streak has passed
       ctx.clearRect(0, 0, CW, CH)
       ctx.drawImage(base, 0, 0)
+      if (pulse && symRef.current) drawSymbol(ctx, symRef.current, 1)
       texture.needsUpdate = true
       a.idleDrawn = true
     }
@@ -117,8 +137,20 @@ export default function Board({ src, p, nrm, hw, hh, lines, bg, mode, down = 0, 
   const w = (2 * hw) / MODEL_SCALE
   const h = (2 * hh) / MODEL_SCALE
 
+  const hoverProps = pulse
+    ? {
+        onPointerOver: (e) => {
+          e.stopPropagation()
+          hoverRef.current = true
+        },
+        onPointerOut: () => {
+          hoverRef.current = false
+        },
+      }
+    : {}
+
   return (
-    <mesh position={pos} quaternion={quaternion} renderOrder={997}>
+    <mesh position={pos} quaternion={quaternion} renderOrder={997} {...hoverProps}>
       <planeGeometry args={[w, h]} />
       <meshStandardMaterial map={texture} roughness={0.85} metalness={0} transparent />
     </mesh>

@@ -7,7 +7,7 @@ import Model from './Model.jsx'
 import Sign from './Sign.jsx'
 import Screen from './Screen.jsx'
 import Board from './Board.jsx'
-import { SIGNS, LANTERNS, SCREEN, BOARD, MODEL_SCALE, VIEW } from '../data/signs.js'
+import { SIGNS, LANTERNS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
 // default camera position derived from the framing in data/signs.js
@@ -83,7 +83,15 @@ const LANTERN_PROBE =
   typeof window !== 'undefined' && /[?&]lights\b/.test(window.location.search)
 
 // A warm point light that lights the model's own lantern from its center — no fake bulb.
-function Lantern({ p, color = LANTERN_COLOR, intensity = LANTERN_INTENSITY }) {
+// `pulseAmount` / `pulseSpeed` control how strongly the light beats (default = subtle flicker).
+function Lantern({
+  p,
+  color = LANTERN_COLOR,
+  intensity = LANTERN_INTENSITY,
+  distance = LANTERN_DISTANCE,
+  pulseAmount = 0.1,
+  pulseSpeed = 7,
+}) {
   const light = useRef()
 
   // Nudge the light inward (toward origin) so it radiates around the lantern, incl. behind.
@@ -94,15 +102,14 @@ function Lantern({ p, color = LANTERN_COLOR, intensity = LANTERN_INTENSITY }) {
   }, [p])
 
   useFrame((state) => {
-    // subtle flicker on the light itself so the glow feels alive
     if (light.current) {
-      const f = 0.9 + Math.sin(state.clock.elapsedTime * 7 + p[0] * 10) * 0.1
+      const f = 1 + Math.sin(state.clock.elapsedTime * pulseSpeed + p[0] * 10) * pulseAmount
       light.current.intensity = intensity * f
     }
   })
 
   return (
-    <pointLight ref={light} position={pos} color={color} intensity={intensity} distance={LANTERN_DISTANCE} decay={2} />
+    <pointLight ref={light} position={pos} color={color} intensity={intensity} distance={distance} decay={2} />
   )
 }
 
@@ -156,7 +163,9 @@ function FloatingWorld({ disabled, onSelect }) {
         <Lantern key={i} {...l} />
       ))}
       {SCREEN && <Screen tech={TECH} {...SCREEN} />}
-      {BOARD && <Board {...BOARD} />}
+      {BOARDS.map((b, i) => (
+        <Board key={b.src ?? i} {...b} />
+      ))}
     </group>
   )
 }
