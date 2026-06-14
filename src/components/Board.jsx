@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { makeBoardTexture, drawSymbol } from '../lib/boardTexture.js'
 import { createHeartbeat } from '../lib/heartbeat.js'
+import { createBoardMelody } from '../lib/boardMelody.js'
 import { MODEL_SCALE } from '../data/signs.js'
 
 const CW = 768
@@ -48,13 +49,14 @@ function drawShimmer(ctx, progress) {
 // With `pulse`, the symbol (e.g. a heart) beats while the cursor hovers the board.
 // `down` / `side` nudge the plane along the board surface (model units) without changing depth.
 export default function Board({
-  src, p, nrm, hw, hh, lines, bg, mode, symbol, symbolColor, textColor, pulse = false, shimmer = true, heartbeat = false, down = 0, side = 0, roll = 0,
+  src, p, nrm, hw, hh, lines, bg, mode, symbol, symbolColor, textColor, pulse = false, shimmer = true, heartbeat = false, melody = false, down = 0, side = 0, roll = 0,
 }) {
   const baseRef = useRef(null)
   const symRef = useRef(null)
   const hoverRef = useRef(false)
   const anim = useRef({ t: 0, beat: 1, hov: 0, idleDrawn: false })
   const heart = useRef(null)
+  const tune = useRef(null)
 
   useEffect(() => {
     if (!heartbeat) return undefined
@@ -64,6 +66,15 @@ export default function Board({
       heart.current = null
     }
   }, [heartbeat])
+
+  useEffect(() => {
+    if (!melody) return undefined
+    tune.current = createBoardMelody()
+    return () => {
+      tune.current?.dispose()
+      tune.current = null
+    }
+  }, [melody])
 
   // The canvas we actually display (base content + animated shimmer/symbol on top).
   const display = useMemo(() => {
@@ -164,16 +175,18 @@ export default function Board({
   const w = (2 * hw) / MODEL_SCALE
   const h = (2 * hh) / MODEL_SCALE
 
-  const hoverProps = pulse
+  const hoverProps = pulse || melody
     ? {
         onPointerOver: (e) => {
           e.stopPropagation()
           hoverRef.current = true
           if (heartbeat) heart.current?.start()
+          if (melody) tune.current?.start()
         },
         onPointerOut: () => {
           hoverRef.current = false
           if (heartbeat) heart.current?.stop()
+          if (melody) tune.current?.stop()
         },
       }
     : {}

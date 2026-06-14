@@ -39,7 +39,7 @@ export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.89
 // `lines` = the text, `symbol` = the little glyph below it.
 export const BOARDS = [
   // board next to the bicycle
-  { src: '/board-art.png', mode: 'top', p: [0.4358, -0.4051, 0.5849], nrm: [-0.606, 0.48, 0.635], hw: 0.21, hh: 0.3, down: 0.008, bg: '#f5f0e6', roll: 3 },
+  { src: '/board-art.png', mode: 'top', lines: ['Dream', 'Plan', 'Do'], melody: true, p: [0.4358, -0.4051, 0.5849], nrm: [-0.606, 0.48, 0.635], hw: 0.21, hh: 0.3, down: 0.008, bg: '#f5f0e6', roll: 3 },
   // poster in front of the desk (text only for now — image to follow, then set src + mode:'top')
   {
     mode: 'paper',

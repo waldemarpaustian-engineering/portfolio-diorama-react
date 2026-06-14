@@ -1,22 +1,25 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { makeSignTexture } from '../lib/signTexture.js'
+import { drawSignTexture, makeSignTexture } from '../lib/signTexture.js'
+import { playSignHoverFor } from '../lib/signHover.js'
 import { MODEL_SCALE } from '../data/signs.js'
 
 const _sign = new THREE.Vector3()
 const _dir = new THREE.Vector3()
-const _scl = new THREE.Vector3()
-const warm = new THREE.Color('#ffc488')
 
 // A single navigation plaque, fixed flat on its board, facing the diorama's front.
 export default function Sign({ label, to, p, hw, hh, nrm, onSelect, disabled }) {
   const mesh = useRef()
   const [hovered, setHovered] = useState(false)
 
-  const texture = useMemo(() => makeSignTexture(label, hw, hh), [label, hw, hh])
+  const { canvas, texture, W, H } = useMemo(() => makeSignTexture(label, hw, hh), [label, hw, hh])
 
-  // Build a fixed orientation: +Z (the plate's front) points along the board normal, kept upright.
+  useEffect(() => {
+    drawSignTexture(canvas.getContext('2d'), W, H, label, hovered)
+    texture.needsUpdate = true
+  }, [canvas, texture, W, H, label, hovered])
+
   const quaternion = useMemo(() => {
     const f = new THREE.Vector3(nrm[0], nrm[1], nrm[2]).normalize()
     const up = Math.abs(f.y) > 0.95 ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(0, 1, 0)
@@ -32,15 +35,9 @@ export default function Sign({ label, to, p, hw, hh, nrm, onSelect, disabled }) 
   useFrame((state) => {
     const m = mesh.current
     if (!m) return
-    // hide the sign when it faces away from the camera (you orbited behind it)
     m.getWorldPosition(_sign)
     _dir.copy(state.camera.position).sub(_sign)
     m.visible = normal.dot(_dir) > 0
-    // smooth hover feedback
-    const targetScale = hovered ? 1.07 : 1.0
-    m.scale.lerp(_scl.setScalar(targetScale), 0.2)
-    const tg = hovered ? 0.45 : 0
-    m.material.emissiveIntensity += (tg - m.material.emissiveIntensity) * 0.2
   })
 
   return (
@@ -58,6 +55,7 @@ export default function Sign({ label, to, p, hw, hh, nrm, onSelect, disabled }) 
         if (disabled) return
         setHovered(true)
         document.body.style.cursor = 'pointer'
+        playSignHoverFor(to)
       }}
       onPointerOut={() => {
         setHovered(false)
@@ -73,8 +71,6 @@ export default function Sign({ label, to, p, hw, hh, nrm, onSelect, disabled }) 
         transparent
         depthTest={false}
         depthWrite={false}
-        emissive={warm}
-        emissiveIntensity={0}
       />
     </mesh>
   )
