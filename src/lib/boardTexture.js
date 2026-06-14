@@ -97,16 +97,17 @@ export function makeBoardTexture(
 }
 
 // Draws the little symbol (heart/star) centered at sym.cx/cy, scaled by `scale`.
-export function drawSymbol(ctx, sym, scale = 1) {
+// `color` overrides the symbol's own color (e.g. a darker tint on hover).
+export function drawSymbol(ctx, sym, scale = 1, color = sym.color) {
   ctx.save()
-  ctx.fillStyle = sym.color
-  if (sym.shadow) {
-    ctx.shadowColor = 'rgba(0,0,0,0.55)'
-    ctx.shadowBlur = 10
-  }
+  ctx.fillStyle = color
   if (sym.glyph === '\u2665' || sym.glyph === '\u2764') {
-    drawHeart(ctx, sym.cx, sym.cy, sym.fs * scale, sym.color)
+    drawHeart(ctx, sym.cx, sym.cy, sym.fs * scale, color)
   } else {
+    if (sym.shadow) {
+      ctx.shadowColor = 'rgba(0,0,0,0.55)'
+      ctx.shadowBlur = 10
+    }
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     ctx.font = FONT(sym.fs * scale)
@@ -115,7 +116,7 @@ export function drawSymbol(ctx, sym, scale = 1) {
   ctx.restore()
 }
 
-// A vector heart whose bottom tip is rounded (no sharp point). Centered on cx/cy.
+// A flat vector heart whose bottom tip is rounded (no sharp point). Centered on cx/cy.
 function drawHeart(ctx, cx, cy, size, color) {
   const r = size * 0.42
   ctx.beginPath()

@@ -39,7 +39,7 @@ export const BOARDS = [
     mode: 'paper',
     lines: ['Ideas', 'become', 'magic.'],
     symbol: '\u2665',
-    symbolColor: '#e23b3b',
+    symbolColor: '#b62f2f',
     pulse: true,
     shimmer: false,
     p: [0.2479, -0.0125, -0.4347],

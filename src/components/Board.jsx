@@ -13,6 +13,19 @@ const SWEEP = 1.1
 const PULSE_SPEED = 6
 const PULSE_AMOUNT = 0.18
 
+// On hover the symbol shifts toward this bordeaux tone (not black). HOVER_MIX = max blend at full hover.
+const HOVER_COLOR = '#6e1622'
+const HOVER_MIX = 0.85
+
+// Blends #rrggbb `a` toward #rrggbb `b` by `amt` (0..1). Returns an rgb() string.
+function mixColor(a, b, amt) {
+  if (typeof a !== 'string' || a[0] !== '#' || a.length < 7) return a
+  const na = parseInt(a.slice(1, 7), 16)
+  const nb = parseInt(b.slice(1, 7), 16)
+  const l = (sa, sb) => Math.round(sa + (sb - sa) * amt)
+  return `rgb(${l((na >> 16) & 255, (nb >> 16) & 255)},${l((na >> 8) & 255, (nb >> 8) & 255)},${l(na & 255, nb & 255)})`
+}
+
 // Draws a soft diagonal light streak across the board at a given progress (0..1).
 function drawShimmer(ctx, progress) {
   const band = CW * 0.22
@@ -39,7 +52,7 @@ export default function Board({
   const baseRef = useRef(null)
   const symRef = useRef(null)
   const hoverRef = useRef(false)
-  const anim = useRef({ t: 0, beat: 1, idleDrawn: false })
+  const anim = useRef({ t: 0, beat: 1, hov: 0, idleDrawn: false })
 
   // The canvas we actually display (base content + animated shimmer/symbol on top).
   const display = useMemo(() => {
@@ -111,18 +124,21 @@ export default function Board({
     const phase = a.t % PERIOD
     const sweeping = shimmer && phase < SWEEP
 
-    // pulse factor for the symbol
+    // pulse factor + hover darkening for the symbol
     if (pulse) {
       const target = hoverRef.current ? 1 + Math.sin(a.t * PULSE_SPEED) * PULSE_AMOUNT : 1
       a.beat += (target - a.beat) * (hoverRef.current ? 1 : 0.15)
+      a.hov += ((hoverRef.current ? 1 : 0) - a.hov) * 0.18
     }
-    const beating = pulse && (hoverRef.current || Math.abs(a.beat - 1) > 0.004)
+    const beating = pulse && (hoverRef.current || Math.abs(a.beat - 1) > 0.004 || a.hov > 0.004)
 
     if (sweeping || beating) {
       ctx.clearRect(0, 0, CW, CH)
       ctx.drawImage(base, 0, 0)
       if (sweeping) drawShimmer(ctx, phase / SWEEP)
-      if (pulse && symRef.current) drawSymbol(ctx, symRef.current, a.beat)
+      if (pulse && symRef.current) {
+        drawSymbol(ctx, symRef.current, a.beat, mixColor(symRef.current.color, HOVER_COLOR, HOVER_MIX * a.hov))
+      }
       texture.needsUpdate = true
       a.idleDrawn = false
     } else if (!a.idleDrawn) {
