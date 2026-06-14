@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useNavigate } from 'react-router-dom'
 import * as THREE from 'three'
 import { makeSignTexture } from '../lib/signTexture.js'
 import { MODEL_SCALE } from '../data/signs.js'
@@ -11,9 +10,8 @@ const _scl = new THREE.Vector3()
 const warm = new THREE.Color('#ffc488')
 
 // A single navigation plaque, fixed flat on its board, facing the diorama's front.
-export default function Sign({ label, to, p, hw, hh, nrm }) {
+export default function Sign({ label, to, p, hw, hh, nrm, onSelect, disabled }) {
   const mesh = useRef()
-  const navigate = useNavigate()
   const [hovered, setHovered] = useState(false)
 
   const texture = useMemo(() => makeSignTexture(label, hw, hh), [label, hw, hh])
@@ -53,10 +51,11 @@ export default function Sign({ label, to, p, hw, hh, nrm }) {
       renderOrder={999}
       onClick={(e) => {
         e.stopPropagation()
-        navigate(to)
+        if (!disabled) onSelect?.()
       }}
       onPointerOver={(e) => {
         e.stopPropagation()
+        if (disabled) return
         setHovered(true)
         document.body.style.cursor = 'pointer'
       }}
