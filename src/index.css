@@ -64,6 +64,13 @@ body {
   pointer-events: none;
 }
 
+.meteor-shower {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
 /* ---------- 3D stage (home) ---------- */
 .stage {
   position: fixed;

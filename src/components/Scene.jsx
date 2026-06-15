@@ -13,6 +13,7 @@ import SoundToggle from './SoundToggle.jsx'
 import ThemeToggle from './ThemeToggle.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import SceneLoader from './SceneLoader.jsx'
+import MeteorShower from './MeteorShower.jsx'
 import { useTheme } from '../hooks/useTheme.js'
 import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
@@ -330,6 +331,8 @@ export default function Scene() {
         />
       </Canvas>
       </div>
+
+      <MeteorShower />
 
       <div
         className="portal-overlay"
