@@ -15,6 +15,17 @@ function luminance([r, g, b]) {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255
 }
 
+function roundRect(ctx, x, y, w, h, r) {
+  const rr = Math.min(r, w / 2, h / 2)
+  ctx.beginPath()
+  ctx.moveTo(x + rr, y)
+  ctx.arcTo(x + w, y, x + w, y + h, rr)
+  ctx.arcTo(x + w, y + h, x, y + h, rr)
+  ctx.arcTo(x, y + h, x, y, rr)
+  ctx.arcTo(x, y, x + w, y, rr)
+  ctx.closePath()
+}
+
 export function drawTech(ctx, W, H, icon, alpha = 1) {
   const rgb = channels(icon.hex)
   const fg = luminance(rgb) > 0.62 ? '#11151b' : '#ffffff'
@@ -45,6 +56,52 @@ export function drawTech(ctx, W, H, icon, alpha = 1) {
   ctx.textBaseline = 'middle'
   ctx.font = `700 ${Math.round(H * 0.12)}px -apple-system, Segoe UI, Helvetica, Arial, sans-serif`
   ctx.fillText(icon.title, W / 2, H * 0.84)
+
+  ctx.restore()
+}
+
+// White CRT with a centered brand card — used on the About-page retro computer.
+export function drawTechCard(ctx, W, H, icon, alpha = 1) {
+  const rgb = channels(icon.hex)
+  const fg = luminance(rgb) > 0.62 ? '#11151b' : '#ffffff'
+
+  ctx.save()
+  ctx.globalAlpha = alpha
+
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, W, H)
+
+  const cardW = Math.min(W * 0.88, H * 0.92)
+  const cardH = Math.min(H * 0.78, cardW * 0.82)
+  const x = (W - cardW) / 2
+  const y = (H - cardH) / 2
+
+  const g = ctx.createLinearGradient(0, y, 0, y + cardH)
+  g.addColorStop(0, `#${icon.hex}`)
+  g.addColorStop(1, darken(rgb, 0.72))
+  ctx.fillStyle = g
+  roundRect(ctx, x, y, cardW, cardH, Math.min(cardW, cardH) * 0.1)
+  ctx.fill()
+
+  const logoSize = Math.min(cardW, cardH) * 0.38
+  const textSize = Math.max(11, Math.round(cardH * 0.1))
+  const gap = cardH * 0.055
+  const blockH = logoSize + gap + textSize
+  const blockTop = y + (cardH - blockH) / 2
+  const s = logoSize / 24
+
+  ctx.save()
+  ctx.translate(x + (cardW - logoSize) / 2, blockTop)
+  ctx.scale(s, s)
+  ctx.fillStyle = fg
+  ctx.fill(new Path2D(icon.path))
+  ctx.restore()
+
+  ctx.fillStyle = fg
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.font = `700 ${textSize}px -apple-system, Segoe UI, Helvetica, Arial, sans-serif`
+  ctx.fillText(icon.title, x + cardW / 2, blockTop + logoSize + gap + textSize / 2)
 
   ctx.restore()
 }

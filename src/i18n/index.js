@@ -21,8 +21,8 @@ const resources = {
       about: {
         eyebrow: 'About me',
         title: 'Hi, I’m Waldemar.',
-        lead: 'I design and build interactive things for the web — somewhere between code, 3D and a good story. Replace this placeholder with your own.',
-        chips: ['Three.js', 'WebGL', 'React', 'Design', 'Animation'],
+        lead: 'I’m a frontend developer with more than 25 years of experience building interfaces that feel clear, fast, and thoughtful. UI/UX design, design systems, and solid architecture go hand in hand for me — as does using AI and generative AI when it genuinely improves the product. I’ve worked across startups, fintech, banking, logistics, automotive, and the public sector, always with a focus on solutions that work well for users and teams alike.',
+        chips: ['UI/UX Design', 'Design Systems', 'AI & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
       },
       works: {
         eyebrow: 'Works',
@@ -69,8 +69,8 @@ const resources = {
       about: {
         eyebrow: 'Über mich',
         title: 'Hallo, ich bin Waldemar.',
-        lead: 'Ich gestalte und baue interaktive Dinge fürs Web — irgendwo zwischen Code, 3D und einer guten Geschichte. Ersetze diesen Platzhalter durch deinen eigenen Text.',
-        chips: ['Three.js', 'WebGL', 'React', 'Design', 'Animation'],
+        lead: 'Ich bin Frontend-Entwickler — seit über 25 Jahren baue ich Weboberflächen, die klar, schnell und angenehm zu nutzen sind. UI/UX-Design, Design Systeme und saubere Architektur gehören für mich zusammen — ebenso wie KI und generative AI, wenn sie Produkte spürbar besser machen. Ob Start-up, Fintech, Bank, Logistik, Automotive oder Behörde: Mir sind Lösungen wichtig, die für Nutzer und Team gleichermaßen gut funktionieren.',
+        chips: ['UI/UX Design', 'Design Systems', 'KI & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
       },
       works: {
         eyebrow: 'Arbeiten',
@@ -117,8 +117,8 @@ const resources = {
       about: {
         eyebrow: 'Sobre mí',
         title: 'Hola, soy Waldemar.',
-        lead: 'Diseño y construyo cosas interactivas para la web — entre el código, el 3D y una buena historia. Reemplaza este texto de ejemplo por el tuyo.',
-        chips: ['Three.js', 'WebGL', 'React', 'Diseño', 'Animación'],
+        lead: 'Soy desarrollador frontend con más de 25 años de experiencia creando interfaces claras, rápidas y agradables de usar. Para mí, el diseño UI/UX, los design systems y una arquitectura sólida van de la mano — al igual que la IA y la IA generativa cuando mejoran de verdad el producto. He trabajado en startups, fintech, banca, logística, automoción y sector público, siempre con foco en soluciones que funcionan bien para usuarios y equipos.',
+        chips: ['UI/UX Design', 'Design Systems', 'IA & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
       },
       works: {
         eyebrow: 'Trabajos',
@@ -165,8 +165,8 @@ const resources = {
       about: {
         eyebrow: 'À propos',
         title: 'Bonjour, je suis Waldemar.',
-        lead: 'Je conçois et crée des expériences interactives pour le web — quelque part entre le code, la 3D et une belle histoire. Remplace ce texte d’exemple par le tien.',
-        chips: ['Three.js', 'WebGL', 'React', 'Design', 'Animation'],
+        lead: 'Je suis développeur frontend avec plus de 25 ans d’expérience à créer des interfaces claires, rapides et agréables à utiliser. Le design UI/UX, les design systems et une architecture solide vont de pair pour moi — tout comme l’IA et l’IA générative quand elles améliorent réellement le produit. Start-up, fintech, banque, logistique, automobile ou secteur public : je vise des solutions qui fonctionnent pour les utilisateurs comme pour les équipes.',
+        chips: ['UI/UX Design', 'Design Systems', 'IA & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
       },
       works: {
         eyebrow: 'Travaux',
