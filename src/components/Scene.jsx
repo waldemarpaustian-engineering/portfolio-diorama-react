@@ -272,6 +272,7 @@ export default function Scene() {
 
   return (
     <div className="stage">
+      <div className="stage-backdrop" aria-hidden />
       <nav className="nav" style={uiStyle}>
         <div className="brand"><span className="mk" /> Waldemar&nbsp;Paustian</div>
         <div className="nav-actions">
@@ -287,7 +288,13 @@ export default function Scene() {
       </div>
 
       <div className="stage-canvas">
-      <Canvas shadows camera={{ position: camPos, fov: 35 }}>
+      <Canvas
+        shadows
+        camera={{ position: camPos, fov: 35 }}
+        gl={{ alpha: true, antialias: true }}
+        onCreated={({ gl }) => gl.setClearColor(0, 0, 0, 0)}
+        style={{ background: 'transparent' }}
+      >
         <hemisphereLight args={['#ffffff', '#cfc6ba', 0.7]} />
         <ambientLight intensity={0.18} />
         <directionalLight

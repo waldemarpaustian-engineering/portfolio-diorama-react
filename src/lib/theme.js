@@ -1,3 +1,5 @@
+import { runThemeTransition } from './themeTransition.js'
+
 const KEY = 'portfolio-theme'
 
 export function getTheme() {
@@ -18,7 +20,9 @@ export function setTheme(theme) {
 }
 
 export function toggleTheme() {
-  return setTheme(getTheme() === 'dark' ? 'light' : 'dark')
+  const next = getTheme() === 'dark' ? 'light' : 'dark'
+  runThemeTransition(next, () => setTheme(next))
+  return next
 }
 
 export function initTheme() {
