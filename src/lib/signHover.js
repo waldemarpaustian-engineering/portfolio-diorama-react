@@ -56,7 +56,7 @@ export function playSignHover(pitch = 1) {
 }
 
 // Slightly different pitch per route so signs feel distinct but cohesive.
-const PITCH = { '/about': 0.96, '/works': 1.04, '/blog': 1.0, '/contact': 1.08 }
+const PITCH = { '/about': 0.96, '/work': 1.04, '/blog': 1.0, '/contact': 1.08 }
 
 export function playSignHoverFor(to) {
   playSignHover(PITCH[to] ?? 1)

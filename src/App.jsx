@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Starfield from './components/Starfield.jsx'
 import Scene from './components/Scene.jsx'
 import About from './pages/About.jsx'
@@ -13,7 +13,8 @@ export default function App() {
       <Routes>
       <Route path="/" element={<Scene />} />
       <Route path="/about" element={<About />} />
-      <Route path="/works" element={<Works />} />
+      <Route path="/work" element={<Works />} />
+      <Route path="/works" element={<Navigate to="/work" replace />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/contact" element={<Contact />} />
       </Routes>

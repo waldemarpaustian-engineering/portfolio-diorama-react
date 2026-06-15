@@ -13,7 +13,7 @@ const resources = {
         back: '← Back to island',
       },
       theme: { toLight: 'Switch to light mode', toDark: 'Switch to dark mode' },
-      signs: { about: 'About Me', works: 'Works', blog: 'Blog', contact: 'Contact' },
+      signs: { about: 'About Me', work: 'Work', blog: 'Blog', contact: 'Contact' },
       boards: {
         bicycle: { lines: ['Dream', 'Plan', 'Do'] },
         desk: { lines: ['Ideas', 'become', 'magic.'] },
@@ -42,8 +42,8 @@ const resources = {
           },
         ],
       },
-      works: {
-        eyebrow: 'Works',
+      work: {
+        eyebrow: 'Work',
         title: 'Selected work.',
         lead: 'Replace these placeholder cards with your real projects.',
         projects: [
@@ -85,7 +85,7 @@ const resources = {
         back: '← Zurück zur Insel',
       },
       theme: { toLight: 'Hellmodus', toDark: 'Dunkelmodus' },
-      signs: { about: 'Über mich', works: 'Arbeiten', blog: 'Blog', contact: 'Kontakt' },
+      signs: { about: 'Über mich', work: 'Arbeit', blog: 'Blog', contact: 'Kontakt' },
       boards: {
         bicycle: { lines: ['Träumen', 'Planen', 'Machen'] },
         desk: { lines: ['Ideen', 'werden', 'Magie.'] },
@@ -114,9 +114,9 @@ const resources = {
           },
         ],
       },
-      works: {
-        eyebrow: 'Arbeiten',
-        title: 'Ausgewählte Arbeiten.',
+      work: {
+        eyebrow: 'Arbeit',
+        title: 'Ausgewählte Arbeit.',
         lead: 'Ersetze diese Platzhalter-Karten durch deine echten Projekte.',
         projects: [
           { title: 'Aurora Dashboard', desc: 'Echtzeit-Analysen mit ruhigen, schnell erfassbaren Daten.' },
@@ -157,7 +157,7 @@ const resources = {
         back: '← Volver a la isla',
       },
       theme: { toLight: 'Modo claro', toDark: 'Modo oscuro' },
-      signs: { about: 'Sobre mí', works: 'Trabajos', blog: 'Blog', contact: 'Contacto' },
+      signs: { about: 'Sobre mí', work: 'Trabajo', blog: 'Blog', contact: 'Contacto' },
       boards: {
         bicycle: { lines: ['Soñar', 'Planear', 'Hacer'] },
         desk: { lines: ['Las ideas', 'se vuelven', 'magia.'] },
@@ -186,9 +186,9 @@ const resources = {
           },
         ],
       },
-      works: {
-        eyebrow: 'Trabajos',
-        title: 'Trabajos seleccionados.',
+      work: {
+        eyebrow: 'Trabajo',
+        title: 'Trabajo seleccionado.',
         lead: 'Reemplaza estas tarjetas de ejemplo por tus proyectos reales.',
         projects: [
           { title: 'Aurora Dashboard', desc: 'Analíticas en tiempo real con datos claros y fáciles de ver.' },
@@ -229,7 +229,7 @@ const resources = {
         back: '← Retour à l’île',
       },
       theme: { toLight: 'Mode clair', toDark: 'Mode sombre' },
-      signs: { about: 'À propos', works: 'Travaux', blog: 'Blog', contact: 'Contact' },
+      signs: { about: 'À propos', work: 'Travail', blog: 'Blog', contact: 'Contact' },
       boards: {
         bicycle: { lines: ['Rêver', 'Planifier', 'Faire'] },
         desk: { lines: ['Les idées', 'deviennent', 'magie.'] },
@@ -258,9 +258,9 @@ const resources = {
           },
         ],
       },
-      works: {
-        eyebrow: 'Travaux',
-        title: 'Travaux sélectionnés.',
+      work: {
+        eyebrow: 'Travail',
+        title: 'Travail sélectionné.',
         lead: 'Remplace ces cartes d’exemple par tes vrais projets.',
         projects: [
           { title: 'Aurora Dashboard', desc: 'Analytique en temps réel avec des données claires et lisibles.' },

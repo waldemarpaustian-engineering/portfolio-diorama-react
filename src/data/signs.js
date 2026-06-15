@@ -4,7 +4,7 @@
 // hw/hh = half width / half height of the plaque (world units, before model scale)
 export const SIGNS = [
   { label: 'About Me', to: '/about',   p: [-0.6935, -0.1042, -0.1743], hw: 0.36, hh: 0.09, nrm: [0.248, -0.034, 0.968] },
-  { label: 'Works',    to: '/works',   p: [-0.6983, -0.1990, -0.1727], hw: 0.36, hh: 0.08, nrm: [0.173,  0.048, 0.984] },
+  { label: 'Work',     to: '/work',    p: [-0.6983, -0.1990, -0.1727], hw: 0.36, hh: 0.08, nrm: [0.173,  0.048, 0.984] },
   { label: 'Blog',     to: '/blog',    p: [-0.6946, -0.2912, -0.1738], hw: 0.36, hh: 0.08, nrm: [0.536, -0.050, 0.843] },
   { label: 'Contact',  to: '/contact', p: [-0.6961, -0.3867, -0.1736], hw: 0.34, hh: 0.08, nrm: [0.503,  0.152, 0.851] },
 ]

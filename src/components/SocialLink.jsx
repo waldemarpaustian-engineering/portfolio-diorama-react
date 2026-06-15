@@ -1,7 +1,7 @@
-export default function SocialLink({ href, icon, label }) {
+export default function SocialLink({ href, icon, label, className = '' }) {
   return (
     <a
-      className={`social-link social-link--${icon.title.toLowerCase()}`}
+      className={`social-link social-link--${icon.title.toLowerCase()} ${className}`.trim()}
       href={href}
       target="_blank"
       rel="noopener noreferrer"
