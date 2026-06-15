@@ -1,4 +1,6 @@
 // Continuous generative arpeggio — soft, futuristic, with varied transitions (no fixed loop).
+import { isSoundEnabled, registerStopper } from './audioGate.js'
+
 export function createBoardMelody() {
   let ctx = null
   let master = null
@@ -114,6 +116,7 @@ export function createBoardMelody() {
   }
 
   function start() {
+    if (!isSoundEnabled()) return
     ensure()
     if (ctx.state === 'suspended') ctx.resume()
     master.gain.cancelScheduledValues(ctx.currentTime)
@@ -142,7 +145,10 @@ export function createBoardMelody() {
     }
   }
 
+  const unreg = registerStopper(stop)
+
   function dispose() {
+    unreg()
     stop()
     if (ctx) ctx.close()
     ctx = null

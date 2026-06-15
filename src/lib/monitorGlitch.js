@@ -1,5 +1,7 @@
 // Soft retro monitor hover sound: warm hum + gentle shimmer, occasional quiet blips.
 // Much calmer than harsh static — meant to feel cozy, not broken.
+import { isSoundEnabled, registerStopper } from './audioGate.js'
+
 export function createMonitorGlitch() {
   let ctx = null
   let master = null
@@ -94,6 +96,7 @@ export function createMonitorGlitch() {
   }
 
   function start() {
+    if (!isSoundEnabled()) return
     ensure()
     if (ctx.state === 'suspended') ctx.resume()
     master.gain.cancelScheduledValues(ctx.currentTime)
@@ -115,7 +118,10 @@ export function createMonitorGlitch() {
     }
   }
 
+  const unreg = registerStopper(stop)
+
   function dispose() {
+    unreg()
     stop()
     if (hum) {
       hum.stop()

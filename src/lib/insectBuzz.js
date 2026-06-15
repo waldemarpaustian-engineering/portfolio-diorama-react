@@ -1,4 +1,6 @@
 // Delicate quiet chime while hovering insects — soft high partials, no buzz.
+import { isSoundEnabled, registerStopper } from './audioGate.js'
+
 export function createInsectBuzz() {
   let ctx = null
   let master = null
@@ -46,6 +48,7 @@ export function createInsectBuzz() {
   }
 
   function start() {
+    if (!isSoundEnabled()) return
     ensure()
     if (ctx.state === 'suspended') ctx.resume()
     master.gain.cancelScheduledValues(ctx.currentTime)
@@ -61,7 +64,10 @@ export function createInsectBuzz() {
     }
   }
 
+  const unreg = registerStopper(stop)
+
   function dispose() {
+    unreg()
     stop()
     nodes.forEach((n) => {
       try { n.stop() } catch { /* already stopped */ }

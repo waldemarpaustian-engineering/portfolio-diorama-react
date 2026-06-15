@@ -1,4 +1,6 @@
 // Short warm wood "tock" for navigation sign hover — one-shot, quiet.
+import { isSoundEnabled } from './audioGate.js'
+
 let ctx = null
 
 function getCtx() {
@@ -9,6 +11,7 @@ function getCtx() {
 }
 
 export function playSignHover(pitch = 1) {
+  if (!isSoundEnabled()) return
   const ac = getCtx()
   if (!ac) return
   const t = ac.currentTime + 0.01

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { createSoundscape } from '../lib/soundscape.js'
+import { setSoundEnabled } from '../lib/audioGate.js'
 
-// Small speaker button that fades the procedural nature soundscape in/out.
-// Starts off (browsers block autoplay until a user gesture — this click is the gesture).
+// Speaker button — toggles all scene audio (nature bed + hover/interaction sounds).
 export default function SoundToggle() {
   const sound = useRef(null)
   const [on, setOn] = useState(false)
@@ -15,6 +15,7 @@ export default function SoundToggle() {
   const toggle = () => {
     const next = !on
     setOn(next)
+    setSoundEnabled(next)
     sound.current?.setEnabled(next)
   }
 

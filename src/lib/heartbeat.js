@@ -1,5 +1,7 @@
 // A gentle synthesized heartbeat ("lub-dub") for Web Audio — no audio file needed.
 // start() fades a looping heartbeat in; stop() fades it out. Meant to play while hovering.
+import { isSoundEnabled, registerStopper } from './audioGate.js'
+
 export function createHeartbeat() {
   let ctx = null
   let master = null
@@ -45,6 +47,7 @@ export function createHeartbeat() {
   }
 
   function start() {
+    if (!isSoundEnabled()) return
     ensure()
     if (ctx.state === 'suspended') ctx.resume()
     master.gain.cancelScheduledValues(ctx.currentTime)
@@ -66,7 +69,10 @@ export function createHeartbeat() {
     }
   }
 
+  const unreg = registerStopper(stop)
+
   function dispose() {
+    unreg()
     stop()
     if (ctx) ctx.close()
     ctx = null
