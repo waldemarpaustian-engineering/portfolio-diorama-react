@@ -19,6 +19,7 @@ export const LANTERNS = [
   { p: [-0.8913, -0.1882, -0.1546] },
   // lantern on the desk — dimmer + a clear breathing pulse that lights the poster
   { p: [0.162, -0.2368, -0.3553], intensity: 5.5, distance: 1.4, pulseAmount: 0.3, pulseSpeed: 1.8, pulseFloor: 0.25 },
+  { p: [0.2504, 0.2443, -0.539] },
 ]
 
 // Cozy firefly swarms drifting around a lantern. `p` is in the model's own coordinate space
