@@ -50,19 +50,67 @@ export function drawTech(ctx, W, H, icon, alpha = 1) {
 }
 
 // Portrait on the monitor hover state — fits inside the frame with a little margin.
-export function drawPortrait(ctx, W, H, img, alpha = 1, fit = 0.9) {
-  if (!img?.complete || !img.naturalWidth) return
+export function drawPortrait(ctx, W, H, img, alpha = 1, fit = 0.9, bgColor = '#0a0c10') {
+  const iw = img?.naturalWidth || img?.width
+  const ih = img?.naturalHeight || img?.height
+  if (!iw || !ih) return
   ctx.save()
-  ctx.globalAlpha = alpha
-  ctx.fillStyle = '#0a0c10'
+  ctx.fillStyle = bgColor
   ctx.fillRect(0, 0, W, H)
-  const iw = img.naturalWidth
-  const ih = img.naturalHeight
-  const scale = Math.min(W / iw, H / ih) * fit
-  const dw = iw * scale
-  const dh = ih * scale
-  ctx.drawImage(img, 0, 0, iw, ih, (W - dw) / 2, (H - dh) / 2, dw, dh)
+  if (alpha > 0.01) {
+    ctx.globalAlpha = alpha
+    const scale = Math.min(W / iw, H / ih) * fit
+    const dw = iw * scale
+    const dh = ih * scale
+    ctx.drawImage(img, 0, 0, iw, ih, (W - dw) / 2, (H - dh) / 2, dw, dh)
+  }
   ctx.restore()
+}
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
+// Swap the photo backdrop to `bgHex` so it matches the monitor letterbox color.
+export function processPortraitBackground(img, bgHex, threshold = 52) {
+  const w = img.naturalWidth
+  const h = img.naturalHeight
+  const canvas = document.createElement('canvas')
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  ctx.drawImage(img, 0, 0)
+  const image = ctx.getImageData(0, 0, w, h)
+  const { data } = image
+  const target = hexToRgb(bgHex)
+
+  const corners = [[3, 3], [w - 4, 3], [3, h - 4], [w - 4, h - 4]]
+  const bg = [0, 0, 0]
+  for (const [x, y] of corners) {
+    const i = (y * w + x) * 4
+    bg[0] += data[i]
+    bg[1] += data[i + 1]
+    bg[2] += data[i + 2]
+  }
+  bg[0] /= 4
+  bg[1] /= 4
+  bg[2] /= 4
+
+  const t2 = threshold * threshold
+  for (let i = 0; i < data.length; i += 4) {
+    const dr = data[i] - bg[0]
+    const dg = data[i + 1] - bg[1]
+    const db = data[i + 2] - bg[2]
+    if (dr * dr + dg * dg + db * db < t2) {
+      data[i] = target[0]
+      data[i + 1] = target[1]
+      data[i + 2] = target[2]
+    }
+  }
+
+  ctx.putImageData(image, 0, 0)
+  return canvas
 }
 
 // Pseudo-random 0..1, stable for one animation frame (changes every ~16 ms).
