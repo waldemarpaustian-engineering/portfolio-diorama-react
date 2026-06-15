@@ -45,13 +45,7 @@ const resources = {
       work: {
         eyebrow: 'Work',
         title: 'Selected work.',
-        lead: 'Replace these placeholder cards with your real projects.',
-        projects: [
-          { title: 'Aurora Dashboard', desc: 'Real-time analytics with calm, glanceable data.' },
-          { title: 'Helix Studio', desc: 'Identity & interactive site for a motion studio.' },
-          { title: 'Tidepool', desc: 'A habit-tracker that grows into a small ecosystem.' },
-          { title: 'Floating Studio', desc: 'This very portfolio — a 3D diorama you can explore.' },
-        ],
+        lead: 'Case studies and projects will appear here soon.',
       },
       blog: {
         eyebrow: 'Blog',
@@ -117,13 +111,7 @@ const resources = {
       work: {
         eyebrow: 'Arbeit',
         title: 'Ausgewählte Arbeit.',
-        lead: 'Ersetze diese Platzhalter-Karten durch deine echten Projekte.',
-        projects: [
-          { title: 'Aurora Dashboard', desc: 'Echtzeit-Analysen mit ruhigen, schnell erfassbaren Daten.' },
-          { title: 'Helix Studio', desc: 'Identität & interaktive Website für ein Motion-Studio.' },
-          { title: 'Tidepool', desc: 'Ein Gewohnheits-Tracker, der zu einem kleinen Ökosystem wächst.' },
-          { title: 'Floating Studio', desc: 'Genau dieses Portfolio — ein 3D-Diorama zum Erkunden.' },
-        ],
+        lead: 'Case Studies und Projekte folgen hier in Kürze.',
       },
       blog: {
         eyebrow: 'Blog',
@@ -189,13 +177,7 @@ const resources = {
       work: {
         eyebrow: 'Trabajo',
         title: 'Trabajo seleccionado.',
-        lead: 'Reemplaza estas tarjetas de ejemplo por tus proyectos reales.',
-        projects: [
-          { title: 'Aurora Dashboard', desc: 'Analíticas en tiempo real con datos claros y fáciles de ver.' },
-          { title: 'Helix Studio', desc: 'Identidad y sitio interactivo para un estudio de animación.' },
-          { title: 'Tidepool', desc: 'Un rastreador de hábitos que crece hasta ser un pequeño ecosistema.' },
-          { title: 'Floating Studio', desc: 'Este mismo portafolio — un diorama 3D que puedes explorar.' },
-        ],
+        lead: 'Los casos de estudio y proyectos aparecerán aquí pronto.',
       },
       blog: {
         eyebrow: 'Blog',
@@ -261,13 +243,7 @@ const resources = {
       work: {
         eyebrow: 'Travail',
         title: 'Travail sélectionné.',
-        lead: 'Remplace ces cartes d’exemple par tes vrais projets.',
-        projects: [
-          { title: 'Aurora Dashboard', desc: 'Analytique en temps réel avec des données claires et lisibles.' },
-          { title: 'Helix Studio', desc: 'Identité et site interactif pour un studio d’animation.' },
-          { title: 'Tidepool', desc: 'Un suivi d’habitudes qui devient un petit écosystème.' },
-          { title: 'Floating Studio', desc: 'Ce portfolio même — un diorama 3D à explorer.' },
-        ],
+        lead: 'Études de cas et projets à venir bientôt ici.',
       },
       blog: {
         eyebrow: 'Blog',
