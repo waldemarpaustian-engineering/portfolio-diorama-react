@@ -40,11 +40,48 @@ const resources = {
             text: 'Accessibility is part of how I build — including components that are accessible from the start: semantic markup, keyboard navigation and screen readers, with WCAG in mind and practical testing using established tools.',
           },
         ],
+        workLink: 'My path →',
       },
       work: {
         eyebrow: 'Work',
-        title: 'Selected work.',
-        lead: 'Case studies and projects will appear here soon.',
+        title: 'A paper trail.',
+        lead: 'Eight chapters — from first websites to microfrontends and accessibility. Case studies will follow here later.',
+        hint: 'Scroll to explore each station →',
+        ariaTrack: 'Career chapters',
+        chapters: [
+          {
+            title: 'First steps — web & studies',
+            text: 'Computer science in Mannheim, internships, CMS and databases. PHP, Java, first interfaces — where the craft began.',
+          },
+          {
+            title: 'Banking & enterprise Java',
+            text: 'Payment platforms, rating systems, model-driven architecture. Complex regulated environments, teams, long release cycles.',
+          },
+          {
+            title: 'Switching frameworks — JSF to Angular',
+            text: 'Migrating legacy apps to modern frontends — Angular 2, GWT editors, rebuilding sales platforms from the ground up.',
+          },
+          {
+            title: 'Chatbot & cloud',
+            text: 'Solo frontend for a conversational app with charts and live handoff. Then a greenfield ETL tool in AWS with Angular and D3.',
+          },
+          {
+            title: 'Startup — from zero to product',
+            text: 'First developer and architect in a startup — no-code form platform, React, GraphQL, design system with Storybook, scaling the team.',
+          },
+          {
+            title: 'Rail & Vue',
+            text: 'Passenger sales system — Vue.js 3, AWS, performant components in an agile environment.',
+          },
+          {
+            title: 'Design systems & public sector',
+            text: 'Robo-advisory and public administration — Angular across versions, company-wide design system, Flutter apps, mentoring.',
+          },
+          {
+            title: 'A11y, microfrontends & AI from 2023',
+            text: 'Hub app and microfrontend platform, Figma tokens, accessibility as a dedicated role — and AI-assisted development in everyday work since 2023.',
+          },
+        ],
       },
       blog: {
         eyebrow: 'Blog',
@@ -100,11 +137,48 @@ const resources = {
             text: 'Barrierefreiheit gehört für mich zum guten Handwerk — auch beim Aufbau von Komponenten: saubere Semantik, Tastaturbedienung und Screenreader von Anfang an, WCAG im Blick und praxisnahe Tests mit etablierten Tools.',
           },
         ],
+        workLink: 'Mein Werdegang →',
       },
       work: {
         eyebrow: 'Arbeit',
-        title: 'Ausgewählte Arbeit.',
-        lead: 'Case Studies und Projekte folgen hier in Kürze.',
+        title: 'Eine Papier-Reise.',
+        lead: 'Acht Kapitel — von den ersten Webseiten bis zu Microfrontends und Barrierefreiheit. Case Studies folgen hier später.',
+        hint: 'Scrollen, um die Stationen zu entdecken →',
+        ariaTrack: 'Werdegang-Kapitel',
+        chapters: [
+          {
+            title: 'Erste Schritte — Web & Studium',
+            text: 'Informatik in Mannheim, Praktika, CMS und Datenbanken. PHP, Java, erste Oberflächen — hier hat das Handwerk begonnen.',
+          },
+          {
+            title: 'Banken & Enterprise Java',
+            text: 'Zahlungsverkehr, Rating-Plattformen, modellgetriebene Architektur. Komplexe regulierte Systeme, Teams, lange Release-Zyklen.',
+          },
+          {
+            title: 'Frameworks wechseln — JSF zu Angular',
+            text: 'Migration alter Anwendungen auf moderne Frontends — Angular 2, GWT-Editoren, Vertriebsplattformen neu gedacht.',
+          },
+          {
+            title: 'Chatbot & Cloud',
+            text: 'Alleine Frontend für eine Conversational App mit Charts und Live-Übergabe. Danach ein ETL-Tool in der AWS-Cloud — Greenfield mit Angular und D3.',
+          },
+          {
+            title: 'Startup — von null auf Produkt',
+            text: 'Erstentwickler und Architekt in einem Startup — No-Code-Formularplattform, React, GraphQL, Design System mit Storybook, Team skalieren.',
+          },
+          {
+            title: 'Bahn & Vue',
+            text: 'Vertriebssystem Personenverkehr — Vue.js 3, AWS, performante Komponenten im agilen Umfeld.',
+          },
+          {
+            title: 'Design Systems & öffentlicher Sektor',
+            text: 'Robo-Advisory und öffentliche Verwaltung — Angular über viele Versionen, unternehmensweites Design System, Flutter-Apps, Mentoring.',
+          },
+          {
+            title: 'A11y, Microfrontends & KI ab 2023',
+            text: 'Hub-App und Microfrontend-Plattform, Figma Tokens, Barrierefreiheit als feste Rolle — und KI-gestützte Entwicklung im Alltag seit 2023.',
+          },
+        ],
       },
       blog: {
         eyebrow: 'Blog',
@@ -160,11 +234,24 @@ const resources = {
             text: 'La accesibilidad forma parte de cómo desarrollo — también al construir componentes: marcado semántico, teclado y lectores de pantalla desde el inicio, WCAG como referencia y pruebas prácticas con herramientas consolidadas.',
           },
         ],
+        workLink: 'Mi trayectoria →',
       },
       work: {
         eyebrow: 'Trabajo',
-        title: 'Trabajo seleccionado.',
-        lead: 'Los casos de estudio y proyectos aparecerán aquí pronto.',
+        title: 'Un camino de papel.',
+        lead: 'Ocho capítulos — desde las primeras webs hasta microfrontends y accesibilidad. Los casos de estudio llegarán después.',
+        hint: 'Desplázate para descubrir cada estación →',
+        ariaTrack: 'Capítulos de trayectoria',
+        chapters: [
+          { title: 'Primeros pasos — web y estudios', text: 'Informática en Mannheim, prácticas, CMS y bases de datos. PHP, Java, primeras interfaces — aquí empezó el oficio.' },
+          { title: 'Banca y Java enterprise', text: 'Plataformas de pagos, rating, arquitectura dirigida por modelos. Entornos regulados, equipos, ciclos largos.' },
+          { title: 'Cambio de frameworks — JSF a Angular', text: 'Migración legacy a frontends modernos — Angular 2, editores GWT, plataformas de ventas rehechas.' },
+          { title: 'Chatbot y nube', text: 'Frontend en solitario para app conversacional con gráficos. Después, ETL en AWS con Angular y D3.' },
+          { title: 'Startup — de cero a producto', text: 'Primer desarrollador y arquitecto — plataforma de formularios, React, GraphQL, design system con Storybook.' },
+          { title: 'Ferrocarril y Vue', text: 'Ventas de transporte de pasajeros — Vue.js 3, AWS, componentes performantes.' },
+          { title: 'Design systems y sector público', text: 'Robo-advisory y administración pública — Angular, design system corporativo, Flutter, mentoring.' },
+          { title: 'A11y, microfrontends e IA desde 2023', text: 'Hub app, microfrontends, tokens Figma, accesibilidad dedicada — IA en el desarrollo desde 2023.' },
+        ],
       },
       blog: {
         eyebrow: 'Blog',
@@ -220,11 +307,24 @@ const resources = {
             text: 'L’accessibilité fait partie de ma façon de développer — y compris pour les composants : balisage sémantique, clavier et lecteurs d’écran dès la conception, WCAG comme repère et tests concrets avec des outils éprouvés.',
           },
         ],
+        workLink: 'Mon parcours →',
       },
       work: {
         eyebrow: 'Travail',
-        title: 'Travail sélectionné.',
-        lead: 'Études de cas et projets à venir bientôt ici.',
+        title: 'Un voyage en papier.',
+        lead: 'Huit chapitres — des premiers sites aux microfrontends et à l’accessibilité. Les études de cas suivront ici.',
+        hint: 'Fais défiler pour découvrir chaque station →',
+        ariaTrack: 'Chapitres du parcours',
+        chapters: [
+          { title: 'Premiers pas — web et études', text: 'Informatique à Mannheim, stages, CMS et bases de données. PHP, Java, premières interfaces — le métier commence ici.' },
+          { title: 'Banque et Java enterprise', text: 'Paiements, notation, architecture pilotée par modèles. Environnements régulés, équipes, cycles longs.' },
+          { title: 'Changement de frameworks — JSF vers Angular', text: 'Migration legacy vers frontends modernes — Angular 2, éditeurs GWT, plateformes commerciales repensées.' },
+          { title: 'Chatbot et cloud', text: 'Frontend solo pour app conversationnelle avec graphiques. Puis ETL sur AWS avec Angular et D3.' },
+          { title: 'Startup — de zéro au produit', text: 'Premier développeur et architecte — plateforme de formulaires, React, GraphQL, design system avec Storybook.' },
+          { title: 'Rail et Vue', text: 'Vente transport voyageurs — Vue.js 3, AWS, composants performants.' },
+          { title: 'Design systems et secteur public', text: 'Robo-advisory et administration publique — Angular, design system d’entreprise, Flutter, mentoring.' },
+          { title: 'A11y, microfrontends et IA depuis 2023', text: 'Hub app, microfrontends, tokens Figma, accessibilité dédiée — IA au quotidien depuis 2023.' },
+        ],
       },
       blog: {
         eyebrow: 'Blog',

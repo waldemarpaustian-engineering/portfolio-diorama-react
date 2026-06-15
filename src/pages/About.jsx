@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 import RetroComputer from '../components/RetroComputer.jsx'
@@ -18,6 +19,7 @@ export default function About() {
             <div className="eyebrow">{t('about.eyebrow')}</div>
             <h1 className="title">{t('about.title')}</h1>
             <p className="lead about-hero__intro">{t('about.intro')}</p>
+            <Link className="about-journey-link" to="/work">{t('about.workLink')}</Link>
           </div>
           <img
             className="about-hero__portrait"
