@@ -25,20 +25,20 @@ const resources = {
         stats: ['25+ years', 'Accessibility', 'Fintech', 'Design Systems'],
         blocks: [
           {
-            title: 'Design & UX',
-            text: 'UI/UX design and design systems are core to how I work — from first concept to consistent, scalable components.',
-          },
-          {
-            title: 'Engineering',
+            title: 'Frontend Development',
             text: 'With React, Angular and Vue.js I build scalable frontends — from reusable components and libraries to microfrontend architectures designed for long-term maintainability and reliable everyday use.',
-          },
-          {
-            title: 'Accessibility',
-            text: 'Accessibility is part of how I build — including components that are accessible from the start: semantic markup, keyboard navigation and screen readers, with WCAG in mind and practical testing using established tools.',
           },
           {
             title: 'Industries & AI',
             text: 'Startups, fintech, banking, logistics, automotive and the public sector — plus AI and generative AI when it genuinely improves the product.',
+          },
+          {
+            title: 'Design & UX',
+            text: 'UI/UX design and design systems are core to how I work — from first concept to consistent, scalable components.',
+          },
+          {
+            title: 'Accessibility',
+            text: 'Accessibility is part of how I build — including components that are accessible from the start: semantic markup, keyboard navigation and screen readers, with WCAG in mind and practical testing using established tools.',
           },
         ],
       },
@@ -50,12 +50,7 @@ const resources = {
       blog: {
         eyebrow: 'Blog',
         title: 'Notes & writing.',
-        lead: 'Placeholder posts — swap in your own.',
-        posts: [
-          { date: 'June 2026', title: 'Building a 3D portfolio with react-three-fiber' },
-          { date: 'May 2026', title: 'Optimizing huge GLB models for the web' },
-          { date: 'April 2026', title: 'Smooth camera motion in the browser' },
-        ],
+        lead: 'Articles will appear here soon.',
       },
       contact: {
         eyebrow: 'Contact',
@@ -91,20 +86,20 @@ const resources = {
         stats: ['25+ Jahre', 'Barrierefreiheit', 'Fintech', 'Design Systems'],
         blocks: [
           {
-            title: 'Design & UX',
-            text: 'UI/UX-Design und Design Systeme sind für mich keine Randnotiz — von der Idee bis zu konsistenten, skalierbaren Komponenten.',
-          },
-          {
-            title: 'Entwicklung',
+            title: 'Frontend Entwicklung',
             text: 'Mit React, Angular und Vue.js realisiere ich skalierbare Frontends — von wiederverwendbaren Komponenten und Libraries bis zu Microfrontend-Architekturen, die langfristig wartbar und im Alltag zuverlässig funktionieren.',
-          },
-          {
-            title: 'Barrierefreiheit',
-            text: 'Barrierefreiheit gehört für mich zum guten Handwerk — auch beim Aufbau von Komponenten: saubere Semantik, Tastaturbedienung und Screenreader von Anfang an, WCAG im Blick und praxisnahe Tests mit etablierten Tools.',
           },
           {
             title: 'Branchen & KI',
             text: 'Start-up, Fintech, Bank, Logistik, Automotive oder Behörde — und KI, wenn sie Produkte spürbar besser macht.',
+          },
+          {
+            title: 'Design & UX',
+            text: 'UI/UX-Design und Design Systeme sind für mich keine Randnotiz — von der Idee bis zu konsistenten, skalierbaren Komponenten.',
+          },
+          {
+            title: 'Barrierefreiheit',
+            text: 'Barrierefreiheit gehört für mich zum guten Handwerk — auch beim Aufbau von Komponenten: saubere Semantik, Tastaturbedienung und Screenreader von Anfang an, WCAG im Blick und praxisnahe Tests mit etablierten Tools.',
           },
         ],
       },
@@ -116,12 +111,7 @@ const resources = {
       blog: {
         eyebrow: 'Blog',
         title: 'Notizen & Geschriebenes.',
-        lead: 'Platzhalter-Beiträge — tausch sie gegen deine eigenen aus.',
-        posts: [
-          { date: 'Juni 2026', title: 'Ein 3D-Portfolio mit react-three-fiber bauen' },
-          { date: 'Mai 2026', title: 'Riesige GLB-Modelle fürs Web optimieren' },
-          { date: 'April 2026', title: 'Sanfte Kamerafahrten im Browser' },
-        ],
+        lead: 'Beiträge folgen hier in Kürze.',
       },
       contact: {
         eyebrow: 'Kontakt',
@@ -157,20 +147,20 @@ const resources = {
         stats: ['25+ años', 'Accesibilidad', 'Fintech', 'Design Systems'],
         blocks: [
           {
-            title: 'Diseño & UX',
-            text: 'El diseño UI/UX y los design systems son el centro de mi trabajo — desde la idea hasta componentes consistentes y escalables.',
-          },
-          {
-            title: 'Desarrollo',
+            title: 'Desarrollo Frontend',
             text: 'Con React, Angular y Vue.js desarrollo frontends escalables — desde componentes y librerías reutilizables hasta arquitecturas microfrontend, pensadas para un mantenimiento sostenible y un uso fiable en el día a día.',
-          },
-          {
-            title: 'Accesibilidad',
-            text: 'La accesibilidad forma parte de cómo desarrollo — también al construir componentes: marcado semántico, teclado y lectores de pantalla desde el inicio, WCAG como referencia y pruebas prácticas con herramientas consolidadas.',
           },
           {
             title: 'Sectores & IA',
             text: 'Startups, fintech, banca, logística, automoción y sector público — y IA generativa cuando mejora de verdad el producto.',
+          },
+          {
+            title: 'Diseño & UX',
+            text: 'El diseño UI/UX y los design systems son el centro de mi trabajo — desde la idea hasta componentes consistentes y escalables.',
+          },
+          {
+            title: 'Accesibilidad',
+            text: 'La accesibilidad forma parte de cómo desarrollo — también al construir componentes: marcado semántico, teclado y lectores de pantalla desde el inicio, WCAG como referencia y pruebas prácticas con herramientas consolidadas.',
           },
         ],
       },
@@ -182,12 +172,7 @@ const resources = {
       blog: {
         eyebrow: 'Blog',
         title: 'Notas y escritos.',
-        lead: 'Entradas de ejemplo — cámbialas por las tuyas.',
-        posts: [
-          { date: 'Junio 2026', title: 'Crear un portafolio 3D con react-three-fiber' },
-          { date: 'Mayo 2026', title: 'Optimizar modelos GLB enormes para la web' },
-          { date: 'Abril 2026', title: 'Movimiento de cámara suave en el navegador' },
-        ],
+        lead: 'Los artículos aparecerán aquí pronto.',
       },
       contact: {
         eyebrow: 'Contacto',
@@ -223,20 +208,20 @@ const resources = {
         stats: ['25+ ans', 'Accessibilité', 'Fintech', 'Design Systems'],
         blocks: [
           {
-            title: 'Design & UX',
-            text: 'Le design UI/UX et les design systems sont au cœur de mon travail — de l’idée aux composants cohérents et évolutifs.',
-          },
-          {
-            title: 'Développement',
+            title: 'Développement frontend',
             text: 'Avec React, Angular et Vue.js, je conçois des frontends évolutifs — des composants et bibliothèques réutilisables aux architectures microfrontend, pensés pour une maintenance durable et une utilisation fiable au quotidien.',
-          },
-          {
-            title: 'Accessibilité',
-            text: 'L’accessibilité fait partie de ma façon de développer — y compris pour les composants : balisage sémantique, clavier et lecteurs d’écran dès la conception, WCAG comme repère et tests concrets avec des outils éprouvés.',
           },
           {
             title: 'Secteurs & IA',
             text: 'Start-up, fintech, banque, logistique, automobile ou secteur public — et l’IA générative quand elle améliore vraiment le produit.',
+          },
+          {
+            title: 'Design & UX',
+            text: 'Le design UI/UX et les design systems sont au cœur de mon travail — de l’idée aux composants cohérents et évolutifs.',
+          },
+          {
+            title: 'Accessibilité',
+            text: 'L’accessibilité fait partie de ma façon de développer — y compris pour les composants : balisage sémantique, clavier et lecteurs d’écran dès la conception, WCAG comme repère et tests concrets avec des outils éprouvés.',
           },
         ],
       },
@@ -248,12 +233,7 @@ const resources = {
       blog: {
         eyebrow: 'Blog',
         title: 'Notes & écrits.',
-        lead: 'Articles d’exemple — remplace-les par les tiens.',
-        posts: [
-          { date: 'Juin 2026', title: 'Créer un portfolio 3D avec react-three-fiber' },
-          { date: 'Mai 2026', title: 'Optimiser d’énormes modèles GLB pour le web' },
-          { date: 'Avril 2026', title: 'Mouvement de caméra fluide dans le navigateur' },
-        ],
+        lead: 'Les articles arriveront bientôt ici.',
       },
       contact: {
         eyebrow: 'Contact',
