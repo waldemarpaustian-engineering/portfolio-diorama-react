@@ -22,7 +22,6 @@ const resources = {
         eyebrow: 'About me',
         title: 'Hi, I’m Waldemar.',
         intro: 'I’m a frontend developer with more than 25 years of experience building interfaces that feel clear, fast, and thoughtful.',
-        stats: ['25+ years', 'Accessibility', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Frontend Development',
@@ -83,7 +82,6 @@ const resources = {
         eyebrow: 'Über mich',
         title: 'Hallo, ich bin Waldemar.',
         intro: 'Ich bin Frontend-Entwickler — seit über 25 Jahren baue ich Weboberflächen, die klar, schnell und angenehm zu nutzen sind.',
-        stats: ['25+ Jahre', 'Barrierefreiheit', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Frontend Entwicklung',
@@ -144,7 +142,6 @@ const resources = {
         eyebrow: 'Sobre mí',
         title: 'Hola, soy Waldemar.',
         intro: 'Soy desarrollador frontend con más de 25 años de experiencia creando interfaces claras, rápidas y agradables de usar.',
-        stats: ['25+ años', 'Accesibilidad', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Desarrollo Frontend',
@@ -205,7 +202,6 @@ const resources = {
         eyebrow: 'À propos',
         title: 'Bonjour, je suis Waldemar.',
         intro: 'Je suis développeur frontend avec plus de 25 ans d’expérience à créer des interfaces claires, rapides et agréables à utiliser.',
-        stats: ['25+ ans', 'Accessibilité', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Développement frontend',

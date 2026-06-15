@@ -7,7 +7,6 @@ export default function About() {
   const { t } = useTranslation()
   const theme = useTheme()
   const blocks = t('about.blocks', { returnObjects: true })
-  const stats = t('about.stats', { returnObjects: true })
   const portrait = theme === 'dark' ? '/monitor-portrait.png' : '/monitor-portrait-light.png'
 
   return (
@@ -19,9 +18,6 @@ export default function About() {
             <div className="eyebrow">{t('about.eyebrow')}</div>
             <h1 className="title">{t('about.title')}</h1>
             <p className="lead about-hero__intro">{t('about.intro')}</p>
-            <ul className="about-stats">
-              {stats.map((s) => <li key={s}>{s}</li>)}
-            </ul>
           </div>
           <img
             className="about-hero__portrait"

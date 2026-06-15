@@ -445,24 +445,6 @@ html[data-theme="dark"] .about-hero__portrait {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
-.about-stats {
-  margin-top: 22px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  list-style: none;
-  padding: 0;
-}
-.about-stats li {
-  background: var(--card-bg);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 7px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-}
-
 .about-blocks {
   margin-top: 52px;
   display: grid;
