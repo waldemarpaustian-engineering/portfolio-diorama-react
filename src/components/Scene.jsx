@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Loader } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as THREE from 'three'
@@ -11,6 +11,7 @@ import Board from './Board.jsx'
 import Fireflies from './Fireflies.jsx'
 import SoundToggle from './SoundToggle.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
+import SceneLoader from './SceneLoader.jsx'
 import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
@@ -275,7 +276,7 @@ export default function Scene() {
         aria-hidden={portal < 0.01}
       />
 
-      <Loader />
+      <SceneLoader />
     </div>
   )
 }
