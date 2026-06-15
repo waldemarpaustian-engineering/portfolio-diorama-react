@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, useProgress } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as THREE from 'three'
@@ -203,13 +203,30 @@ export default function Scene() {
   const controlsRef = useRef()
   const [flyTarget, setFlyTarget] = useState(null)
   const [portal, setPortal] = useState(0)
+  const [revealed, setRevealed] = useState(false)
+  const { active: loading } = useProgress()
   const { t } = useTranslation()
   const uiFade = Math.max(0, 1 - portal * 1.6)
   const blur = portal * 18
 
+  useEffect(() => {
+    if (loading) {
+      setRevealed(false)
+      return undefined
+    }
+    const t = setTimeout(() => setRevealed(true), 120)
+    return () => clearTimeout(t)
+  }, [loading])
+
+  const uiStyle = {
+    opacity: revealed ? uiFade : 0,
+    transform: revealed ? 'translateY(0)' : 'translateY(12px)',
+    transition: 'opacity 1s ease 0.35s, transform 1s ease 0.35s',
+  }
+
   return (
     <div className="stage">
-      <nav className="nav">
+      <nav className="nav" style={uiStyle}>
         <div className="brand"><span className="mk" /> Waldemar&nbsp;Paustian</div>
         <div className="nav-actions">
           <LanguageSwitcher />
@@ -217,11 +234,12 @@ export default function Scene() {
         </div>
       </nav>
 
-      <div className="intro" style={{ opacity: uiFade, pointerEvents: uiFade < 0.05 ? 'none' : undefined }}>
+      <div className="intro" style={{ ...uiStyle, pointerEvents: uiFade < 0.05 ? 'none' : undefined }}>
         <h1>{t('nav.title')}</h1>
         <p>{t('nav.subtitle')}</p>
       </div>
 
+      <div className={`stage-canvas${revealed ? ' stage-canvas--in' : ''}`}>
       <Canvas shadows camera={{ position: camPos, fov: 35 }}>
         <hemisphereLight args={['#ffffff', '#cfc6ba', 0.7]} />
         <ambientLight intensity={0.18} />
@@ -264,6 +282,7 @@ export default function Scene() {
           onArrive={navigate}
         />
       </Canvas>
+      </div>
 
       <div
         className="portal-overlay"
