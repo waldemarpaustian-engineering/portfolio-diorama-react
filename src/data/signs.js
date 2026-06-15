@@ -33,7 +33,7 @@ export const SWARMS = [
 // open the site with `?lights`, click the CENTER of the monitor screen, and copy the
 // logged `p` and `nrm` here. hw/hh = half width / half height of the screen plane.
 // Leave as null to disable the overlay.
-export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.890], hw: 0.3, hh: 0.175, portrait: '/monitor-portrait.png', portraitFit: 0.9 }
+export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.890], hw: 0.3, hh: 0.175, portrait: '/monitor-portrait.png', portraitFit: 0.97 }
 
 // Framed boards/posters with crisp image + text overlays. Place each one the same way as
 // the screen: open with `?lights`, click the CENTER of the board, copy the logged `p` and

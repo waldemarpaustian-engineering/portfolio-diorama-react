@@ -10,8 +10,10 @@ import Screen from './Screen.jsx'
 import Board from './Board.jsx'
 import Fireflies from './Fireflies.jsx'
 import SoundToggle from './SoundToggle.jsx'
+import ThemeToggle from './ThemeToggle.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import SceneLoader from './SceneLoader.jsx'
+import { useTheme } from '../hooks/useTheme.js'
 import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
@@ -253,6 +255,7 @@ export default function Scene() {
   const [introDone, setIntroDone] = useState(false)
   const { active: loading } = useProgress()
   const { t } = useTranslation()
+  const theme = useTheme()
   const uiFade = Math.max(0, 1 - portal * 1.6)
   const blur = portal * 18
 
@@ -267,6 +270,7 @@ export default function Scene() {
         <div className="brand"><span className="mk" /> Waldemar&nbsp;Paustian</div>
         <div className="nav-actions">
           <LanguageSwitcher />
+          <ThemeToggle />
           <SoundToggle />
         </div>
       </nav>
@@ -333,7 +337,9 @@ export default function Scene() {
           opacity: portal > 0.004 ? 1 : 0,
           backdropFilter: `blur(${blur}px)`,
           WebkitBackdropFilter: `blur(${blur}px)`,
-          background: `rgba(252, 250, 247, ${portal * 0.92})`,
+          background: theme === 'dark'
+            ? `rgba(8, 8, 14, ${portal * 0.92})`
+            : `rgba(252, 250, 247, ${portal * 0.92})`,
         }}
         aria-hidden={portal < 0.01}
       />

@@ -12,6 +12,7 @@ const resources = {
         subtitle: 'Drag to look around. Click a sign to open a page.',
         back: '← Back to island',
       },
+      theme: { toLight: 'Switch to light mode', toDark: 'Switch to dark mode' },
       signs: { about: 'About Me', works: 'Works', blog: 'Blog', contact: 'Contact' },
       about: {
         eyebrow: 'About me',
@@ -55,6 +56,7 @@ const resources = {
         subtitle: 'Ziehen, um dich umzusehen. Klick auf ein Schild, um eine Seite zu öffnen.',
         back: '← Zurück zur Insel',
       },
+      theme: { toLight: 'Hellmodus', toDark: 'Dunkelmodus' },
       signs: { about: 'Über mich', works: 'Arbeiten', blog: 'Blog', contact: 'Kontakt' },
       about: {
         eyebrow: 'Über mich',
@@ -98,6 +100,7 @@ const resources = {
         subtitle: 'Arrastra para mirar alrededor. Haz clic en un cartel para abrir una página.',
         back: '← Volver a la isla',
       },
+      theme: { toLight: 'Modo claro', toDark: 'Modo oscuro' },
       signs: { about: 'Sobre mí', works: 'Trabajos', blog: 'Blog', contact: 'Contacto' },
       about: {
         eyebrow: 'Sobre mí',
@@ -141,6 +144,7 @@ const resources = {
         subtitle: 'Fais glisser pour regarder autour. Clique sur un panneau pour ouvrir une page.',
         back: '← Retour à l’île',
       },
+      theme: { toLight: 'Mode clair', toDark: 'Mode sombre' },
       signs: { about: 'À propos', works: 'Travaux', blog: 'Blog', contact: 'Contact' },
       about: {
         eyebrow: 'À propos',
