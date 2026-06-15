@@ -14,6 +14,7 @@ import ThemeToggle from './ThemeToggle.jsx'
 import LanguageSwitcher from './LanguageSwitcher.jsx'
 import SceneLoader from './SceneLoader.jsx'
 import MeteorShower from './MeteorShower.jsx'
+import SkyClouds from './SkyClouds.jsx'
 import { useTheme } from '../hooks/useTheme.js'
 import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
@@ -307,6 +308,7 @@ export default function Scene() {
         <directionalLight position={[-7, 5, -7]} intensity={0.4} color="#cfe0ff" />
 
         <Suspense fallback={null}>
+          <SkyClouds />
           <FloatingWorld disabled={!!flyTarget} onSelect={setFlyTarget} />
         </Suspense>
 
