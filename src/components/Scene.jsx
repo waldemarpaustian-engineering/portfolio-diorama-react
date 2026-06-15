@@ -239,7 +239,7 @@ function FloatingWorld({ disabled, onSelect }) {
       ))}
       {SCREEN && <Screen tech={TECH} {...SCREEN} />}
       {BOARDS.map((b, i) => (
-        <Board key={b.src ?? i} {...b} />
+        <Board key={b.gallery?.[0] ?? b.src ?? i} {...b} />
       ))}
     </group>
   )

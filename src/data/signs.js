@@ -33,15 +33,27 @@ export const SWARMS = [
 // open the site with `?lights`, click the CENTER of the monitor screen, and copy the
 // logged `p` and `nrm` here. hw/hh = half width / half height of the screen plane.
 // Leave as null to disable the overlay.
-export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.890], hw: 0.3, hh: 0.175 }
+export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.890], hw: 0.3, hh: 0.175, portrait: '/monitor-portrait.png', portraitFit: 0.9 }
 
 // Framed boards/posters with crisp image + text overlays. Place each one the same way as
 // the screen: open with `?lights`, click the CENTER of the board, copy the logged `p` and
-// `nrm`. `src` = image (omit for text-only), `mode` = 'top' | 'cover' | 'paper',
+// `nrm`. `src` = single image, or use `gallery` = ['/a.png', '/b.png', ...] — click cycles.
 // `lines` = the text, `symbol` = the little glyph below it.
 export const BOARDS = [
-  // board next to the bicycle
-  { src: '/board-art.png', mode: 'top', lines: ['Dream', 'Plan', 'Do'], melody: true, p: [0.4358, -0.4051, 0.5849], nrm: [-0.606, 0.48, 0.635], hw: 0.21, hh: 0.3, down: 0.008, bg: '#f5f0e6', roll: 3 },
+  // board next to the bicycle — click swaps the artwork (add paths to gallery)
+  {
+    mode: 'top',
+    lines: ['Dream', 'Plan', 'Do'],
+    melody: true,
+    gallery: ['/board-art.png', '/board-art-fairy.png', '/board-art-whale.png', '/board-art-robot.png', '/board-art-fox.png'],
+    p: [0.4358, -0.4051, 0.5849],
+    nrm: [-0.606, 0.48, 0.635],
+    hw: 0.21,
+    hh: 0.3,
+    down: 0.008,
+    bg: '#f5f0e6',
+    roll: 3,
+  },
   // poster in front of the desk (text only for now — image to follow, then set src + mode:'top')
   {
     mode: 'paper',

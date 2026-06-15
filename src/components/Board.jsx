@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { makeBoardTexture, drawSymbol } from '../lib/boardTexture.js'
@@ -49,7 +49,7 @@ function drawShimmer(ctx, progress) {
 // With `pulse`, the symbol (e.g. a heart) beats while the cursor hovers the board.
 // `down` / `side` nudge the plane along the board surface (model units) without changing depth.
 export default function Board({
-  src, p, nrm, hw, hh, lines, bg, mode, symbol, symbolColor, textColor, pulse = false, shimmer = true, heartbeat = false, melody = false, down = 0, side = 0, roll = 0,
+  src, gallery, p, nrm, hw, hh, lines, bg, mode, symbol, symbolColor, textColor, pulse = false, shimmer = true, heartbeat = false, melody = false, down = 0, side = 0, roll = 0,
 }) {
   const baseRef = useRef(null)
   const symRef = useRef(null)
@@ -57,6 +57,16 @@ export default function Board({
   const anim = useRef({ t: 0, beat: 1, hov: 0, idleDrawn: false })
   const heart = useRef(null)
   const tune = useRef(null)
+  const [imageIndex, setImageIndex] = useState(0)
+
+  const images = useMemo(() => {
+    if (gallery?.length) return gallery
+    if (src) return [src]
+    return []
+  }, [gallery, src])
+
+  const currentSrc = images[imageIndex] ?? null
+  const canCycle = images.length > 1
 
   useEffect(() => {
     if (!heartbeat) return undefined
@@ -99,17 +109,17 @@ export default function Board({
       symRef.current = r.symbol
       anim.current.idleDrawn = false
     }
-    if (!src) {
+    if (!currentSrc) {
       apply(null)
       return undefined
     }
     const img = new Image()
     img.onload = () => apply(img)
-    img.src = src
+    img.src = currentSrc
     return () => {
       img.onload = null
     }
-  }, [src, lines, bg, mode, symbol, symbolColor, textColor, pulse])
+  }, [currentSrc, lines, bg, mode, symbol, symbolColor, textColor, pulse])
 
   // Orthonormal basis on the board surface: r = right, u = up, f = outward normal.
   const basis = useMemo(() => {
@@ -175,19 +185,27 @@ export default function Board({
   const w = (2 * hw) / MODEL_SCALE
   const h = (2 * hh) / MODEL_SCALE
 
-  const hoverProps = pulse || melody
+  const hoverProps = pulse || melody || canCycle
     ? {
         onPointerOver: (e) => {
           e.stopPropagation()
           hoverRef.current = true
+          if (canCycle) document.body.style.cursor = 'pointer'
           if (heartbeat) heart.current?.start()
           if (melody) tune.current?.start()
         },
         onPointerOut: () => {
           hoverRef.current = false
+          if (canCycle) document.body.style.cursor = 'default'
           if (heartbeat) heart.current?.stop()
           if (melody) tune.current?.stop()
         },
+        onClick: canCycle
+          ? (e) => {
+              e.stopPropagation()
+              setImageIndex((i) => (i + 1) % images.length)
+            }
+          : undefined,
       }
     : {}
 

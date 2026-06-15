@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { drawTech, drawCRT } from '../lib/screenTexture.js'
+import { drawTech, drawCRT, drawPortrait } from '../lib/screenTexture.js'
 import { createMonitorGlitch } from '../lib/monitorGlitch.js'
 import { MODEL_SCALE } from '../data/signs.js'
 
@@ -17,7 +17,7 @@ function frameRand(t, n) {
 
 // A crisp, self-lit overlay on the monitor that cycles through technology logos.
 // On hover it glitches like a failing CRT and plays a crackly static sound.
-export default function Screen({ tech, p, nrm, hw, hh }) {
+export default function Screen({ tech, portrait, portraitFit = 0.9, p, nrm, hw, hh }) {
   const canvas = useMemo(() => {
     const c = document.createElement('canvas')
     c.width = 1024
@@ -53,6 +53,15 @@ export default function Screen({ tech, p, nrm, hw, hh }) {
   const glowRef = useRef()
   const groupRef = useRef()
   const glitchSound = useRef(null)
+  const portraitImg = useRef(null)
+
+  useEffect(() => {
+    if (!portrait) return undefined
+    const img = new Image()
+    img.src = portrait
+    img.onload = () => { portraitImg.current = img }
+    return () => { portraitImg.current = null }
+  }, [portrait])
 
   useEffect(() => {
     glitchSound.current = createMonitorGlitch()
@@ -75,6 +84,7 @@ export default function Screen({ tech, p, nrm, hw, hh }) {
 
     const fading = a.t > PERIOD - FADE
     const glitching = a.hov > 0.02
+    const showPortrait = glitching && portraitImg.current?.complete
     // Repaint every frame while glitching (animated overlay), or when the slide changes/fades.
     if (glitching || fading || a.lastIdx !== a.idx) {
       const ctx = canvas.getContext('2d')
@@ -82,12 +92,18 @@ export default function Screen({ tech, p, nrm, hw, hh }) {
       const H = canvas.height
       ctx.clearRect(0, 0, W, H)
 
-      drawTech(ctx, W, H, tech[a.idx], 1)
-      if (fading) {
-        const next = tech[(a.idx + 1) % tech.length]
-        drawTech(ctx, W, H, next, (a.t - (PERIOD - FADE)) / FADE)
+      if (showPortrait) {
+        if (a.hov < 0.98) drawTech(ctx, W, H, tech[a.idx], 1 - a.hov)
+        drawPortrait(ctx, W, H, portraitImg.current, a.hov, portraitFit)
+        drawCRT(ctx, W, H, a.hov, a.scan)
+      } else {
+        drawTech(ctx, W, H, tech[a.idx], 1)
+        if (fading) {
+          const next = tech[(a.idx + 1) % tech.length]
+          drawTech(ctx, W, H, next, (a.t - (PERIOD - FADE)) / FADE)
+        }
+        if (glitching) drawCRT(ctx, W, H, a.hov, a.scan)
       }
-      if (glitching) drawCRT(ctx, W, H, a.hov, a.scan)
 
       a.lastIdx = a.idx
       texture.needsUpdate = true

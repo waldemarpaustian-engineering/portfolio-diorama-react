@@ -49,6 +49,22 @@ export function drawTech(ctx, W, H, icon, alpha = 1) {
   ctx.restore()
 }
 
+// Portrait on the monitor hover state — fits inside the frame with a little margin.
+export function drawPortrait(ctx, W, H, img, alpha = 1, fit = 0.9) {
+  if (!img?.complete || !img.naturalWidth) return
+  ctx.save()
+  ctx.globalAlpha = alpha
+  ctx.fillStyle = '#0a0c10'
+  ctx.fillRect(0, 0, W, H)
+  const iw = img.naturalWidth
+  const ih = img.naturalHeight
+  const scale = Math.min(W / iw, H / ih) * fit
+  const dw = iw * scale
+  const dh = ih * scale
+  ctx.drawImage(img, 0, 0, iw, ih, (W - dw) / 2, (H - dh) / 2, dw, dh)
+  ctx.restore()
+}
+
 // Pseudo-random 0..1, stable for one animation frame (changes every ~16 ms).
 function frameRand(t, n) {
   const f = Math.floor(t * 60)
