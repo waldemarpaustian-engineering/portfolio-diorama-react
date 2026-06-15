@@ -36,6 +36,53 @@ function easeOutQuad(t) {
   return 1 - (1 - t) ** 2
 }
 
+function easeOutCubic(t) {
+  return 1 - (1 - t) ** 3
+}
+
+// Slow dolly toward the island after assets load — replaces blur/fog reveal.
+const INTRO_DURATION = 2.1
+const INTRO_PULLBACK = 1.32
+
+function IntroCamera({ controlsRef, ready, onDone }) {
+  const { camera } = useThree()
+  const anim = useRef(null)
+  const finished = useRef(false)
+
+  const endPos = useMemo(() => new THREE.Vector3(...camPos), [])
+  const startPos = useMemo(() => {
+    const v = endPos.clone().multiplyScalar(INTRO_PULLBACK)
+    v.y += 0.45
+    return v
+  }, [endPos])
+
+  useEffect(() => {
+    if (!ready || finished.current) return
+    camera.position.copy(startPos)
+    anim.current = { t: 0 }
+    if (controlsRef.current) controlsRef.current.enabled = false
+  }, [ready, camera, controlsRef, startPos])
+
+  useFrame((_, delta) => {
+    const a = anim.current
+    if (!a || finished.current) return
+    a.t = Math.min(1, a.t + delta / INTRO_DURATION)
+    const e = easeOutCubic(a.t)
+    camera.position.lerpVectors(startPos, endPos, e)
+    if (controlsRef.current) {
+      controlsRef.current.update()
+      if (a.t >= 1) controlsRef.current.enabled = true
+    }
+    if (a.t >= 1) {
+      anim.current = null
+      finished.current = true
+      onDone?.()
+    }
+  })
+
+  return null
+}
+
 function CameraRig({ controlsRef, target, onPortalProgress, onArrive }) {
   const { camera } = useThree()
   const anim = useRef(null)
@@ -203,25 +250,15 @@ export default function Scene() {
   const controlsRef = useRef()
   const [flyTarget, setFlyTarget] = useState(null)
   const [portal, setPortal] = useState(0)
-  const [revealed, setRevealed] = useState(false)
+  const [introDone, setIntroDone] = useState(false)
   const { active: loading } = useProgress()
   const { t } = useTranslation()
   const uiFade = Math.max(0, 1 - portal * 1.6)
   const blur = portal * 18
 
-  useEffect(() => {
-    if (loading) {
-      setRevealed(false)
-      return undefined
-    }
-    const t = setTimeout(() => setRevealed(true), 120)
-    return () => clearTimeout(t)
-  }, [loading])
-
   const uiStyle = {
-    opacity: revealed ? uiFade : 0,
-    transform: revealed ? 'translateY(0)' : 'translateY(12px)',
-    transition: 'opacity 1s ease 0.35s, transform 1s ease 0.35s',
+    opacity: introDone ? uiFade : 0,
+    transition: 'opacity 1.1s ease 0.15s',
   }
 
   return (
@@ -239,7 +276,7 @@ export default function Scene() {
         <p>{t('nav.subtitle')}</p>
       </div>
 
-      <div className={`stage-canvas${revealed ? ' stage-canvas--in' : ''}`}>
+      <div className="stage-canvas">
       <Canvas shadows camera={{ position: camPos, fov: 35 }}>
         <hemisphereLight args={['#ffffff', '#cfc6ba', 0.7]} />
         <ambientLight intensity={0.18} />
@@ -273,6 +310,12 @@ export default function Scene() {
           maxDistance={22}
           minPolarAngle={0.25}
           maxPolarAngle={1.5}
+        />
+
+        <IntroCamera
+          controlsRef={controlsRef}
+          ready={!loading}
+          onDone={() => setIntroDone(true)}
         />
 
         <CameraRig
