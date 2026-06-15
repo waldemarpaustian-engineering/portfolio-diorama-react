@@ -2,29 +2,25 @@
 html[data-theme="light"] {
   --ink: #2b2a33;
   --muted: #7a7782;
-  --line: #e7e3dd;
-  --accent: #5b6cff;
-  --surface: rgba(255, 255, 255, 0.8);
+  --line: #d6e4f0;
+  --accent: #4a7fd4;
+  --surface: rgba(255, 255, 255, 0.82);
   --surface-hover: #fff;
   --surface-active-fg: #fff;
   --surface-active-bg: var(--ink);
   --bg-stage:
-    radial-gradient(60% 60% at 18% 22%, #ffd9c2 0%, rgba(255, 217, 194, 0) 60%),
-    radial-gradient(55% 55% at 82% 26%, #c9d8ff 0%, rgba(201, 216, 255, 0) 62%),
-    radial-gradient(70% 70% at 70% 85%, #ffd0e4 0%, rgba(255, 208, 228, 0) 60%),
-    radial-gradient(60% 60% at 25% 80%, #d8f0e6 0%, rgba(216, 240, 230, 0) 60%),
-    linear-gradient(180deg, #fbf7f3, #f2ecf6);
+    radial-gradient(90% 80% at 50% -10%, #9ec9ef 0%, rgba(158, 201, 239, 0) 68%),
+    radial-gradient(70% 60% at 88% 92%, rgba(255, 236, 210, 0.35) 0%, rgba(255, 236, 210, 0) 58%),
+    linear-gradient(180deg, #a8d4f5 0%, #cbe5f7 38%, #e8f4fc 72%, #f4f9fe 100%);
   --bg-page:
-    radial-gradient(50% 50% at 15% 12%, #ffd9c2 0%, rgba(255, 217, 194, 0) 60%),
-    radial-gradient(50% 50% at 88% 18%, #c9d8ff 0%, rgba(201, 216, 255, 0) 62%),
-    radial-gradient(60% 60% at 80% 95%, #ffd0e4 0%, rgba(255, 208, 228, 0) 60%),
-    linear-gradient(180deg, #fbf7f3, #f2ecf6);
+    radial-gradient(85% 75% at 50% -5%, #9ec9ef 0%, rgba(158, 201, 239, 0) 65%),
+    linear-gradient(180deg, #a8d4f5 0%, #d4ebf8 45%, #eef6fc 100%);
   --card-bg: #fff;
-  --card-thumb: linear-gradient(135deg, #ffd9c2, #c9d8ff);
-  --loader-track: #e7e3dd;
-  --loader-track-border: #d8d2c8;
-  --loader-bar: linear-gradient(90deg, #e8a87c, #8fa8e8 55%, var(--ink));
-  --page-nav-blur: rgba(251, 247, 243, 0.72);
+  --card-thumb: linear-gradient(135deg, #b8ddf5, #dceef9);
+  --loader-track: #d6e4f0;
+  --loader-track-border: #c5d8e8;
+  --loader-bar: linear-gradient(90deg, #7eb8e8, #5d9fe4 55%, var(--ink));
+  --page-nav-blur: rgba(238, 246, 252, 0.78);
   color-scheme: light;
 }
 
@@ -53,8 +49,11 @@ html, body, #root { height: 100%; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Helvetica, Arial, sans-serif;
   color: var(--ink);
-  background: #030308;
+  background: #eef6fc;
   -webkit-font-smoothing: antialiased;
+}
+html[data-theme="dark"] body {
+  background: #030308;
 }
 
 .starfield {

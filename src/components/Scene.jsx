@@ -313,7 +313,13 @@ export default function Scene() {
         <OrbitControls
           ref={controlsRef}
           enableDamping
-          enablePan={false}
+          enablePan
+          zoomToCursor
+          mouseButtons={{
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.PAN,
+          }}
           target={[0, 0, 0]}
           minDistance={5}
           maxDistance={22}
@@ -346,7 +352,7 @@ export default function Scene() {
           WebkitBackdropFilter: `blur(${blur}px)`,
           background: theme === 'dark'
             ? `rgba(8, 8, 14, ${portal * 0.92})`
-            : `rgba(252, 250, 247, ${portal * 0.92})`,
+            : `rgba(238, 246, 252, ${portal * 0.92})`,
         }}
         aria-hidden={portal < 0.01}
       />
