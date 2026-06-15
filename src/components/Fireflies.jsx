@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createInsectBuzz } from '../lib/insectBuzz.js'
 
@@ -18,7 +18,6 @@ function getSprite(glow) {
     g.addColorStop(0.25, 'rgba(255,226,168,0.85)')
     g.addColorStop(1, 'rgba(255,200,120,0)')
   } else {
-    // a small dark insect body: solid-ish core that fades softly at the edge
     g.addColorStop(0, 'rgba(255,255,255,1)')
     g.addColorStop(0.55, 'rgba(255,255,255,1)')
     g.addColorStop(0.8, 'rgba(255,255,255,0.6)')
@@ -32,15 +31,34 @@ function getSprite(glow) {
   return t
 }
 
-// A small swarm of motes that drift around a point (e.g. a lantern). With `glow` (default)
-// they look like warm fireflies; with `glow: false` they're small dark insects buzzing nearby.
-// With `buzz`, hovering the swarm plays a gentle wing hum.
+// A small swarm of motes that drift around a point (e.g. a lantern). With `follow`, motes
+// drift toward the cursor when it comes close and trail behind with staggered lag.
 export default function Fireflies({
-  p, count = 12, radius = 0.22, color = '#ffd9a0', size = 0.05, speed = 1, glow = true, buzz = false,
+  p,
+  count = 12,
+  radius = 0.22,
+  color = '#ffd9a0',
+  size = 0.05,
+  speed = 1,
+  glow = true,
+  buzz = false,
+  follow = false,
+  followRadius,
 }) {
   const tex = useMemo(() => getSprite(glow), [glow])
   const refs = useRef([])
   const buzzSound = useRef(null)
+  const groupRef = useRef()
+  const { camera } = useThree()
+  const raycaster = useMemo(() => new THREE.Raycaster(), [])
+  const plane = useMemo(() => new THREE.Plane(), [])
+  const planeNormal = useMemo(() => new THREE.Vector3(), [])
+  const hitPoint = useMemo(() => new THREE.Vector3(), [])
+  const localCursor = useMemo(() => new THREE.Vector3(), [])
+  const worldCenter = useMemo(() => new THREE.Vector3(), [])
+  const smooth = useRef({ x: 0, y: 0, z: 0, pull: 0 })
+
+  const reach = followRadius ?? radius * 4.2
 
   useEffect(() => {
     if (!buzz) return undefined
@@ -51,7 +69,6 @@ export default function Fireflies({
     }
   }, [buzz])
 
-  // Per-mote wander parameters: an ellipsoidal orbit + random offset, phase and twinkle.
   const parts = useMemo(
     () =>
       Array.from({ length: count }, () => ({
@@ -74,19 +91,57 @@ export default function Fireflies({
     [count, radius, size],
   )
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const t = state.clock.elapsedTime * speed
+    const sm = smooth.current
+    let targetPull = 0
+
+    if (follow && groupRef.current) {
+      groupRef.current.getWorldPosition(worldCenter)
+      camera.getWorldDirection(planeNormal)
+      plane.setFromNormalAndCoplanarPoint(planeNormal, worldCenter)
+      raycaster.setFromCamera(state.pointer, camera)
+      if (raycaster.ray.intersectPlane(plane, hitPoint)) {
+        localCursor.copy(groupRef.current.worldToLocal(hitPoint))
+        const dist = localCursor.length()
+        if (dist < reach) {
+          targetPull = (1 - dist / reach) ** 1.4
+          const chase = delta * (5 + targetPull * 8)
+          sm.x += (localCursor.x - sm.x) * chase
+          sm.y += (localCursor.y - sm.y) * chase
+          sm.z += (localCursor.z - sm.z) * chase
+        }
+      }
+    }
+
+    sm.pull += (targetPull - sm.pull) * Math.min(1, delta * 6)
+    if (sm.pull < 0.01 && targetPull === 0) {
+      const home = delta * 3
+      sm.x *= 1 - home
+      sm.y *= 1 - home
+      sm.z *= 1 - home
+    }
+
     for (let i = 0; i < parts.length; i++) {
       const d = parts[i]
       const s = refs.current[i]
       if (!s) continue
-      // smooth orbit + a fast small jitter so insects look like they're buzzing
+
       const jitter = glow ? 0 : radius * 0.12
-      s.position.set(
-        d.cx + Math.sin(t * d.sx + d.px) * d.rx + (jitter ? Math.sin(t * 9 + d.px) * jitter : 0),
-        d.cy + Math.sin(t * d.sy + d.py) * d.ry + (jitter ? Math.cos(t * 11 + d.py) * jitter : 0),
-        d.cz + Math.cos(t * d.sz + d.pz) * d.rz + (jitter ? Math.sin(t * 10 + d.pz) * jitter : 0),
-      )
+      let bx = d.cx + Math.sin(t * d.sx + d.px) * d.rx + (jitter ? Math.sin(t * 9 + d.px) * jitter : 0)
+      let by = d.cy + Math.sin(t * d.sy + d.py) * d.ry + (jitter ? Math.cos(t * 11 + d.py) * jitter : 0)
+      let bz = d.cz + Math.cos(t * d.sz + d.pz) * d.rz + (jitter ? Math.sin(t * 10 + d.pz) * jitter : 0)
+
+      if (follow && sm.pull > 0.01) {
+        const lag = 0.22 + (i / parts.length) * 0.58
+        const a = sm.pull * lag
+        bx += (sm.x - bx) * a
+        by += (sm.y - by) * a
+        bz += (sm.z - bz) * a
+      }
+
+      s.position.set(bx, by, bz)
+
       const tw = 0.5 + 0.5 * Math.sin(t * d.tw + d.tp)
       if (glow) {
         s.material.opacity = 0.3 + 0.7 * tw
@@ -99,7 +154,7 @@ export default function Fireflies({
   })
 
   return (
-    <group position={p}>
+    <group ref={groupRef} position={p}>
       {buzz && (
         <mesh
           onPointerOver={(e) => {
