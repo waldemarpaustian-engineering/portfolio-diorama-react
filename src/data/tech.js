@@ -5,6 +5,8 @@ import {
   siReact,
   siTypescript,
   siJavascript,
+  siHtml5,
+  siSass,
   siAngular,
   siVuedotjs,
   siNodedotjs,
@@ -22,6 +24,8 @@ import {
 // simple-icons has no dedicated "Angular Material" logo, so we reuse the Material Design
 // mark (Angular Material is Google's Material Design for Angular) with a fitting label.
 const angularMaterial = { ...siMaterialdesign, title: 'Angular Material' }
+const html = { ...siHtml5, title: 'HTML' }
+const scss = { ...siSass, title: 'SCSS' }
 
 // simple-icons no longer ships an OpenAI/ChatGPT logo (trademark), so we define it here.
 const chatgpt = {
@@ -34,6 +38,8 @@ export const TECH = [
   siReact,
   siTypescript,
   siJavascript,
+  html,
+  scss,
   siAngular,
   angularMaterial,
   siVuedotjs,

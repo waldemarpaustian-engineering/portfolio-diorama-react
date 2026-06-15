@@ -21,8 +21,22 @@ const resources = {
       about: {
         eyebrow: 'About me',
         title: 'Hi, I’m Waldemar.',
-        lead: 'I’m a frontend developer with more than 25 years of experience building interfaces that feel clear, fast, and thoughtful. UI/UX design, design systems, and solid architecture go hand in hand for me — as does using AI and generative AI when it genuinely improves the product. I’ve worked across startups, fintech, banking, logistics, automotive, and the public sector, always with a focus on solutions that work well for users and teams alike.',
-        chips: ['UI/UX Design', 'Design Systems', 'AI & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
+        intro: 'I’m a frontend developer with more than 25 years of experience building interfaces that feel clear, fast, and thoughtful.',
+        stats: ['25+ years', 'Fintech', 'Design Systems'],
+        blocks: [
+          {
+            title: 'Design & UX',
+            text: 'UI/UX design and design systems are core to how I work — from first concept to consistent, scalable components.',
+          },
+          {
+            title: 'Engineering',
+            text: 'React, Angular, Vue.js and solid architecture: I build frontends that teams can maintain and users enjoy using.',
+          },
+          {
+            title: 'Industries & AI',
+            text: 'Startups, fintech, banking, logistics, automotive and the public sector — plus AI and generative AI when it genuinely improves the product.',
+          },
+        ],
       },
       works: {
         eyebrow: 'Works',
@@ -69,8 +83,22 @@ const resources = {
       about: {
         eyebrow: 'Über mich',
         title: 'Hallo, ich bin Waldemar.',
-        lead: 'Ich bin Frontend-Entwickler — seit über 25 Jahren baue ich Weboberflächen, die klar, schnell und angenehm zu nutzen sind. UI/UX-Design, Design Systeme und saubere Architektur gehören für mich zusammen — ebenso wie KI und generative AI, wenn sie Produkte spürbar besser machen. Ob Start-up, Fintech, Bank, Logistik, Automotive oder Behörde: Mir sind Lösungen wichtig, die für Nutzer und Team gleichermaßen gut funktionieren.',
-        chips: ['UI/UX Design', 'Design Systems', 'KI & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
+        intro: 'Ich bin Frontend-Entwickler — seit über 25 Jahren baue ich Weboberflächen, die klar, schnell und angenehm zu nutzen sind.',
+        stats: ['25+ Jahre', 'Fintech', 'Design Systems'],
+        blocks: [
+          {
+            title: 'Design & UX',
+            text: 'UI/UX-Design und Design Systeme sind für mich keine Randnotiz — von der Idee bis zu konsistenten, skalierbaren Komponenten.',
+          },
+          {
+            title: 'Entwicklung',
+            text: 'React, Angular, Vue.js und saubere Architektur: ich entwickle Frontends, die Teams pflegen und Nutzer gern bedienen.',
+          },
+          {
+            title: 'Branchen & KI',
+            text: 'Start-up, Fintech, Bank, Logistik, Automotive oder Behörde — und KI, wenn sie Produkte spürbar besser macht.',
+          },
+        ],
       },
       works: {
         eyebrow: 'Arbeiten',
@@ -117,8 +145,22 @@ const resources = {
       about: {
         eyebrow: 'Sobre mí',
         title: 'Hola, soy Waldemar.',
-        lead: 'Soy desarrollador frontend con más de 25 años de experiencia creando interfaces claras, rápidas y agradables de usar. Para mí, el diseño UI/UX, los design systems y una arquitectura sólida van de la mano — al igual que la IA y la IA generativa cuando mejoran de verdad el producto. He trabajado en startups, fintech, banca, logística, automoción y sector público, siempre con foco en soluciones que funcionan bien para usuarios y equipos.',
-        chips: ['UI/UX Design', 'Design Systems', 'IA & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
+        intro: 'Soy desarrollador frontend con más de 25 años de experiencia creando interfaces claras, rápidas y agradables de usar.',
+        stats: ['25+ años', 'Fintech', 'Design Systems'],
+        blocks: [
+          {
+            title: 'Diseño & UX',
+            text: 'El diseño UI/UX y los design systems son el centro de mi trabajo — desde la idea hasta componentes consistentes y escalables.',
+          },
+          {
+            title: 'Desarrollo',
+            text: 'React, Angular, Vue.js y arquitectura sólida: construyo frontends que los equipos pueden mantener y los usuarios disfrutan.',
+          },
+          {
+            title: 'Sectores & IA',
+            text: 'Startups, fintech, banca, logística, automoción y sector público — y IA generativa cuando mejora de verdad el producto.',
+          },
+        ],
       },
       works: {
         eyebrow: 'Trabajos',
@@ -165,8 +207,22 @@ const resources = {
       about: {
         eyebrow: 'À propos',
         title: 'Bonjour, je suis Waldemar.',
-        lead: 'Je suis développeur frontend avec plus de 25 ans d’expérience à créer des interfaces claires, rapides et agréables à utiliser. Le design UI/UX, les design systems et une architecture solide vont de pair pour moi — tout comme l’IA et l’IA générative quand elles améliorent réellement le produit. Start-up, fintech, banque, logistique, automobile ou secteur public : je vise des solutions qui fonctionnent pour les utilisateurs comme pour les équipes.',
-        chips: ['UI/UX Design', 'Design Systems', 'IA & GenAI', 'React', 'Angular', 'Vue.js', 'HTML', 'CSS', 'Figma'],
+        intro: 'Je suis développeur frontend avec plus de 25 ans d’expérience à créer des interfaces claires, rapides et agréables à utiliser.',
+        stats: ['25+ ans', 'Fintech', 'Design Systems'],
+        blocks: [
+          {
+            title: 'Design & UX',
+            text: 'Le design UI/UX et les design systems sont au cœur de mon travail — de l’idée aux composants cohérents et évolutifs.',
+          },
+          {
+            title: 'Développement',
+            text: 'React, Angular, Vue.js et une architecture solide : je construis des frontends que les équipes peuvent maintenir et que les utilisateurs aiment.',
+          },
+          {
+            title: 'Secteurs & IA',
+            text: 'Start-up, fintech, banque, logistique, automobile ou secteur public — et l’IA générative quand elle améliore vraiment le produit.',
+          },
+        ],
       },
       works: {
         eyebrow: 'Travaux',

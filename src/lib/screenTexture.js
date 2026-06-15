@@ -60,16 +60,13 @@ export function drawTech(ctx, W, H, icon, alpha = 1) {
   ctx.restore()
 }
 
-// White CRT with a centered brand card — used on the About-page retro computer.
+// Centered brand card on transparent CRT — About-page retro computer.
 export function drawTechCard(ctx, W, H, icon, alpha = 1) {
   const rgb = channels(icon.hex)
   const fg = luminance(rgb) > 0.62 ? '#11151b' : '#ffffff'
 
   ctx.save()
   ctx.globalAlpha = alpha
-
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, W, H)
 
   const cardW = Math.min(W * 0.88, H * 0.92)
   const cardH = Math.min(H * 0.78, cardW * 0.82)
