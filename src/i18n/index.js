@@ -22,7 +22,7 @@ const resources = {
         eyebrow: 'About me',
         title: 'Hi, I’m Waldemar.',
         intro: 'I’m a frontend developer with more than 25 years of experience building interfaces that feel clear, fast, and thoughtful.',
-        stats: ['25+ years', 'Fintech', 'Design Systems'],
+        stats: ['25+ years', 'Accessibility CoP', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Design & UX',
@@ -31,6 +31,10 @@ const resources = {
           {
             title: 'Engineering',
             text: 'React, Angular, Vue.js and solid architecture: I build frontends that teams can maintain and users enjoy using.',
+          },
+          {
+            title: 'Accessibility',
+            text: 'Three times in the accessibility CoP — I know the common tools and how to build accessible websites from the ground up: WCAG, semantics, keyboard use, screen readers and meaningful testing.',
           },
           {
             title: 'Industries & AI',
@@ -84,7 +88,7 @@ const resources = {
         eyebrow: 'Über mich',
         title: 'Hallo, ich bin Waldemar.',
         intro: 'Ich bin Frontend-Entwickler — seit über 25 Jahren baue ich Weboberflächen, die klar, schnell und angenehm zu nutzen sind.',
-        stats: ['25+ Jahre', 'Fintech', 'Design Systems'],
+        stats: ['25+ Jahre', 'Barrierefreiheit CoP', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Design & UX',
@@ -93,6 +97,10 @@ const resources = {
           {
             title: 'Entwicklung',
             text: 'React, Angular, Vue.js und saubere Architektur: ich entwickle Frontends, die Teams pflegen und Nutzer gern bedienen.',
+          },
+          {
+            title: 'Barrierefreiheit',
+            text: 'Dreimal im Barrierefreiheit-CoP — ich kenne die gängigen Tools und weiß, wie man Websites von Anfang an zugänglich baut: WCAG, Semantik, Tastaturbedienung, Screenreader und sinnvolle Tests.',
           },
           {
             title: 'Branchen & KI',
@@ -146,7 +154,7 @@ const resources = {
         eyebrow: 'Sobre mí',
         title: 'Hola, soy Waldemar.',
         intro: 'Soy desarrollador frontend con más de 25 años de experiencia creando interfaces claras, rápidas y agradables de usar.',
-        stats: ['25+ años', 'Fintech', 'Design Systems'],
+        stats: ['25+ años', 'CoP Accesibilidad', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Diseño & UX',
@@ -155,6 +163,10 @@ const resources = {
           {
             title: 'Desarrollo',
             text: 'React, Angular, Vue.js y arquitectura sólida: construyo frontends que los equipos pueden mantener y los usuarios disfrutan.',
+          },
+          {
+            title: 'Accesibilidad',
+            text: 'Tres veces en el CoP de accesibilidad — conozco las herramientas habituales y sé cómo crear sitios accesibles desde el principio: WCAG, semántica, teclado, lectores de pantalla y pruebas con sentido.',
           },
           {
             title: 'Sectores & IA',
@@ -208,7 +220,7 @@ const resources = {
         eyebrow: 'À propos',
         title: 'Bonjour, je suis Waldemar.',
         intro: 'Je suis développeur frontend avec plus de 25 ans d’expérience à créer des interfaces claires, rapides et agréables à utiliser.',
-        stats: ['25+ ans', 'Fintech', 'Design Systems'],
+        stats: ['25+ ans', 'CoP Accessibilité', 'Fintech', 'Design Systems'],
         blocks: [
           {
             title: 'Design & UX',
@@ -217,6 +229,10 @@ const resources = {
           {
             title: 'Développement',
             text: 'React, Angular, Vue.js et une architecture solide : je construis des frontends que les équipes peuvent maintenir et que les utilisateurs aiment.',
+          },
+          {
+            title: 'Accessibilité',
+            text: 'Trois fois dans le CoP accessibilité — je connais les outils courants et sais comment concevoir des sites accessibles dès le départ : WCAG, sémantique, clavier, lecteurs d’écran et tests pertinents.',
           },
           {
             title: 'Secteurs & IA',
