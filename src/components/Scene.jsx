@@ -21,13 +21,21 @@ const camPos = [
   VIEW.radius * Math.sin(VIEW.phi) * Math.cos(VIEW.theta),
 ]
 
-// How long the camera takes to glide toward a sign before the page opens (seconds).
-const FLY_DURATION = 0.9
-// How far in front of the sign the camera comes to rest.
-const FLY_DISTANCE = 3.5
+// Calm sign transition: glide toward the plaque, then white blur dissolve → new page.
+const TRANSITION_DURATION = 1.4
+const GLIDE_PORTION = 0.55
+const FADE_START = 0.28
+const FLY_DISTANCE = 2.5
 
-// Drives a smooth camera glide toward a selected sign, then navigates.
-function CameraRig({ controlsRef, target, onArrive }) {
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2
+}
+
+function easeOutQuad(t) {
+  return 1 - (1 - t) ** 2
+}
+
+function CameraRig({ controlsRef, target, onPortalProgress, onArrive }) {
   const { camera } = useThree()
   const anim = useRef(null)
 
@@ -35,8 +43,8 @@ function CameraRig({ controlsRef, target, onArrive }) {
     if (!target) return
     const signWorld = new THREE.Vector3(...target.p).multiplyScalar(MODEL_SCALE)
     const normal = new THREE.Vector3(...target.nrm).normalize()
-    const toPos = signWorld.clone().add(normal.multiplyScalar(FLY_DISTANCE))
-    toPos.y += 0.2
+    const toPos = signWorld.clone().add(normal.clone().multiplyScalar(FLY_DISTANCE))
+    toPos.y += 0.12
 
     anim.current = {
       t: 0,
@@ -46,21 +54,26 @@ function CameraRig({ controlsRef, target, onArrive }) {
       fromTarget: controlsRef.current?.target.clone() ?? new THREE.Vector3(),
       toTarget: signWorld.clone(),
     }
+    onPortalProgress?.(0)
     if (controlsRef.current) controlsRef.current.enabled = false
-  }, [target, camera, controlsRef])
+  }, [target, camera, controlsRef, onPortalProgress])
 
   useFrame((_, delta) => {
     const a = anim.current
     if (!a) return
-    a.t = Math.min(1, a.t + delta / FLY_DURATION)
-    // easeInOutCubic
-    const e = a.t < 0.5 ? 4 * a.t ** 3 : 1 - (-2 * a.t + 2) ** 3 / 2
+
+    a.t = Math.min(1, a.t + delta / TRANSITION_DURATION)
+    const glideT = Math.min(1, a.t / GLIDE_PORTION)
+    const e = easeInOutCubic(glideT)
 
     camera.position.lerpVectors(a.fromPos, a.toPos, e)
     if (controlsRef.current) {
       controlsRef.current.target.lerpVectors(a.fromTarget, a.toTarget, e)
       controlsRef.current.update()
     }
+
+    const fadeT = Math.max(0, (a.t - FADE_START) / (1 - FADE_START))
+    onPortalProgress?.(easeOutQuad(fadeT))
 
     if (a.t >= 1) {
       anim.current = null
@@ -188,7 +201,10 @@ export default function Scene() {
   const navigate = useNavigate()
   const controlsRef = useRef()
   const [flyTarget, setFlyTarget] = useState(null)
+  const [portal, setPortal] = useState(0)
   const { t } = useTranslation()
+  const uiFade = Math.max(0, 1 - portal * 1.6)
+  const blur = portal * 18
 
   return (
     <div className="stage">
@@ -200,7 +216,7 @@ export default function Scene() {
         </div>
       </nav>
 
-      <div className="intro">
+      <div className="intro" style={{ opacity: uiFade, pointerEvents: uiFade < 0.05 ? 'none' : undefined }}>
         <h1>{t('nav.title')}</h1>
         <p>{t('nav.subtitle')}</p>
       </div>
@@ -240,8 +256,24 @@ export default function Scene() {
           maxPolarAngle={1.5}
         />
 
-        <CameraRig controlsRef={controlsRef} target={flyTarget} onArrive={navigate} />
+        <CameraRig
+          controlsRef={controlsRef}
+          target={flyTarget}
+          onPortalProgress={setPortal}
+          onArrive={navigate}
+        />
       </Canvas>
+
+      <div
+        className="portal-overlay"
+        style={{
+          opacity: portal > 0.004 ? 1 : 0,
+          backdropFilter: `blur(${blur}px)`,
+          WebkitBackdropFilter: `blur(${blur}px)`,
+          background: `rgba(252, 250, 247, ${portal * 0.92})`,
+        }}
+        aria-hidden={portal < 0.01}
+      />
 
       <Loader />
     </div>
