@@ -242,7 +242,11 @@ function FloatingWorld({ disabled, onSelect }) {
       ))}
       {SCREEN && <Screen tech={TECH} {...SCREEN} />}
       {BOARDS.map((b, i) => (
-        <Board key={b.gallery?.[0] ?? b.src ?? i} {...b} />
+        <Board
+          key={b.id ?? b.gallery?.[0] ?? i}
+          {...b}
+          lines={t(`boards.${b.id}.lines`, { returnObjects: true })}
+        />
       ))}
     </group>
   )

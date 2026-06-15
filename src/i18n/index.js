@@ -14,6 +14,10 @@ const resources = {
       },
       theme: { toLight: 'Switch to light mode', toDark: 'Switch to dark mode' },
       signs: { about: 'About Me', works: 'Works', blog: 'Blog', contact: 'Contact' },
+      boards: {
+        bicycle: { lines: ['Dream', 'Plan', 'Do'] },
+        desk: { lines: ['Ideas', 'become', 'magic.'] },
+      },
       about: {
         eyebrow: 'About me',
         title: 'Hi, I’m Waldemar.',
@@ -58,6 +62,10 @@ const resources = {
       },
       theme: { toLight: 'Hellmodus', toDark: 'Dunkelmodus' },
       signs: { about: 'Über mich', works: 'Arbeiten', blog: 'Blog', contact: 'Kontakt' },
+      boards: {
+        bicycle: { lines: ['Träumen', 'Planen', 'Machen'] },
+        desk: { lines: ['Ideen', 'werden', 'Magie.'] },
+      },
       about: {
         eyebrow: 'Über mich',
         title: 'Hallo, ich bin Waldemar.',
@@ -102,6 +110,10 @@ const resources = {
       },
       theme: { toLight: 'Modo claro', toDark: 'Modo oscuro' },
       signs: { about: 'Sobre mí', works: 'Trabajos', blog: 'Blog', contact: 'Contacto' },
+      boards: {
+        bicycle: { lines: ['Soñar', 'Planear', 'Hacer'] },
+        desk: { lines: ['Las ideas', 'se vuelven', 'magia.'] },
+      },
       about: {
         eyebrow: 'Sobre mí',
         title: 'Hola, soy Waldemar.',
@@ -146,6 +158,10 @@ const resources = {
       },
       theme: { toLight: 'Mode clair', toDark: 'Mode sombre' },
       signs: { about: 'À propos', works: 'Travaux', blog: 'Blog', contact: 'Contact' },
+      boards: {
+        bicycle: { lines: ['Rêver', 'Planifier', 'Faire'] },
+        desk: { lines: ['Les idées', 'deviennent', 'magie.'] },
+      },
       about: {
         eyebrow: 'À propos',
         title: 'Bonjour, je suis Waldemar.',

@@ -38,12 +38,12 @@ export const SCREEN = { p: [-0.0968, -0.1909, -0.3091], nrm: [0.114, 0.441, 0.89
 // Framed boards/posters with crisp image + text overlays. Place each one the same way as
 // the screen: open with `?lights`, click the CENTER of the board, copy the logged `p` and
 // `nrm`. `src` = single image, or use `gallery` = ['/a.png', '/b.png', ...] — click cycles.
-// `lines` = the text, `symbol` = the little glyph below it.
+// `lines` = the text, `symbol` = the little glyph below it. Text comes from i18n via `id`.
 export const BOARDS = [
   // board next to the bicycle — click swaps the artwork (add paths to gallery)
   {
+    id: 'bicycle',
     mode: 'top',
-    lines: ['Dream', 'Plan', 'Do'],
     melody: true,
     gallery: ['/board-art.png', '/board-art-fairy.png', '/board-art-whale.png', '/board-art-robot.png', '/board-art-fox.png'],
     p: [0.4358, -0.4051, 0.5849],
@@ -56,8 +56,8 @@ export const BOARDS = [
   },
   // poster in front of the desk (text only for now — image to follow, then set src + mode:'top')
   {
+    id: 'desk',
     mode: 'paper',
-    lines: ['Ideas', 'become', 'magic.'],
     symbol: '\u2665',
     symbolColor: '#b62f2f',
     pulse: true,
