@@ -14,9 +14,9 @@ export const SIGNS = [
 // toggling an emissive material. To find positions: open the site with `?lights` in the
 // URL, click each lantern (it lights up live + logs its coordinates), then paste them here.
 export const LANTERNS = [
-  // lantern with insect swarm — same breathing pulse as the desk lantern
-  { p: [0.7907, 0.0843, -0.1496], pulseAmount: 0.3, pulseSpeed: 1.8, pulseFloor: 0.16 },
-  { p: [0.6612, 0.0758, -0.1548] },
+  { p: [0.7907, 0.0843, -0.1496] },
+  // left lantern (next to the insect swarm) — warm flicker with a deeper dim dip
+  { p: [0.6612, 0.0758, -0.1548], pulseAmount: 0.16, pulseSpeed: 1.6, pulseFloor: 0.22 },
   { p: [-0.8913, -0.1882, -0.1546] },
   // lantern on the desk — dimmer + a clear breathing pulse that lights the poster
   { p: [0.162, -0.2368, -0.3553], intensity: 5.5, distance: 1.4, pulseAmount: 0.3, pulseSpeed: 1.8, pulseFloor: 0.16 },
