@@ -2,10 +2,12 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 import { JOURNEY_CHAPTERS } from '../data/journey.js'
-import { JourneyArt, JourneyWalker } from '../components/journey/JourneyArt.jsx'
+import { JOURNEY_FAR_DECOR, JOURNEY_NEAR_DECOR, JOURNEY_FRONT_DECOR, JOURNEY_MEADOW_DECOR } from '../data/journeyDecor.js'
+import { JourneyArt, JourneyCutout, JourneyWalker } from '../components/journey/JourneyArt.jsx'
 import {
   useJourneyAnimations,
   useJourneyWalker,
+  useJourneyRockDepth,
   useJourneyWheel,
   useJourneyParallax,
 } from '../hooks/useJourneyAnimations.js'
@@ -13,11 +15,14 @@ import {
 export default function Works() {
   const { t } = useTranslation()
   const pageRef = useRef(null)
+  const stageRef = useRef(null)
   const trackRef = useRef(null)
   const walkerRef = useRef(null)
   const layerRef = useRef(null)
   const layerFarRef = useRef(null)
   const layerNearRef = useRef(null)
+  const layerMeadowRef = useRef(null)
+  const layerFrontRef = useRef(null)
   const chaptersRef = useRef([])
   const copy = t('work.chapters', { returnObjects: true })
   const desktopChapters = JOURNEY_CHAPTERS
@@ -25,8 +30,9 @@ export default function Works() {
 
   useJourneyAnimations(trackRef, chaptersRef)
   useJourneyWalker(trackRef, walkerRef)
+  useJourneyRockDepth(trackRef, walkerRef)
   useJourneyWheel(pageRef, trackRef)
-  useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef)
+  useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef, layerMeadowRef, layerFrontRef, stageRef)
 
   return (
     <div className="page journey-page" ref={pageRef}>
@@ -38,30 +44,37 @@ export default function Works() {
         <p className="journey-hint">{t('work.hint')}</p>
       </header>
 
-      <div className="journey-stage">
+      <div className="journey-stage" ref={stageRef}>
         <div className="journey-stage__paper" ref={layerRef} aria-hidden>
           <div className="journey-stage__fold" />
           <div className="journey-stage__hills" />
         </div>
         <div className="journey-layer journey-layer--far" ref={layerFarRef} aria-hidden>
-          <span className="journey-cutout journey-cutout--cloud" style={{ left: '12%', top: '14%' }} />
-          <span className="journey-cutout journey-cutout--cloud" style={{ left: '48%', top: '10%' }} />
-          <span className="journey-cutout journey-cutout--sun" style={{ left: '64%', top: '8%' }} />
-          <span className="journey-cutout journey-cutout--cloud" style={{ left: '92%', top: '16%' }} />
-          <span className="journey-cutout journey-cutout--sun" style={{ left: '132%', top: '6%' }} />
-          <span className="journey-cutout journey-cutout--cloud" style={{ left: '168%', top: '12%' }} />
+          {JOURNEY_FAR_DECOR.map((item) => (
+            <JourneyCutout key={item.id} item={item} />
+          ))}
         </div>
         <div className="journey-layer journey-layer--near" ref={layerNearRef} aria-hidden>
-          <span className="journey-cutout journey-cutout--tree" style={{ left: '30%', bottom: '102px' }} />
-          <span className="journey-cutout journey-cutout--rock" style={{ left: '56%', bottom: '104px' }} />
-          <span className="journey-cutout journey-cutout--tree" style={{ left: '78%', bottom: '100px' }} />
-          <span className="journey-cutout journey-cutout--tree" style={{ left: '118%', bottom: '106px' }} />
-          <span className="journey-cutout journey-cutout--rock" style={{ left: '146%', bottom: '104px' }} />
-          <span className="journey-cutout journey-cutout--tree" style={{ left: '182%', bottom: '102px' }} />
+          {JOURNEY_NEAR_DECOR.map((item) => (
+            <JourneyCutout key={item.id} item={item} />
+          ))}
         </div>
 
         <div className="journey-walker" ref={walkerRef} aria-hidden>
           <JourneyWalker />
+        </div>
+
+        <div className="journey-layer journey-layer--meadow" ref={layerMeadowRef} aria-hidden>
+          <div className="journey-meadow-strip" aria-hidden />
+          {JOURNEY_MEADOW_DECOR.map((item) => (
+            <JourneyCutout key={item.id} item={item} />
+          ))}
+        </div>
+
+        <div className="journey-layer journey-layer--front" ref={layerFrontRef} aria-hidden>
+          {JOURNEY_FRONT_DECOR.map((item) => (
+            <JourneyCutout key={item.id} item={item} />
+          ))}
         </div>
 
         <div className="journey-track" ref={trackRef} role="region" aria-label={t('work.ariaTrack')}>

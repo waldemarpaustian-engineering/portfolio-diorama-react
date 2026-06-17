@@ -8,15 +8,27 @@ const WALKER_FRAME_COUNT = WALKER_BOY_FRAMES.length
 gsap.registerPlugin(ScrollTrigger)
 
 function getLoopMetrics(track) {
-  const firstOriginal = track.querySelector('.journey-chapter[data-loop="original"]')
+  const originals = [...track.querySelectorAll('.journey-chapter[data-loop="original"]')]
   const firstClone = track.querySelector('.journey-chapter[data-loop="clone"]')
-  if (!firstOriginal || !firstClone) return null
+  if (!originals.length || !firstClone) return null
 
-  const loopStart = Math.max(0, firstOriginal.offsetLeft - 32)
-  const loopDistance = firstClone.offsetLeft - firstOriginal.offsetLeft
-  if (loopDistance <= 0) return null
+  const firstOriginal = originals[0]
+  const lastOriginal = originals[originals.length - 1]
+  const pad = 32
+  const loopStart = Math.max(0, firstOriginal.offsetLeft - pad)
 
-  return { loopStart, loopDistance, loopEnd: loopStart + loopDistance }
+  const seamDistance = firstClone.offsetLeft - firstOriginal.offsetLeft
+  if (seamDistance <= 0) return null
+
+  const loopEnd = loopStart + seamDistance
+  const loopDistance = seamDistance
+
+  // Journey ends when the last chapter tile has passed the walker on the left
+  const walkerX = Math.min(Math.max(72, track.clientWidth * 0.18), 168)
+  const journeyEndScroll = lastOriginal.offsetLeft + lastOriginal.offsetWidth - walkerX + 24
+  const journeySpan = Math.max(1, journeyEndScroll - loopStart)
+
+  return { loopStart, loopDistance, loopEnd, journeySpan }
 }
 
 function normalizeLoopPosition(value, metrics) {
@@ -136,9 +148,6 @@ export function useJourneyWalker(trackRef, walkerRef) {
       img.src = src
     })
 
-    let frameProgress = 0
-    let lastScroll = track.scrollLeft
-
     function setFrame(index) {
       if (!frameImg) return
       const normalized = ((Math.floor(index) % WALKER_FRAME_COUNT) + WALKER_FRAME_COUNT) % WALKER_FRAME_COUNT
@@ -146,23 +155,28 @@ export function useJourneyWalker(trackRef, walkerRef) {
       frameImg.dataset.frame = String(normalized)
     }
 
-    setFrame(0)
+    function syncWalkerFrame() {
+      const metrics = getLoopMetrics(track)
+      if (!metrics) {
+        setFrame(0)
+        return
+      }
+      const offset = Math.max(0, track.scrollLeft - metrics.loopStart)
+      const progress = Math.min(1, offset / metrics.journeySpan)
+      setFrame(progress * WALKER_FRAME_COUNT)
+    }
+
+    syncWalkerFrame()
 
     function onScroll() {
       if (reduced || !frameImg) return
-      const delta = Math.abs(track.scrollLeft - lastScroll)
-      lastScroll = track.scrollLeft
-      if (delta < 0.2) return
-
-      frameProgress = (frameProgress + delta / 12) % WALKER_FRAME_COUNT
-      setFrame(frameProgress)
+      syncWalkerFrame()
       walker.classList.add('journey-walker--run')
 
       clearTimeout(idleTimerRef.current)
       idleTimerRef.current = window.setTimeout(() => {
         walker.classList.remove('journey-walker--run')
-        frameProgress = 0
-        setFrame(0)
+        syncWalkerFrame()
       }, 220)
     }
 
@@ -174,9 +188,53 @@ export function useJourneyWalker(trackRef, walkerRef) {
   }, [trackRef, walkerRef])
 }
 
+export function useJourneyRockDepth(trackRef, walkerRef) {
+  useEffect(() => {
+    const track = trackRef.current
+    const walker = walkerRef.current
+    if (!track || !walker) return undefined
+
+    const mq = window.matchMedia('(min-width: 900px)')
+
+    function update() {
+      if (!mq.matches) return
+      const rock = document.querySelector('[data-decor-id="rock-mid"]')
+      if (!rock) return
+
+      const walkerBox = walker.getBoundingClientRect()
+      const rockBox = rock.getBoundingClientRect()
+      const walkerFeet = walkerBox.left + walkerBox.width * 0.42
+      const rockCenter = rockBox.left + rockBox.width * 0.5
+
+      if (rockCenter > walkerFeet + 18) {
+        rock.style.zIndex = '3'
+      } else if (rockCenter > walkerFeet - 12) {
+        rock.style.zIndex = '5'
+      } else {
+        rock.style.zIndex = '3'
+      }
+    }
+
+    update()
+    track.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+
+    return () => {
+      track.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [trackRef, walkerRef])
+}
+
 const LINE_TO_PX = 64
 const MOUSE_PIXEL_BOOST = 12
 const TRACKPAD_BOOST = 1.15
+
+// Near/front shift at p=1: tree-3 (118%) lands ~54% — third tree as journey destination
+const PARALLAX_PAPER = 12
+const PARALLAX_FAR = 23
+const PARALLAX_NEAR = 64
+const PARALLAX_FRONT = 64
 function wheelToPixels(e) {
   const { deltaY, deltaMode } = e
   if (deltaMode === 1) return deltaY * LINE_TO_PX
@@ -271,47 +329,119 @@ export function useJourneyWheel(containerRef, trackRef) {
   }, [containerRef, trackRef])
 }
 
-export function useJourneyParallax(trackRef, layerRef, farLayerRef, nearLayerRef) {
+function getParallaxProgress(track) {
+  const metrics = getLoopMetrics(track)
+  if (!metrics) {
+    const max = Math.max(0, track.scrollWidth - track.clientWidth)
+    return max > 0 ? track.scrollLeft / max : 0
+  }
+
+  const offset = track.scrollLeft - metrics.loopStart
+  if (offset <= 0) return 0
+  return Math.min(1, offset / metrics.journeySpan)
+}
+
+function applyParallax(
+  track,
+  layer,
+  farLayer,
+  nearLayer,
+  meadowLayer,
+  frontLayer,
+  animators,
+  immediate = false,
+) {
+  const p = getParallaxProgress(track)
+  const values = {
+    paper: -p * PARALLAX_PAPER,
+    far: -p * PARALLAX_FAR,
+    near: -p * PARALLAX_NEAR,
+    front: -p * PARALLAX_FRONT,
+  }
+
+  if (immediate) {
+    gsap.set(layer, { xPercent: values.paper })
+    if (farLayer) gsap.set(farLayer, { xPercent: values.far })
+    if (nearLayer) gsap.set(nearLayer, { xPercent: values.near })
+    if (meadowLayer) gsap.set(meadowLayer, { xPercent: values.front })
+    if (frontLayer) gsap.set(frontLayer, { xPercent: values.front })
+    return
+  }
+
+  animators.xTo(values.paper)
+  if (animators.farTo) animators.farTo(values.far)
+  if (animators.nearTo) animators.nearTo(values.near)
+  if (animators.meadowTo) animators.meadowTo(values.front)
+  if (animators.frontTo) animators.frontTo(values.front)
+}
+
+export function useJourneyParallax(
+  trackRef,
+  layerRef,
+  farLayerRef,
+  nearLayerRef,
+  meadowLayerRef,
+  frontLayerRef,
+  stageRef,
+) {
   useEffect(() => {
     const track = trackRef.current
+    const stage = stageRef?.current
     const layer = layerRef.current
     const farLayer = farLayerRef?.current
     const nearLayer = nearLayerRef?.current
+    const meadowLayer = meadowLayerRef?.current
+    const frontLayer = frontLayerRef?.current
     if (!track || !layer) return undefined
 
-    const xTo = gsap.quickTo(layer, 'xPercent', {
-      duration: 0.35,
-      ease: 'power2.out',
-    })
-    const farTo = farLayer ? gsap.quickTo(farLayer, 'xPercent', {
-      duration: 0.45,
-      ease: 'power2.out',
-    }) : null
-    const nearTo = nearLayer ? gsap.quickTo(nearLayer, 'xPercent', {
-      duration: 0.25,
-      ease: 'power2.out',
-    }) : null
-
-    function update() {
-      const metrics = getLoopMetrics(track)
-      const current = metrics
-        ? normalizeLoopPosition(track.scrollLeft, metrics)
-        : track.scrollLeft
-      const max = metrics ? metrics.loopDistance : (track.scrollWidth - track.clientWidth)
-      const offset = metrics ? (current - metrics.loopStart) : current
-      const p = max > 0 ? offset / max : 0
-      xTo(-p * 12)
-      if (farTo) farTo(-p * 6.5)
-      if (nearTo) nearTo(-p * 18)
+    const animators = {
+      xTo: gsap.quickTo(layer, 'xPercent', {
+        duration: 0.35,
+        ease: 'power2.out',
+      }),
+      farTo: farLayer ? gsap.quickTo(farLayer, 'xPercent', {
+        duration: 0.45,
+        ease: 'power2.out',
+      }) : null,
+      nearTo: nearLayer ? gsap.quickTo(nearLayer, 'xPercent', {
+        duration: 0.25,
+        ease: 'power2.out',
+      }) : null,
+      meadowTo: meadowLayer ? gsap.quickTo(meadowLayer, 'xPercent', {
+        duration: 0.25,
+        ease: 'power2.out',
+      }) : null,
+      frontTo: frontLayer ? gsap.quickTo(frontLayer, 'xPercent', {
+        duration: 0.25,
+        ease: 'power2.out',
+      }) : null,
     }
 
-    update()
-    track.addEventListener('scroll', update, { passive: true })
+    const sync = (immediate = false) => {
+      applyParallax(track, layer, farLayer, nearLayer, meadowLayer, frontLayer, animators, immediate)
+    }
+
+    sync(true)
+    const rafId = requestAnimationFrame(() => sync(true))
+
+    const onScroll = () => sync(false)
+    track.addEventListener('scroll', onScroll, { passive: true })
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => sync(true))
+      : null
+    resizeObserver?.observe(track)
+    if (stage) resizeObserver?.observe(stage)
+
     return () => {
-      track.removeEventListener('scroll', update)
+      cancelAnimationFrame(rafId)
+      resizeObserver?.disconnect()
+      track.removeEventListener('scroll', onScroll)
       gsap.set(layer, { clearProps: 'transform' })
       if (farLayer) gsap.set(farLayer, { clearProps: 'transform' })
       if (nearLayer) gsap.set(nearLayer, { clearProps: 'transform' })
+      if (meadowLayer) gsap.set(meadowLayer, { clearProps: 'transform' })
+      if (frontLayer) gsap.set(frontLayer, { clearProps: 'transform' })
     }
-  }, [trackRef, layerRef, farLayerRef, nearLayerRef])
+  }, [trackRef, layerRef, farLayerRef, nearLayerRef, meadowLayerRef, frontLayerRef, stageRef])
 }

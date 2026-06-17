@@ -1,5 +1,7 @@
 // Hand-cut paper style SVG scenes — placeholders until custom illustrations land in /public/journey/.
 
+import { useState } from 'react'
+
 function PaperShadow({ children, className = '' }) {
   return (
     <div className={`journey-art ${className}`}>
@@ -118,6 +120,50 @@ export function JourneyArt({ variant }) {
 export const WALKER_BOY_FRAMES = Array.from({ length: 30 }, (_, i) =>
   `/journey/walker-boy/${String(i + 1).padStart(2, '0')}.png`,
 )
+
+export function JourneyCutout({ item }) {
+  const [imageFailed, setImageFailed] = useState(false)
+
+  if (item.type === 'image' && !imageFailed) {
+    return (
+      <img
+        data-decor-id={item.id}
+        className={`journey-cutout journey-cutout--image${item.className ? ` ${item.className}` : ''}`}
+        src={item.src}
+        alt=""
+        aria-hidden
+        decoding="async"
+        draggable={false}
+        onError={() => setImageFailed(true)}
+        style={{
+          ...(item.width != null ? { width: item.width } : {}),
+          ...(item.height != null ? { height: item.height } : {}),
+          ...item.style,
+        }}
+      />
+    )
+  }
+
+  if (item.type === 'image' && imageFailed && item.fallback) {
+    return (
+      <span
+        className={`journey-cutout journey-cutout--${item.fallback}`}
+        style={item.style}
+        aria-hidden
+      />
+    )
+  }
+
+  if (item.type === 'image') return null
+
+  return (
+    <span
+      className={`journey-cutout journey-cutout--${item.variant}`}
+      style={item.style}
+      aria-hidden
+    />
+  )
+}
 
 export function JourneyWalker() {
   return (
