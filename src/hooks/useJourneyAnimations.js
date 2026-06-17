@@ -41,7 +41,7 @@ function normalizeLoopPosition(value, metrics) {
 }
 
 function showChapter(el) {
-  el.querySelectorAll('.journey-chapter__inner > *').forEach((node) => {
+  el.querySelectorAll('.journey-note__body > *').forEach((node) => {
     node.style.opacity = '1'
     node.style.transform = 'none'
   })
@@ -69,7 +69,7 @@ export function useJourneyAnimations(trackRef, chaptersRef) {
 
     chapters.forEach((chapter) => {
       if (!chapter) return
-      const targets = chapter.querySelectorAll('.journey-chapter__inner > *')
+      const targets = chapter.querySelectorAll('.journey-note__body > *')
       const art = chapter.querySelector('.journey-art')
       if (!targets.length) return
 

@@ -100,18 +100,22 @@ export default function Works() {
                 <div className="journey-chapter__scene">
                   <JourneyArt variant={chapter.art} />
                 </div>
-                <div className="journey-chapter__inner">
-                  <h2 className="journey-chapter__title">{text.title}</h2>
-                  {text.projects ? (
-                    <p className="journey-chapter__projects">{text.projects}</p>
-                  ) : null}
-                  {text.tagline ? (
-                    <p className="journey-chapter__tagline">{text.tagline}</p>
-                  ) : null}
-                  <p className="journey-chapter__text">{text.text}</p>
-                  {text.note ? (
-                    <p className="journey-chapter__note">{text.note}</p>
-                  ) : null}
+                <div className="journey-chapter__inner journey-note">
+                  <div className="journey-note__backing" aria-hidden />
+                  <div className="journey-note__paper" aria-hidden />
+                  <div className="journey-note__body">
+                    <h2 className="journey-chapter__title">{text.title}</h2>
+                    {text.projects ? (
+                      <p className="journey-chapter__projects">{text.projects}</p>
+                    ) : null}
+                    {text.tagline ? (
+                      <p className="journey-chapter__tagline">{text.tagline}</p>
+                    ) : null}
+                    <p className="journey-chapter__text">{text.text}</p>
+                    {text.note ? (
+                      <p className="journey-chapter__note">{text.note}</p>
+                    ) : null}
+                  </div>
                 </div>
               </article>
             )
