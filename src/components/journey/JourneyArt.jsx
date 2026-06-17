@@ -115,11 +115,19 @@ export function JourneyArt({ variant }) {
   }
 }
 
+export const WALKER_BOY_FRAMES = Array.from({ length: 30 }, (_, i) =>
+  `/journey/walker-boy/${String(i + 1).padStart(2, '0')}.png`,
+)
+
 export function JourneyWalker() {
   return (
     <div className="journey-walker__sprite" aria-hidden>
-      <img className="journey-walker__frame journey-walker__frame--a" src="/journey/walker-1.png" alt="" decoding="async" />
-      <img className="journey-walker__frame journey-walker__frame--b" src="/journey/walker-2.png" alt="" decoding="async" />
+      <img
+        className="journey-walker__frame"
+        src={WALKER_BOY_FRAMES[0]}
+        alt=""
+        decoding="async"
+      />
     </div>
   )
 }

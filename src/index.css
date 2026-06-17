@@ -623,7 +623,7 @@ html[data-theme="dark"] .journey-stage__fold {
 
 .journey-track {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   align-items: flex-start;
   gap: clamp(40px, 6vw, 80px);
@@ -653,16 +653,81 @@ html[data-theme="dark"] .journey-stage__fold {
   transform: rotateX(38deg);
   transform-origin: center bottom;
 }
+.journey-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.journey-layer--far {
+  z-index: 1;
+}
+.journey-layer--near {
+  z-index: 2;
+}
+.journey-cutout {
+  position: absolute;
+  display: block;
+  border: 2px solid var(--ink);
+  background: var(--journey-paper);
+  box-shadow: 6px 7px 0 rgba(43, 42, 51, 0.1);
+  filter: drop-shadow(0 10px 16px rgba(43, 42, 51, 0.16));
+}
+.journey-cutout--cloud {
+  width: 86px;
+  height: 46px;
+  border-radius: 28px;
+  transform: rotate(-3deg);
+}
+.journey-cutout--cloud::before,
+.journey-cutout--cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border: inherit;
+  border-radius: 50%;
+}
+.journey-cutout--cloud::before {
+  width: 34px;
+  height: 34px;
+  left: 14px;
+  top: -16px;
+}
+.journey-cutout--cloud::after {
+  width: 28px;
+  height: 28px;
+  right: 12px;
+  top: -10px;
+}
+.journey-cutout--sun {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #ffe59a;
+}
+.journey-cutout--tree {
+  width: 42px;
+  height: 124px;
+  border-radius: 24px 24px 4px 4px;
+  background:
+    radial-gradient(circle at 50% 28%, #d8ecc8 0 34px, transparent 35px),
+    linear-gradient(180deg, #7aa15a 0 42%, #c79a62 42% 100%);
+}
+.journey-cutout--rock {
+  width: 54px;
+  height: 38px;
+  border-radius: 20px 18px 10px 10px;
+  background: #d5d0c8;
+  transform: rotate(-4deg);
+}
 .journey-walker {
   position: absolute;
   bottom: 56px;
-  left: 48px;
-  width: 88px;
-  height: 110px;
+  left: clamp(72px, 18vw, 168px);
+  width: 96px;
+  height: 140px;
   z-index: 4;
   transform: translateX(-50%);
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.16));
-  transition: left 0.08s linear;
   pointer-events: none;
 }
 .journey-walker__sprite {
@@ -678,39 +743,8 @@ html[data-theme="dark"] .journey-stage__fold {
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-}
-.journey-walker__frame--b {
-  opacity: 0;
-}
-
-@keyframes journey-walk-swap-a {
-  0%, 45% { opacity: 1; }
-  55%, 100% { opacity: 0; }
-}
-@keyframes journey-walk-swap-b {
-  0%, 45% { opacity: 0; }
-  55%, 100% { opacity: 1; }
-}
-@keyframes journey-walk-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-
-@media (prefers-reduced-motion: no-preference) and (min-width: 900px) {
-  .journey-walker__sprite {
-    animation: journey-walk-bob 0.55s ease-in-out infinite;
-  }
-  .journey-walker__frame--a {
-    animation: journey-walk-swap-a 0.55s ease-in-out infinite;
-  }
-  .journey-walker__frame--b {
-    animation: journey-walk-swap-b 0.55s ease-in-out infinite;
-  }
-  .journey-walker--run .journey-walker__sprite,
-  .journey-walker--run .journey-walker__frame--a,
-  .journey-walker--run .journey-walker__frame--b {
-    animation-duration: 0.34s;
-  }
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 html[data-theme="dark"] .journey-walker__frame {
@@ -825,11 +859,15 @@ html[data-theme="dark"] .journey-walker__frame {
   }
   .journey-track__rail,
   .journey-walker,
-  .journey-track__spacer { display: none; }
+  .journey-track__spacer,
+  .journey-layer { display: none; }
   .journey-chapter {
     flex: none;
     scroll-snap-align: start;
     margin-bottom: 12px;
+  }
+  .journey-chapter[data-loop="clone"] {
+    display: none;
   }
   .journey-stage { min-height: auto; }
   .journey-stage__fold { display: none; }

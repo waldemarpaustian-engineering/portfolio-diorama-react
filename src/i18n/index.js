@@ -148,7 +148,7 @@ const resources = {
         chapters: [
           {
             title: 'Erste Schritte — Web & Studium',
-            text: 'Informatik in Mannheim, Praktika, CMS und Datenbanken. PHP, Java, erste Oberflächen — hier hat das Handwerk begonnen.',
+            text: 'Informatikstudium in Mannheim mit Abschluss als Diplom-Informatiker, dazu Praktika sowie Arbeit mit CMS und Datenbanken. PHP, Java, erste Oberflächen — hier hat das Handwerk begonnen.',
           },
           {
             title: 'Banken & Enterprise Java',
