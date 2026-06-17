@@ -59,8 +59,8 @@ const resources = {
             title: '2. Frontend Framework Engineering (2007–2015)',
             projects: '15+ Projects',
             tagline: 'Building systems that generate interfaces',
-            text: 'Development of model-driven frontend systems, generators and reusable UI frameworks for complex enterprise applications. Freelance since 2012. Focus on automation, scaling and structured UI architecture.',
-            note: '(Main focus: enterprise banking projects.)',
+            text: 'Model-driven frontend systems, generators and reusable UI frameworks for complex enterprise applications. Freelance since 2012. Focus on automation, scaling and structured UI architecture.',
+            note: '(Focus: enterprise banking.)',
           },
           {
             title: '3. Modern Frontend Architecture (2015–2019)',
@@ -161,8 +161,8 @@ const resources = {
             title: '2. Frontend Framework Engineering (2007–2015)',
             projects: '15+ Projects',
             tagline: 'Building systems that generate interfaces',
-            text: 'Entwicklung modellgetriebener Frontend-Systeme, Generatoren und wiederverwendbarer UI-Frameworks für komplexe Enterprise-Anwendungen. Freiberufler seit 2012. Fokus auf Automatisierung, Skalierung und strukturierten UI-Aufbau.',
-            note: '(Größter Block: Enterprise-Banking-Projekte.)',
+            text: 'Modellgetriebene Frontend-Systeme, Generatoren und UI-Frameworks für komplexe Enterprise-Anwendungen. Freiberufler seit 2012. Fokus auf Automatisierung, Skalierung und strukturierten UI-Aufbau.',
+            note: '(Schwerpunkt: Enterprise-Banking.)',
           },
           {
             title: '3. Modern Frontend Architecture (2015–2019)',
@@ -263,8 +263,8 @@ const resources = {
             title: '2. Frontend Framework Engineering (2007–2015)',
             projects: '15+ Projects',
             tagline: 'Building systems that generate interfaces',
-            text: 'Desarrollo de sistemas frontend dirigidos por modelos, generadores y frameworks UI reutilizables para aplicaciones enterprise complejas. Freelance desde 2012. Enfoque en automatización, escalado y arquitectura UI estructurada.',
-            note: '(Foco principal: proyectos enterprise bancarios.)',
+            text: 'Sistemas frontend dirigidos por modelos, generadores y frameworks UI para aplicaciones enterprise complejas. Freelance desde 2012. Enfoque en automatización, escalado y arquitectura UI estructurada.',
+            note: '(Foco: enterprise bancario.)',
           },
           {
             title: '3. Modern Frontend Architecture (2015–2019)',
@@ -365,8 +365,8 @@ const resources = {
             title: '2. Frontend Framework Engineering (2007–2015)',
             projects: '15+ Projects',
             tagline: 'Building systems that generate interfaces',
-            text: 'Développement de systèmes frontend pilotés par modèles, de générateurs et de frameworks UI réutilisables pour des applications enterprise complexes. Freelance depuis 2012. Accent sur l’automatisation, la montée en charge et l’architecture UI structurée.',
-            note: '(Focus principal : projets enterprise bancaires.)',
+            text: 'Systèmes frontend pilotés par modèles, générateurs et frameworks UI pour des applications enterprise complexes. Freelance depuis 2012. Accent sur l’automatisation, la montée en charge et l’architecture UI structurée.',
+            note: '(Focus : enterprise bancaire.)',
           },
           {
             title: '3. Modern Frontend Architecture (2015–2019)',
