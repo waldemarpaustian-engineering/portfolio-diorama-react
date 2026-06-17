@@ -11,6 +11,7 @@ import {
   useJourneyRockDepth,
   useJourneyWheel,
   useJourneyParallax,
+  useJourneyMobileScroll,
 } from '../hooks/useJourneyAnimations.js'
 
 export default function Works() {
@@ -36,6 +37,7 @@ export default function Works() {
   useJourneyRockDepth(trackRef, walkerRef)
   useJourneyWheel(pageRef, trackRef)
   useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef, layerMeadowRef, layerFrontRef, stageRef)
+  useJourneyMobileScroll(stageRef, trackRef, pageRef)
 
   return (
     <div className="page journey-page" ref={pageRef}>

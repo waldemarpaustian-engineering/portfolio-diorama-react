@@ -46,7 +46,7 @@ const resources = {
         eyebrow: 'Work',
         title: 'A paper trail.',
         lead: 'Six stations — from first frontends to AI-assisted development and design systems at scale. Freelance since 2012.',
-        hint: 'Scroll to explore each station →',
+        hint: 'Scroll down to explore each station — on desktop, scroll sideways →',
         ariaTrack: 'Career chapters',
         chapters: [
           {
@@ -148,7 +148,7 @@ const resources = {
         eyebrow: 'Arbeit',
         title: 'Eine Papier-Reise.',
         lead: 'Sechs Stationen — von den ersten Frontends bis zu KI-gestützter Entwicklung und Design Systems im großen Maßstab. Freiberufler seit 2012.',
-        hint: 'Scrollen, um die Stationen zu entdecken →',
+        hint: 'Nach unten scrollen, um die Stationen zu entdecken — am Desktop seitlich →',
         ariaTrack: 'Werdegang-Kapitel',
         chapters: [
           {
@@ -250,7 +250,7 @@ const resources = {
         eyebrow: 'Trabajo',
         title: 'Un camino de papel.',
         lead: 'Seis estaciones — desde los primeros frontends hasta desarrollo con IA y design systems a escala. Freelance desde 2012.',
-        hint: 'Desplázate para descubrir cada estación →',
+        hint: 'Desplázate hacia abajo para descubrir cada estación — en escritorio, lateral →',
         ariaTrack: 'Capítulos de trayectoria',
         chapters: [
           {
@@ -352,7 +352,7 @@ const resources = {
         eyebrow: 'Travail',
         title: 'Un voyage en papier.',
         lead: 'Six stations — des premiers frontends au développement assisté par IA et aux design systems à grande échelle. Freelance depuis 2012.',
-        hint: 'Fais défiler pour découvrir chaque station →',
+        hint: 'Fais défiler vers le bas pour découvrir chaque station — sur desktop, latéralement →',
         ariaTrack: 'Chapitres du parcours',
         chapters: [
           {

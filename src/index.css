@@ -928,29 +928,55 @@ html[data-theme="dark"] .journey-walker__frame {
 
 @media (max-width: 899px) {
   .journey-page {
-    --journey-side: 26px;
+    --journey-side: 20px;
+  }
+  .journey-intro {
+    padding-bottom: 16px;
+    margin-bottom: 0;
+  }
+  .journey-stage {
+    min-height: 100dvh;
+    overflow: hidden;
+    --journey-ground: clamp(50px, 8.5vh, 66px);
+    --journey-meadow-bottom: clamp(54px, 9vh, 70px);
+    --journey-walker-bottom: clamp(58px, 9.5vh, 74px);
+    --journey-meadow-h: clamp(44px, 7.5vh, 60px);
+  }
+  /* Himmel etwas tiefer — näher an den Zetteln */
+  .journey-layer--far .journey-cutout--sky {
+    transform: translateY(7vh);
   }
   .journey-track {
-    flex-direction: column;
-    gap: 36px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scroll-snap-type: y mandatory;
-    max-height: none;
-    padding: 40px 26px 80px;
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(20px, 5vw, 32px);
+    padding: 10vh 16px 17vh;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    scroll-snap-type: none;
   }
-  .journey-track__rail,
-  .journey-walker,
-  .journey-layer--meadow,
-  .journey-layer--front,
-  .journey-track__spacer,
-  .journey-layer { display: none; }
+  .journey-track--mobile-scroll {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    touch-action: pan-y;
+    overscroll-behavior: auto;
+    scrollbar-width: none;
+  }
+  .journey-track--mobile-scroll::-webkit-scrollbar {
+    display: none;
+  }
   .journey-chapter {
-    flex: none;
-    width: 100%;
-    max-width: min(100%, 420px);
-    scroll-snap-align: start;
-    margin-bottom: 12px;
+    flex: 0 0 clamp(252px, 76vw, 310px);
+    width: auto;
+    max-width: none;
+    gap: 0;
+    align-content: center;
+    padding-top: 0;
+    margin-bottom: 0;
+    scroll-snap-align: none;
+  }
+  .journey-chapter__scene {
+    display: none;
   }
   .journey-note {
     max-width: none;
@@ -962,7 +988,19 @@ html[data-theme="dark"] .journey-walker__frame {
   .journey-chapter[data-loop="clone"] {
     display: none;
   }
-  .journey-stage { min-height: auto; }
+  .journey-walker {
+    left: clamp(56px, 16vw, 120px);
+    width: clamp(58px, 9.5vh, 82px);
+    height: clamp(84px, 14vh, 118px);
+  }
+  .journey-dots {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    z-index: 27;
+    padding-bottom: 0;
+  }
 }
 
 @media (min-width: 900px) {

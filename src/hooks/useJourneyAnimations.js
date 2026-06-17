@@ -9,24 +9,32 @@ gsap.registerPlugin(ScrollTrigger)
 
 function getLoopMetrics(track) {
   const originals = [...track.querySelectorAll('.journey-chapter[data-loop="original"]')]
-  const firstClone = track.querySelector('.journey-chapter[data-loop="clone"]')
-  if (!originals.length || !firstClone) return null
+  if (!originals.length) return null
 
   const firstOriginal = originals[0]
   const lastOriginal = originals[originals.length - 1]
   const pad = 32
   const loopStart = Math.max(0, firstOriginal.offsetLeft - pad)
-
-  const seamDistance = firstClone.offsetLeft - firstOriginal.offsetLeft
-  if (seamDistance <= 0) return null
-
-  const loopEnd = loopStart + seamDistance
-  const loopDistance = seamDistance
-
-  // Journey ends when the last chapter tile has passed the walker on the left
   const walkerX = Math.min(Math.max(72, track.clientWidth * 0.18), 168)
   const journeyEndScroll = lastOriginal.offsetLeft + lastOriginal.offsetWidth - walkerX + 24
   const journeySpan = Math.max(1, journeyEndScroll - loopStart)
+
+  const firstClone = track.querySelector('.journey-chapter[data-loop="clone"]')
+  const seamDistance = firstClone
+    ? firstClone.offsetLeft - firstOriginal.offsetLeft
+    : 0
+
+  if (!firstClone || seamDistance <= 0) {
+    return {
+      loopStart,
+      loopDistance: journeySpan,
+      loopEnd: loopStart + journeySpan,
+      journeySpan,
+    }
+  }
+
+  const loopEnd = loopStart + seamDistance
+  const loopDistance = seamDistance
 
   return { loopStart, loopDistance, loopEnd, journeySpan }
 }
@@ -98,6 +106,7 @@ export function useJourneyAnimations(trackRef, chaptersRef) {
         ScrollTrigger.create({
           trigger: chapter,
           scroller: track,
+          horizontal: true,
           start: 'left 72%',
           end: 'right 35%',
           once: true,
@@ -107,25 +116,7 @@ export function useJourneyAnimations(trackRef, chaptersRef) {
       )
     })
 
-    const mobileTriggers = []
-    const mobileMedia = window.matchMedia('(max-width: 899px)')
-    if (mobileMedia.matches) {
-      chapterTriggers.forEach((trigger) => trigger.kill())
-      revealItems.forEach(({ chapter, tl }) => {
-        mobileTriggers.push(
-          ScrollTrigger.create({
-            trigger: chapter,
-            scroller: track,
-            start: 'top 85%',
-            once: true,
-            onEnter: () => tl.play(),
-          }),
-        )
-      })
-    }
-
     return () => {
-      mobileTriggers.forEach((trigger) => trigger.kill())
       chapterTriggers.forEach((trigger) => trigger.kill())
       revealItems.forEach(({ tl }) => tl.kill())
     }
@@ -194,10 +185,7 @@ export function useJourneyRockDepth(trackRef, walkerRef) {
     const walker = walkerRef.current
     if (!track || !walker) return undefined
 
-    const mq = window.matchMedia('(min-width: 900px)')
-
     function update() {
-      if (!mq.matches) return
       const rock = document.querySelector('[data-decor-id="rock-mid"]')
       if (!rock) return
 
@@ -253,6 +241,14 @@ export function useJourneyWheel(containerRef, trackRef) {
     if (!container || !track) return undefined
 
     const mq = window.matchMedia('(min-width: 900px)')
+
+    const onMqChange = () => {
+      if (wheelTweenRef.current) {
+        wheelTweenRef.current.kill()
+        wheelTweenRef.current = null
+      }
+      ScrollTrigger.refresh()
+    }
 
     function maxScroll() {
       return Math.max(0, track.scrollWidth - track.clientWidth)
@@ -317,10 +313,12 @@ export function useJourneyWheel(containerRef, trackRef) {
 
     container.addEventListener('wheel', onWheel, { passive: false })
     track.addEventListener('scroll', onTrackScroll, { passive: true })
+    mq.addEventListener('change', onMqChange)
 
     return () => {
       container.removeEventListener('wheel', onWheel)
       track.removeEventListener('scroll', onTrackScroll)
+      mq.removeEventListener('change', onMqChange)
       if (wheelTweenRef.current) {
         wheelTweenRef.current.kill()
         wheelTweenRef.current = null
@@ -444,4 +442,129 @@ export function useJourneyParallax(
       if (frontLayer) gsap.set(frontLayer, { clearProps: 'transform' })
     }
   }, [trackRef, layerRef, farLayerRef, nearLayerRef, meadowLayerRef, frontLayerRef, stageRef])
+}
+
+function getMobileScrollSpan(track) {
+  const metrics = getLoopMetrics(track)
+  return metrics?.journeySpan ?? Math.max(1, track.scrollWidth - track.clientWidth)
+}
+
+function setJourneyScrollProgress(track, progress) {
+  const metrics = getLoopMetrics(track)
+  const clamped = Math.max(0, Math.min(1, progress))
+  if (!metrics) {
+    const max = Math.max(0, track.scrollWidth - track.clientWidth)
+    track.scrollLeft = clamped * max
+    return
+  }
+  track.scrollLeft = metrics.loopStart + clamped * metrics.journeySpan
+}
+
+export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {
+  useEffect(() => {
+    const stage = stageRef.current
+    const track = trackRef.current
+    const page = pageRef?.current
+    if (!stage || !track) return undefined
+
+    const mobileMq = window.matchMedia('(max-width: 899px)')
+    const reducedMq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let pinTrigger = null
+
+    const teardown = () => {
+      pinTrigger?.kill()
+      pinTrigger = null
+      track.classList.remove('journey-track--mobile-scroll')
+      track.style.overflowX = ''
+      track.scrollLeft = 0
+    }
+
+    const setup = () => {
+      teardown()
+      if (!mobileMq.matches) return
+
+      track.classList.add('journey-track--mobile-scroll')
+
+      if (reducedMq.matches) {
+        track.style.overflowX = 'auto'
+        chaptersShowAll(track)
+        return
+      }
+
+      pinTrigger = ScrollTrigger.create({
+        trigger: stage,
+        start: 'top top',
+        end: () => `+=${Math.max(window.innerHeight * 1.15, getMobileScrollSpan(track) * 1.4)}`,
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.55,
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
+        onUpdate(self) {
+          setJourneyScrollProgress(track, self.progress)
+        },
+      })
+    }
+
+    function chaptersShowAll(trackEl) {
+      trackEl.querySelectorAll('.journey-chapter').forEach((chapter) => {
+        showChapter(chapter)
+      })
+    }
+
+    function onWheel(e) {
+      if (!mobileMq.matches) return
+
+      const deltaX = e.deltaX
+      const deltaY = wheelToPixels(e)
+      const delta = Math.abs(deltaX) > Math.abs(deltaY) * 0.6 ? deltaX : deltaY
+      if (Math.abs(delta) < 0.5) return
+
+      if (reducedMq.matches) {
+        const max = Math.max(0, track.scrollWidth - track.clientWidth)
+        if (max <= 0) return
+        e.preventDefault()
+        track.scrollLeft = Math.max(0, Math.min(max, track.scrollLeft + delta))
+        return
+      }
+
+      if (!pinTrigger) return
+
+      const stageTop = stage.getBoundingClientRect().top
+      const journeyActive = stageTop <= 1 && pinTrigger.progress < 0.999
+      const approaching = stageTop > 0 && stageTop < window.innerHeight
+      if (!journeyActive && !approaching) return
+
+      e.preventDefault()
+      window.scrollBy({ top: delta, left: 0, behavior: 'instant' })
+    }
+
+    setup()
+
+    const onChange = () => {
+      setup()
+      ScrollTrigger.refresh()
+    }
+
+    mobileMq.addEventListener('change', onChange)
+    reducedMq.addEventListener('change', onChange)
+    window.addEventListener('resize', onChange)
+    const wheelTarget = page || stage
+    wheelTarget.addEventListener('wheel', onWheel, { passive: false })
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => ScrollTrigger.refresh())
+      : null
+    resizeObserver?.observe(track)
+    resizeObserver?.observe(stage)
+
+    return () => {
+      mobileMq.removeEventListener('change', onChange)
+      reducedMq.removeEventListener('change', onChange)
+      window.removeEventListener('resize', onChange)
+      wheelTarget.removeEventListener('wheel', onWheel)
+      resizeObserver?.disconnect()
+      teardown()
+    }
+  }, [stageRef, trackRef, pageRef])
 }
