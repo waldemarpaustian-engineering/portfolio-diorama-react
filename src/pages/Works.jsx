@@ -88,9 +88,17 @@ export default function Works() {
                   <JourneyArt variant={chapter.art} />
                 </div>
                 <div className="journey-chapter__inner">
-                  <div className="journey-chapter__years">{chapter.years}</div>
                   <h2 className="journey-chapter__title">{text.title}</h2>
+                  {text.projects ? (
+                    <p className="journey-chapter__projects">{text.projects}</p>
+                  ) : null}
+                  {text.tagline ? (
+                    <p className="journey-chapter__tagline">{text.tagline}</p>
+                  ) : null}
                   <p className="journey-chapter__text">{text.text}</p>
+                  {text.note ? (
+                    <p className="journey-chapter__note">{text.note}</p>
+                  ) : null}
                 </div>
               </article>
             )

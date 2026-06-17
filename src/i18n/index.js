@@ -21,11 +21,11 @@ const resources = {
       about: {
         eyebrow: 'About me',
         title: 'Hi, I’m Waldemar.',
-        intro: 'I’m a frontend developer with more than 25 years of experience building interfaces that feel clear, fast, and thoughtful.',
+        intro: 'I’m a frontend developer with more than 25 years of experience building interfaces that feel clear, fast, and thoughtful. Freelance since 2012.',
         blocks: [
           {
             title: 'Frontend Development',
-            text: 'With React, Angular and Vue.js I build scalable frontends — from reusable components and libraries to microfrontend architectures designed for long-term maintainability and reliable everyday use.',
+            text: 'I build scalable frontends — from reusable components and libraries to architectures designed for long-term maintainability and reliable everyday use.',
           },
           {
             title: 'Industries & AI',
@@ -45,41 +45,46 @@ const resources = {
       work: {
         eyebrow: 'Work',
         title: 'A paper trail.',
-        lead: 'Eight chapters — from first websites to microfrontends and accessibility. Case studies will follow here later.',
+        lead: 'Six stations — from first frontends to AI-assisted development and design systems at scale. Freelance since 2012.',
         hint: 'Scroll to explore each station →',
         ariaTrack: 'Career chapters',
         chapters: [
           {
-            title: 'First steps — web & studies',
-            text: 'Computer science in Mannheim, internships, CMS and databases. PHP, Java, first interfaces — where the craft began.',
+            title: '1. Early Frontend & Web Craft (2000–2007)',
+            projects: '4+ Projects',
+            tagline: 'Learning by building',
+            text: 'During my computer science studies I gained hands-on experience at web agencies and as a working student at an AI company. That’s where my first frontends and interactive web applications took shape.',
           },
           {
-            title: 'Banking & enterprise Java',
-            text: 'Payment platforms, rating systems, model-driven architecture. Complex regulated environments, teams, long release cycles.',
+            title: '2. Frontend Framework Engineering (2007–2015)',
+            projects: '15+ Projects',
+            tagline: 'Building systems that generate interfaces',
+            text: 'Development of model-driven frontend systems, generators and reusable UI frameworks for complex enterprise applications. Freelance since 2012. Focus on automation, scaling and structured UI architecture.',
+            note: '(This is where the bulk of my enterprise banking projects live.)',
           },
           {
-            title: 'Switching frameworks — JSF to Angular',
-            text: 'Migrating legacy apps to modern frontends — Angular 2, GWT editors, rebuilding sales platforms from the ground up.',
+            title: '3. Modern Frontend Architecture (2015–2019)',
+            projects: '6+ Projects',
+            tagline: 'From legacy to component-driven systems',
+            text: 'Shift to modern frontend architectures and reactive UI concepts. Migration of existing systems and building scalable component landscapes.',
           },
           {
-            title: 'Chatbot & cloud',
-            text: 'Solo frontend for a conversational app with charts and live handoff. Then a greenfield ETL tool in AWS with Angular and D3.',
+            title: '4. Product & Platform Engineering (2019–2022)',
+            projects: '4 Projects',
+            tagline: 'Building products from zero',
+            text: 'Development of new platforms and digital products in startup and enterprise environments. Focus on product architecture, modular systems and integration.',
           },
           {
-            title: 'Startup — from zero to product',
-            text: 'First developer and architect in a startup — no-code form platform, React, GraphQL, design system with Storybook, scaling the team.',
+            title: '5. AI-Augmented Development (2022–Today)',
+            projects: '10+ AI-driven initiatives',
+            tagline: 'Human + AI workflows',
+            text: 'Early adoption of AI-assisted development and automated engineering processes. Using modern tools for code generation, analysis, refactoring and workflow optimization.',
           },
           {
-            title: 'Rail & Vue',
-            text: 'Passenger sales system — Vue.js 3, AWS, performant components in an agile environment.',
-          },
-          {
-            title: 'Design systems & public sector',
-            text: 'Robo-advisory and public administration — Angular across versions, company-wide design system, Flutter apps, mentoring.',
-          },
-          {
-            title: 'A11y, microfrontends & AI from 2023',
-            text: 'Hub app and microfrontend platform, Figma tokens, accessibility as a dedicated role — and AI-assisted development in everyday work since 2023.',
+            title: '6. Design Systems & Platform Scale (2021–Today)',
+            projects: '6+ Large-scale frontend systems',
+            tagline: 'Frontend ecosystems at scale',
+            text: 'Building and scaling company-wide design systems, component libraries and platform architectures. Focus on consistency, accessibility and scalable frontend strategies.',
           },
         ],
       },
@@ -118,11 +123,11 @@ const resources = {
       about: {
         eyebrow: 'Über mich',
         title: 'Hallo, ich bin Waldemar.',
-        intro: 'Ich bin Frontend-Entwickler — seit über 25 Jahren baue ich Weboberflächen, die klar, schnell und angenehm zu nutzen sind.',
+        intro: 'Ich bin Frontend-Entwickler — seit über 25 Jahren baue ich Weboberflächen, die klar, schnell und angenehm zu nutzen sind. Freiberufler seit 2012.',
         blocks: [
           {
             title: 'Frontend Entwicklung',
-            text: 'Mit React, Angular und Vue.js realisiere ich skalierbare Frontends — von wiederverwendbaren Komponenten und Libraries bis zu Microfrontend-Architekturen, die langfristig wartbar und im Alltag zuverlässig funktionieren.',
+            text: 'Ich realisiere skalierbare Frontends — von wiederverwendbaren Komponenten und Libraries bis zu Architekturen, die langfristig wartbar und im Alltag zuverlässig funktionieren.',
           },
           {
             title: 'Branchen & KI',
@@ -142,41 +147,46 @@ const resources = {
       work: {
         eyebrow: 'Arbeit',
         title: 'Eine Papier-Reise.',
-        lead: 'Acht Kapitel — von den ersten Webseiten bis zu Microfrontends und Barrierefreiheit. Case Studies folgen hier später.',
+        lead: 'Sechs Stationen — von den ersten Frontends bis zu KI-gestützter Entwicklung und Design Systems im großen Maßstab. Freiberufler seit 2012.',
         hint: 'Scrollen, um die Stationen zu entdecken →',
         ariaTrack: 'Werdegang-Kapitel',
         chapters: [
           {
-            title: 'Erste Schritte — Web & Studium',
-            text: 'Informatikstudium in Mannheim mit Abschluss als Diplom-Informatiker, dazu Praktika sowie Arbeit mit CMS und Datenbanken. PHP, Java, erste Oberflächen — hier hat das Handwerk begonnen.',
+            title: '1. Early Frontend & Web Craft (2000–2007)',
+            projects: '4+ Projects',
+            tagline: 'Learning by building',
+            text: 'Während meines Informatikstudiums sammelte ich praktische Erfahrung in Web-Agenturen und als Werkstudent in einer KI-Firma. Dort entstanden meine ersten Frontends und interaktiven Web-Anwendungen.',
           },
           {
-            title: 'Banken & Enterprise Java',
-            text: 'Zahlungsverkehr, Rating-Plattformen, modellgetriebene Architektur. Komplexe regulierte Systeme, Teams, lange Release-Zyklen.',
+            title: '2. Frontend Framework Engineering (2007–2015)',
+            projects: '15+ Projects',
+            tagline: 'Building systems that generate interfaces',
+            text: 'Entwicklung modellgetriebener Frontend-Systeme, Generatoren und wiederverwendbarer UI-Frameworks für komplexe Enterprise-Anwendungen. Freiberufler seit 2012. Fokus auf Automatisierung, Skalierung und strukturierten UI-Aufbau.',
+            note: '(Hier steckt der größte Block meiner Enterprise-Banking-Projekte drin.)',
           },
           {
-            title: 'Frameworks wechseln — JSF zu Angular',
-            text: 'Migration alter Anwendungen auf moderne Frontends — Angular 2, GWT-Editoren, Vertriebsplattformen neu gedacht.',
+            title: '3. Modern Frontend Architecture (2015–2019)',
+            projects: '6+ Projects',
+            tagline: 'From legacy to component-driven systems',
+            text: 'Wechsel in moderne Frontend-Architekturen mit reaktiven UI-Konzepten. Migration bestehender Systeme und Aufbau skalierbarer Komponentenlandschaften.',
           },
           {
-            title: 'Chatbot & Cloud',
-            text: 'Alleine Frontend für eine Conversational App mit Charts und Live-Übergabe. Danach ein ETL-Tool in der AWS-Cloud — Greenfield mit Angular und D3.',
+            title: '4. Product & Platform Engineering (2019–2022)',
+            projects: '4 Projects',
+            tagline: 'Building products from zero',
+            text: 'Entwicklung neuer Plattformen und digitaler Produkte im Startup- und Enterprise-Umfeld. Fokus auf Produktarchitektur, modulare Systeme und Integration.',
           },
           {
-            title: 'Startup — von null auf Produkt',
-            text: 'Erstentwickler und Architekt in einem Startup — No-Code-Formularplattform, React, GraphQL, Design System mit Storybook, Team skalieren.',
+            title: '5. AI-Augmented Development (2022–Today)',
+            projects: '10+ AI-driven initiatives',
+            tagline: 'Human + AI workflows',
+            text: 'Früher Einstieg in KI-gestützte Entwicklung und automatisierte Entwicklungsprozesse. Einsatz moderner Werkzeuge zur Codegenerierung, Analyse, Refactoring und Workflow-Optimierung.',
           },
           {
-            title: 'Bahn & Vue',
-            text: 'Vertriebssystem Personenverkehr — Vue.js 3, AWS, performante Komponenten im agilen Umfeld.',
-          },
-          {
-            title: 'Design Systems & öffentlicher Sektor',
-            text: 'Robo-Advisory und öffentliche Verwaltung — Angular über viele Versionen, unternehmensweites Design System, Flutter-Apps, Mentoring.',
-          },
-          {
-            title: 'A11y, Microfrontends & KI ab 2023',
-            text: 'Hub-App und Microfrontend-Plattform, Figma Tokens, Barrierefreiheit als feste Rolle — und KI-gestützte Entwicklung im Alltag seit 2023.',
+            title: '6. Design Systems & Platform Scale (2021–Today)',
+            projects: '6+ Large-scale frontend systems',
+            tagline: 'Frontend ecosystems at scale',
+            text: 'Aufbau und Skalierung unternehmensweiter Design Systeme, Komponentenbibliotheken und Plattformarchitekturen. Fokus auf Konsistenz, Accessibility und skalierbare Frontend-Strategien.',
           },
         ],
       },
@@ -215,11 +225,11 @@ const resources = {
       about: {
         eyebrow: 'Sobre mí',
         title: 'Hola, soy Waldemar.',
-        intro: 'Soy desarrollador frontend con más de 25 años de experiencia creando interfaces claras, rápidas y agradables de usar.',
+        intro: 'Soy desarrollador frontend con más de 25 años de experiencia creando interfaces claras, rápidas y agradables de usar. Freelance desde 2012.',
         blocks: [
           {
             title: 'Desarrollo Frontend',
-            text: 'Con React, Angular y Vue.js desarrollo frontends escalables — desde componentes y librerías reutilizables hasta arquitecturas microfrontend, pensadas para un mantenimiento sostenible y un uso fiable en el día a día.',
+            text: 'Desarrollo frontends escalables — desde componentes y librerías reutilizables hasta arquitecturas pensadas para un mantenimiento sostenible y un uso fiable en el día a día.',
           },
           {
             title: 'Sectores & IA',
@@ -239,18 +249,47 @@ const resources = {
       work: {
         eyebrow: 'Trabajo',
         title: 'Un camino de papel.',
-        lead: 'Ocho capítulos — desde las primeras webs hasta microfrontends y accesibilidad. Los casos de estudio llegarán después.',
+        lead: 'Seis estaciones — desde los primeros frontends hasta desarrollo con IA y design systems a escala. Freelance desde 2012.',
         hint: 'Desplázate para descubrir cada estación →',
         ariaTrack: 'Capítulos de trayectoria',
         chapters: [
-          { title: 'Primeros pasos — web y estudios', text: 'Informática en Mannheim, prácticas, CMS y bases de datos. PHP, Java, primeras interfaces — aquí empezó el oficio.' },
-          { title: 'Banca y Java enterprise', text: 'Plataformas de pagos, rating, arquitectura dirigida por modelos. Entornos regulados, equipos, ciclos largos.' },
-          { title: 'Cambio de frameworks — JSF a Angular', text: 'Migración legacy a frontends modernos — Angular 2, editores GWT, plataformas de ventas rehechas.' },
-          { title: 'Chatbot y nube', text: 'Frontend en solitario para app conversacional con gráficos. Después, ETL en AWS con Angular y D3.' },
-          { title: 'Startup — de cero a producto', text: 'Primer desarrollador y arquitecto — plataforma de formularios, React, GraphQL, design system con Storybook.' },
-          { title: 'Ferrocarril y Vue', text: 'Ventas de transporte de pasajeros — Vue.js 3, AWS, componentes performantes.' },
-          { title: 'Design systems y sector público', text: 'Robo-advisory y administración pública — Angular, design system corporativo, Flutter, mentoring.' },
-          { title: 'A11y, microfrontends e IA desde 2023', text: 'Hub app, microfrontends, tokens Figma, accesibilidad dedicada — IA en el desarrollo desde 2023.' },
+          {
+            title: '1. Early Frontend & Web Craft (2000–2007)',
+            projects: '4+ Projects',
+            tagline: 'Learning by building',
+            text: 'Durante mis estudios de informática adquirí experiencia práctica en agencias web y como estudiante en una empresa de IA. Allí surgieron mis primeros frontends y aplicaciones web interactivas.',
+          },
+          {
+            title: '2. Frontend Framework Engineering (2007–2015)',
+            projects: '15+ Projects',
+            tagline: 'Building systems that generate interfaces',
+            text: 'Desarrollo de sistemas frontend dirigidos por modelos, generadores y frameworks UI reutilizables para aplicaciones enterprise complejas. Freelance desde 2012. Enfoque en automatización, escalado y arquitectura UI estructurada.',
+            note: '(Aquí está la mayor parte de mis proyectos enterprise en el sector bancario.)',
+          },
+          {
+            title: '3. Modern Frontend Architecture (2015–2019)',
+            projects: '6+ Projects',
+            tagline: 'From legacy to component-driven systems',
+            text: 'Transición a arquitecturas frontend modernas y conceptos UI reactivos. Migración de sistemas existentes y construcción de paisajes de componentes escalables.',
+          },
+          {
+            title: '4. Product & Platform Engineering (2019–2022)',
+            projects: '4 Projects',
+            tagline: 'Building products from zero',
+            text: 'Desarrollo de nuevas plataformas y productos digitales en entornos startup y enterprise. Enfoque en arquitectura de producto, sistemas modulares e integración.',
+          },
+          {
+            title: '5. AI-Augmented Development (2022–Today)',
+            projects: '10+ AI-driven initiatives',
+            tagline: 'Human + AI workflows',
+            text: 'Adopción temprana del desarrollo asistido por IA y procesos de ingeniería automatizados. Uso de herramientas modernas para generación de código, análisis, refactoring y optimización de flujos.',
+          },
+          {
+            title: '6. Design Systems & Platform Scale (2021–Today)',
+            projects: '6+ Large-scale frontend systems',
+            tagline: 'Frontend ecosystems at scale',
+            text: 'Construcción y escalado de design systems corporativos, bibliotecas de componentes y arquitecturas de plataforma. Enfoque en consistencia, accesibilidad y estrategias frontend escalables.',
+          },
         ],
       },
       blog: {
@@ -288,11 +327,11 @@ const resources = {
       about: {
         eyebrow: 'À propos',
         title: 'Bonjour, je suis Waldemar.',
-        intro: 'Je suis développeur frontend avec plus de 25 ans d’expérience à créer des interfaces claires, rapides et agréables à utiliser.',
+        intro: 'Je suis développeur frontend avec plus de 25 ans d’expérience à créer des interfaces claires, rapides et agréables à utiliser. Freelance depuis 2012.',
         blocks: [
           {
             title: 'Développement frontend',
-            text: 'Avec React, Angular et Vue.js, je conçois des frontends évolutifs — des composants et bibliothèques réutilisables aux architectures microfrontend, pensés pour une maintenance durable et une utilisation fiable au quotidien.',
+            text: 'Je conçois des frontends évolutifs — des composants et bibliothèques réutilisables aux architectures pensées pour une maintenance durable et une utilisation fiable au quotidien.',
           },
           {
             title: 'Secteurs & IA',
@@ -312,18 +351,47 @@ const resources = {
       work: {
         eyebrow: 'Travail',
         title: 'Un voyage en papier.',
-        lead: 'Huit chapitres — des premiers sites aux microfrontends et à l’accessibilité. Les études de cas suivront ici.',
+        lead: 'Six stations — des premiers frontends au développement assisté par IA et aux design systems à grande échelle. Freelance depuis 2012.',
         hint: 'Fais défiler pour découvrir chaque station →',
         ariaTrack: 'Chapitres du parcours',
         chapters: [
-          { title: 'Premiers pas — web et études', text: 'Informatique à Mannheim, stages, CMS et bases de données. PHP, Java, premières interfaces — le métier commence ici.' },
-          { title: 'Banque et Java enterprise', text: 'Paiements, notation, architecture pilotée par modèles. Environnements régulés, équipes, cycles longs.' },
-          { title: 'Changement de frameworks — JSF vers Angular', text: 'Migration legacy vers frontends modernes — Angular 2, éditeurs GWT, plateformes commerciales repensées.' },
-          { title: 'Chatbot et cloud', text: 'Frontend solo pour app conversationnelle avec graphiques. Puis ETL sur AWS avec Angular et D3.' },
-          { title: 'Startup — de zéro au produit', text: 'Premier développeur et architecte — plateforme de formulaires, React, GraphQL, design system avec Storybook.' },
-          { title: 'Rail et Vue', text: 'Vente transport voyageurs — Vue.js 3, AWS, composants performants.' },
-          { title: 'Design systems et secteur public', text: 'Robo-advisory et administration publique — Angular, design system d’entreprise, Flutter, mentoring.' },
-          { title: 'A11y, microfrontends et IA depuis 2023', text: 'Hub app, microfrontends, tokens Figma, accessibilité dédiée — IA au quotidien depuis 2023.' },
+          {
+            title: '1. Early Frontend & Web Craft (2000–2007)',
+            projects: '4+ Projects',
+            tagline: 'Learning by building',
+            text: 'Pendant mes études d’informatique, j’ai acquis de l’expérience pratique en agences web et en tant qu’étudiant salarié dans une entreprise d’IA. C’est là que mes premiers frontends et applications web interactives ont vu le jour.',
+          },
+          {
+            title: '2. Frontend Framework Engineering (2007–2015)',
+            projects: '15+ Projects',
+            tagline: 'Building systems that generate interfaces',
+            text: 'Développement de systèmes frontend pilotés par modèles, de générateurs et de frameworks UI réutilisables pour des applications enterprise complexes. Freelance depuis 2012. Accent sur l’automatisation, la montée en charge et l’architecture UI structurée.',
+            note: '(C’est ici que se trouve la plus grande partie de mes projets enterprise dans le secteur bancaire.)',
+          },
+          {
+            title: '3. Modern Frontend Architecture (2015–2019)',
+            projects: '6+ Projects',
+            tagline: 'From legacy to component-driven systems',
+            text: 'Passage à des architectures frontend modernes et des concepts UI réactifs. Migration de systèmes existants et construction de paysages de composants évolutifs.',
+          },
+          {
+            title: '4. Product & Platform Engineering (2019–2022)',
+            projects: '4 Projects',
+            tagline: 'Building products from zero',
+            text: 'Développement de nouvelles plateformes et produits numériques en startup et en enterprise. Accent sur l’architecture produit, les systèmes modulaires et l’intégration.',
+          },
+          {
+            title: '5. AI-Augmented Development (2022–Today)',
+            projects: '10+ AI-driven initiatives',
+            tagline: 'Human + AI workflows',
+            text: 'Adoption précoce du développement assisté par IA et de processus d’ingénierie automatisés. Utilisation d’outils modernes pour la génération de code, l’analyse, le refactoring et l’optimisation des workflows.',
+          },
+          {
+            title: '6. Design Systems & Platform Scale (2021–Today)',
+            projects: '6+ Large-scale frontend systems',
+            tagline: 'Frontend ecosystems at scale',
+            text: 'Construction et montée en charge de design systems d’entreprise, de bibliothèques de composants et d’architectures de plateforme. Accent sur la cohérence, l’accessibilité et les stratégies frontend évolutives.',
+          },
         ],
       },
       blog: {
