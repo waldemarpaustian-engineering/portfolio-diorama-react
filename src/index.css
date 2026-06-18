@@ -631,6 +631,13 @@ html[data-theme="dark"] .journey-page {
   align-self: stretch;
   pointer-events: none;
 }
+.journey-track__loop-buffer {
+  flex: 0 0 0;
+  width: 0;
+  align-self: stretch;
+  pointer-events: none;
+  visibility: hidden;
+}
 .journey-track__rail {
   display: none;
 }

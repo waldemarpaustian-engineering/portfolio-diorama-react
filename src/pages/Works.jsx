@@ -158,6 +158,7 @@ export default function Works() {
           })}
 
           <div className="journey-track__spacer" aria-hidden />
+          <div className="journey-track__loop-buffer" aria-hidden />
         </div>
 
         <div className="journey-dots" aria-hidden>

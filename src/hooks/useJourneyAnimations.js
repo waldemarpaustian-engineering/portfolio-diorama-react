@@ -50,13 +50,33 @@ function computeLoopMetrics(track) {
 
 function refreshJourneyMetrics(track) {
   const metrics = computeLoopMetrics(track)
-  if (metrics) journeyMetricsCache.set(track, metrics)
-  else journeyMetricsCache.delete(track)
+  if (metrics) {
+    journeyMetricsCache.set(track, metrics)
+    applyJourneyLoopBuffer(track, metrics)
+  } else {
+    journeyMetricsCache.delete(track)
+  }
   return metrics
+}
+
+function applyJourneyLoopBuffer(track, metrics) {
+  const buffer = track.querySelector('.journey-track__loop-buffer')
+  if (!buffer || !metrics) return
+  const span = Math.round(metrics.journeySpan)
+  buffer.style.flex = `0 0 ${span}px`
+  buffer.style.width = `${span}px`
 }
 
 function getJourneyMetrics(track) {
   return journeyMetricsCache.get(track) ?? refreshJourneyMetrics(track)
+}
+
+const JOURNEY_LOOP_PIN_MULTIPLIER = 2.5
+
+function hasJourneyLoop(metrics, track) {
+  if (!metrics?.loopDistance || metrics.loopDistance <= metrics.journeySpan + 16) return false
+  const firstClone = track?.querySelector('.journey-chapter[data-loop="clone"]')
+  return Boolean(firstClone && firstClone.offsetWidth > 0)
 }
 
 function getJourneyScrollEnd(track, metrics) {
@@ -65,18 +85,43 @@ function getJourneyScrollEnd(track, metrics) {
   return Math.min(physicalMax, idealEnd)
 }
 
+function normalizeJourneyScrollLeft(track, value, metrics) {
+  if (!metrics) return value
+
+  const journeyEnd = getJourneyScrollEnd(track, metrics)
+  let next = value
+
+  if (hasJourneyLoop(metrics, track)) {
+    while (next >= metrics.loopEnd) next -= metrics.loopDistance
+    while (next < metrics.loopStart) next += metrics.loopDistance
+    return next
+  }
+
+  if (next > journeyEnd) {
+    const overflow = next - journeyEnd
+    return metrics.loopStart + (overflow % metrics.journeySpan)
+  }
+
+  return Math.max(metrics.loopStart, Math.min(journeyEnd, next))
+}
+
+function getNormalizedJourneyOffset(track, metrics) {
+  const normalized = normalizeJourneyScrollLeft(track, track.scrollLeft, metrics)
+  return normalized - metrics.loopStart
+}
+
 function getJourneyProgress(track, metrics) {
-  const scrollEnd = getJourneyScrollEnd(track, metrics)
-  const offset = track.scrollLeft - metrics.loopStart
-  const span = Math.max(1, scrollEnd - metrics.loopStart)
+  const span = Math.max(1, metrics.journeySpan)
+  const offset = getNormalizedJourneyOffset(track, metrics)
+
   if (offset <= 0) return 0
-  return Math.min(1, offset / span)
+  if (offset <= span) return offset / span
+
+  return ((offset - span) % span) / span
 }
 
 function clampJourneyScroll(track, value, metrics) {
-  if (!metrics) return value
-  const journeyEnd = getJourneyScrollEnd(track, metrics)
-  return Math.max(metrics.loopStart, Math.min(journeyEnd, value))
+  return normalizeJourneyScrollLeft(track, value, metrics)
 }
 
 function getWalkerEndFeetStageX(track, metrics, noteEl) {
@@ -431,9 +476,13 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
       if (!shouldHijackHorizontalWheel(stage, track, delta)) return
 
       const metrics = getJourneyMetrics(track)
-      const startValue = metrics ? clampJourneyScroll(track, track.scrollLeft, metrics) : track.scrollLeft
+      const startValue = metrics
+        ? normalizeJourneyScrollLeft(track, track.scrollLeft, metrics)
+        : track.scrollLeft
       const rawTarget = startValue + delta
-      const next = metrics ? clampJourneyScroll(track, rawTarget, metrics) : clamp(rawTarget)
+      const next = metrics
+        ? normalizeJourneyScrollLeft(track, rawTarget, metrics)
+        : clamp(rawTarget)
       if (Math.abs(next - startValue) < 0.5) return
 
       e.preventDefault()
@@ -448,7 +497,7 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
         onUpdate: () => {
           const m = getJourneyMetrics(track)
           const wrapped = m
-            ? clampJourneyScroll(track, wheelStateRef.current.value, m)
+            ? normalizeJourneyScrollLeft(track, wheelStateRef.current.value, m)
             : clamp(wheelStateRef.current.value)
           isNormalizing = true
           track.scrollLeft = wrapped
@@ -461,7 +510,7 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
       if (!mq.matches || isNormalizing) return
       const metrics = getJourneyMetrics(track)
       if (!metrics) return
-      const normalized = clampJourneyScroll(track, track.scrollLeft, metrics)
+      const normalized = normalizeJourneyScrollLeft(track, track.scrollLeft, metrics)
       if (Math.abs(normalized - track.scrollLeft) > 0.5) {
         isNormalizing = true
         track.scrollLeft = normalized
@@ -625,14 +674,22 @@ function getMobileScrollSpan(track) {
 
 function setJourneyScrollProgress(track, progress) {
   const metrics = getJourneyMetrics(track)
-  const clamped = Math.max(0, Math.min(1, progress))
   if (!metrics) {
     const max = Math.max(0, track.scrollWidth - track.clientWidth)
-    track.scrollLeft = clamped * max
+    const wrapped = progress - Math.floor(progress)
+    const fraction = wrapped < 0 ? wrapped + 1 : wrapped
+    track.scrollLeft = fraction * max
     return
   }
   const scrollEnd = getJourneyScrollEnd(track, metrics)
-  track.scrollLeft = metrics.loopStart + clamped * (scrollEnd - metrics.loopStart)
+  const span = Math.max(1, scrollEnd - metrics.loopStart)
+  const wrapped = progress - Math.floor(progress)
+  const fraction = wrapped < 0 ? wrapped + 1 : wrapped
+  track.scrollLeft = normalizeJourneyScrollLeft(
+    track,
+    metrics.loopStart + fraction * span,
+    metrics,
+  )
 }
 
 export function useJourneySkyGlow(stageRef, theme) {
@@ -916,14 +973,14 @@ export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {
       pinTrigger = ScrollTrigger.create({
         trigger: stage,
         start: 'top top',
-        end: () => `+=${Math.max(window.innerHeight * 1.15, getMobileScrollSpan(track) * 1.4)}`,
+        end: () => `+=${Math.max(window.innerHeight * 1.15, getMobileScrollSpan(track) * 1.4) * JOURNEY_LOOP_PIN_MULTIPLIER}`,
         pin: true,
         pinSpacing: true,
         scrub: 0.55,
         invalidateOnRefresh: true,
         anticipatePin: 1,
         onUpdate(self) {
-          setJourneyScrollProgress(track, self.progress)
+          setJourneyScrollProgress(track, self.progress * JOURNEY_LOOP_PIN_MULTIPLIER)
         },
       })
 
