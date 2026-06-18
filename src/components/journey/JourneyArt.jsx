@@ -15,14 +15,14 @@ export function JourneyArt({ variant }) {
   switch (variant) {
     case 'studium':
       return (
-        <PaperShadow className="journey-art--studium">
-          <svg viewBox="0 0 200 160" aria-hidden>
-            <rect x="52" y="28" width="96" height="72" rx="6" fill="#f8f4ec" stroke="#2b2a33" strokeWidth="2.2" />
-            <rect x="60" y="38" width="80" height="48" fill="#c8e4f8" stroke="#2b2a33" strokeWidth="1.5" />
-            <text x="100" y="68" textAnchor="middle" fontSize="11" fill="#4a7fd4" fontFamily="monospace">&lt;/&gt;</text>
-            <path d="M88 108h24v8H88z" fill="#d4c4a8" stroke="#2b2a33" strokeWidth="1.5" />
-            <rect x="40" y="118" width="120" height="8" rx="2" fill="#e8dcc8" stroke="#2b2a33" strokeWidth="1.5" />
-          </svg>
+        <PaperShadow className="journey-art journey-art--studium">
+          <img
+            src="/journey/art-studium-early-web.png"
+            alt=""
+            aria-hidden
+            decoding="async"
+            draggable={false}
+          />
         </PaperShadow>
       )
     case 'banking':
@@ -38,18 +38,14 @@ export function JourneyArt({ variant }) {
       )
     case 'frameworks':
       return (
-        <PaperShadow className="journey-art--frameworks">
-          <svg viewBox="0 0 200 160" aria-hidden>
-            <rect x="38" y="90" width="44" height="44" rx="4" fill="#b8ddf5" stroke="#2b2a33" strokeWidth="2" transform="rotate(-6 60 112)" />
-            <rect x="78" y="78" width="44" height="44" rx="4" fill="#ffe8c8" stroke="#2b2a33" strokeWidth="2" />
-            <rect x="118" y="92" width="44" height="44" rx="4" fill="#c8f0c8" stroke="#2b2a33" strokeWidth="2" transform="rotate(8 140 114)" />
-            <path d="M72 100h16M108 88h16" stroke="#4a7fd4" strokeWidth="2.5" strokeLinecap="round" markerEnd="url(#arrow)" />
-            <defs>
-              <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                <path d="M0,0 L6,3 L0,6 Z" fill="#4a7fd4" />
-              </marker>
-            </defs>
-          </svg>
+        <PaperShadow className="journey-art journey-art--frameworks">
+          <img
+            src="/journey/art-frameworks.png"
+            alt=""
+            aria-hidden
+            decoding="async"
+            draggable={false}
+          />
         </PaperShadow>
       )
     case 'chatbot':

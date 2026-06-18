@@ -13,6 +13,7 @@ import {
   useJourneyParallax,
   useJourneyMobileScroll,
   useJourneySkyGlow,
+  useJourneyRain,
 } from '../hooks/useJourneyAnimations.js'
 
 export default function Works() {
@@ -25,6 +26,7 @@ export default function Works() {
   const walkerRef = useRef(null)
   const layerRef = useRef(null)
   const layerFarRef = useRef(null)
+  const layerRainRef = useRef(null)
   const layerNearRef = useRef(null)
   const layerMeadowRef = useRef(null)
   const layerFrontRef = useRef(null)
@@ -40,6 +42,7 @@ export default function Works() {
   useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef, layerMeadowRef, layerFrontRef, stageRef)
   useJourneyMobileScroll(stageRef, trackRef, pageRef)
   useJourneySkyGlow(stageRef, theme)
+  useJourneyRain(stageRef, layerRainRef, theme)
 
   return (
     <div className="page journey-page" ref={pageRef}>
@@ -80,6 +83,8 @@ export default function Works() {
             <JourneyCutout key={item.id} item={item} />
           ))}
         </div>
+
+        <div className="journey-layer journey-layer--rain" ref={layerRainRef} aria-hidden />
 
         <div className="journey-track" ref={trackRef} role="region" aria-label={t('work.ariaTrack')}>
           <div className="journey-track__rail" aria-hidden />

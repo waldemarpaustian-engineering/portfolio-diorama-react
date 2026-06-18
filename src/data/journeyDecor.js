@@ -15,17 +15,21 @@ const SKY_CLOUD_HEIGHT = 80
 const SUN_SIZE = 118
 const MOON_SIZE = 112
 
-function cloudItem(id, src, left, top, nativeW, nativeH) {
+// Wolke, aus der gelegentlich Nieselregen fällt (Light Mode)
+export const JOURNEY_RAIN_CLOUD_ID = 'cloud-2'
+
+function cloudItem(id, src, left, top, nativeW, nativeH, options = {}) {
   const width = Math.round((nativeW / nativeH) * SKY_CLOUD_HEIGHT)
   return {
     id,
     type: 'image',
     src,
     fallback: 'cloud',
-    className: 'journey-cutout--sky journey-cutout--sky-front',
+    className: `journey-cutout--sky journey-cutout--sky-front${options.rainSource ? ' journey-cutout--rain-source' : ''}`,
     width,
     height: SKY_CLOUD_HEIGHT,
     style: { left, top, zIndex: 1 },
+    ...(options.rainSource ? { rainSource: true } : {}),
   }
 }
 
@@ -181,7 +185,7 @@ export const JOURNEY_FAR_DECOR_LIGHT = [
   sunItem('sun-1', '62%', '7%'),
   sunItem('sun-2', '128%', '5%'),
   cloudItem('cloud-1', '/journey/cutouts/cloud-1.png', '10%', '13%', 180, 107),
-  cloudItem('cloud-2', '/journey/cutouts/cloud-2.png', '38%', '9%', 228, 66),
+  cloudItem('cloud-2', '/journey/cutouts/cloud-2.png', '38%', '9%', 228, 66, { rainSource: true }),
   cloudItem('cloud-3', '/journey/cutouts/cloud-3.png', '84%', '15%', 210, 133),
   cloudItem('cloud-4', '/journey/cutouts/cloud-4.png', '152%', '11%', 228, 86),
   cloudItem('cloud-5', '/journey/cutouts/cloud-5.png', '188%', '14%', 185, 109),

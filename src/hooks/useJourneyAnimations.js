@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { WALKER_BOY_FRAMES } from '../components/journey/JourneyArt.jsx'
+import { JOURNEY_RAIN_CLOUD_ID } from '../data/journeyDecor.js'
 
 const WALKER_FRAME_COUNT = WALKER_BOY_FRAMES.length
 
@@ -529,6 +530,182 @@ export function useJourneySkyGlow(stageRef, theme) {
       gsap.set(stage.querySelectorAll('.journey-celestial__halo-glow, .journey-celestial img'), { clearProps: 'all' })
     }
   }, [stageRef, theme])
+}
+
+const RAIN_DROP_COUNT = 48
+const RAIN_DURATION_MIN_S = 5
+const RAIN_DURATION_MAX_S = 8
+const RAIN_INTERVAL_S = 10
+
+function getRainZoneLayout(cloud, layer, stage) {
+  const layerRect = layer.getBoundingClientRect()
+  const cloudRect = cloud.getBoundingClientRect()
+  const width = cloudRect.width * 0.82
+  const inset = (cloudRect.width - width) / 2
+  const left = cloudRect.left - layerRect.left + inset
+  const top = cloudRect.bottom - layerRect.top - 4
+
+  const meadow = stage.querySelector('.journey-meadow-strip')
+  const grassTop = meadow
+    ? meadow.getBoundingClientRect().top - layerRect.top
+    : layerRect.height
+  const height = Math.max(48, grassTop - top)
+
+  return { left, top, width, height }
+}
+
+function applyRainZoneLayout(zone, layout) {
+  zone.style.left = `${layout.left}px`
+  zone.style.top = `${layout.top}px`
+  zone.style.width = `${layout.width}px`
+  zone.style.height = `${layout.height}px`
+}
+
+export function useJourneyRain(stageRef, rainRef, theme) {
+  useEffect(() => {
+    if (theme === 'dark') return undefined
+
+    const stage = stageRef.current
+    const layer = rainRef.current
+    if (!stage || !layer) return undefined
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined
+    }
+
+    let idleTimer = null
+    let stopTimer = null
+    let dropTweens = []
+    let fadeTween = null
+    let zoneEl = null
+    let disposed = false
+    let tickerActive = false
+
+    const getRainCloud = () => stage.querySelector(`[data-decor-id="${JOURNEY_RAIN_CLOUD_ID}"]`)
+
+    const syncZone = () => {
+      if (!zoneEl) return
+      const cloud = getRainCloud()
+      if (!cloud) return
+      applyRainZoneLayout(zoneEl, getRainZoneLayout(cloud, layer, stage))
+    }
+
+    const onTick = () => syncZone()
+
+    const startZoneSync = () => {
+      if (tickerActive) return
+      tickerActive = true
+      gsap.ticker.add(onTick)
+    }
+
+    const stopZoneSync = () => {
+      if (!tickerActive) return
+      tickerActive = false
+      gsap.ticker.remove(onTick)
+    }
+
+    const clearRain = () => {
+      clearTimeout(stopTimer)
+      stopTimer = null
+      dropTweens.forEach((tween) => tween.kill())
+      dropTweens = []
+      fadeTween?.kill()
+      fadeTween = null
+      stopZoneSync()
+      gsap.killTweensOf(layer)
+      layer.replaceChildren()
+      zoneEl = null
+      gsap.set(layer, { opacity: 0 })
+    }
+
+    const scheduleIdle = () => {
+      if (disposed) return
+      const wait = RAIN_INTERVAL_S * 1000
+      idleTimer = window.setTimeout(startRain, wait)
+    }
+
+    const startRain = () => {
+      if (disposed) return
+
+      const cloud = getRainCloud()
+      if (!cloud) {
+        scheduleIdle()
+        return
+      }
+
+      clearRain()
+
+      const layout = getRainZoneLayout(cloud, layer, stage)
+      zoneEl = document.createElement('div')
+      zoneEl.className = 'journey-rain__zone'
+      applyRainZoneLayout(zoneEl, layout)
+      layer.appendChild(zoneEl)
+      startZoneSync()
+
+      for (let i = 0; i < RAIN_DROP_COUNT; i += 1) {
+        const drop = document.createElement('span')
+        const tilt = 5 + Math.random() * 4
+        drop.className = 'journey-rain__drop'
+        drop.style.left = `${Math.random() * 100}%`
+        drop.style.top = `${-4 - Math.random() * 20}%`
+        drop.style.height = `${7 + Math.random() * 4}px`
+        drop.style.width = `${1 + Math.random() * 0.55}px`
+        drop.style.opacity = String(0.46 + Math.random() * 0.24)
+        zoneEl.appendChild(drop)
+
+        gsap.set(drop, { rotation: tilt, transformOrigin: '50% 0%' })
+        dropTweens.push(gsap.fromTo(
+          drop,
+          { y: 0 },
+          {
+            y: () => zoneEl.offsetHeight + 6,
+            rotation: tilt,
+            duration: 1 + Math.random() * 0.55,
+            repeat: -1,
+            ease: 'none',
+            delay: Math.random() * 2.8,
+          },
+        ))
+      }
+
+      fadeTween = gsap.to(layer, {
+        opacity: 1,
+        duration: 1.2,
+        ease: 'sine.out',
+      })
+
+      const rainDuration = (RAIN_DURATION_MIN_S + Math.random() * (RAIN_DURATION_MAX_S - RAIN_DURATION_MIN_S)) * 1000
+      stopTimer = window.setTimeout(() => {
+        fadeTween = gsap.to(layer, {
+          opacity: 0,
+          duration: 2,
+          ease: 'sine.in',
+          onComplete: () => {
+            clearRain()
+            scheduleIdle()
+          },
+        })
+      }, rainDuration)
+    }
+
+    const onResize = () => syncZone()
+
+    window.addEventListener('resize', onResize, { passive: true })
+
+    let bootRaf = requestAnimationFrame(() => {
+      bootRaf = requestAnimationFrame(() => {
+        if (!disposed) startRain()
+      })
+    })
+
+    return () => {
+      disposed = true
+      cancelAnimationFrame(bootRaf)
+      clearTimeout(idleTimer)
+      window.removeEventListener('resize', onResize)
+      clearRain()
+    }
+  }, [stageRef, rainRef, theme])
 }
 
 export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {

@@ -637,6 +637,30 @@ html[data-theme="dark"] .journey-page {
 .journey-layer--far {
   z-index: 1;
 }
+.journey-layer--rain {
+  z-index: 10;
+  opacity: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.journey-rain__zone {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+.journey-rain__drop {
+  position: absolute;
+  border-radius: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(58, 92, 132, 0.08) 0%,
+    rgba(52, 84, 124, 0.42) 35%,
+    rgba(42, 72, 112, 0.62) 100%
+  );
+  box-shadow: 0 0 1px rgba(72, 108, 148, 0.28);
+  pointer-events: none;
+  will-change: transform;
+}
 .journey-layer--near {
   z-index: 2;
 }
@@ -964,6 +988,46 @@ html[data-theme="dark"] .journey-walker__frame {
   position: relative;
   width: min(128px, 52%);
 }
+.journey-chapter:has(.journey-art--studium) {
+  gap: 0;
+  padding-top: 24px;
+}
+.journey-chapter:has(.journey-art--studium) .journey-chapter__scene {
+  min-height: 64px;
+  padding-bottom: 0;
+  margin-bottom: -8px;
+}
+.journey-art--studium {
+  width: min(184px, 66%);
+  transform: translateY(14px);
+}
+.journey-art--studium .journey-art__shadow {
+  display: none;
+}
+.journey-art--studium img {
+  background: transparent;
+}
+.journey-chapter:has(.journey-art--frameworks) {
+  gap: 0;
+  padding-top: 12px;
+}
+.journey-chapter:has(.journey-art--frameworks) .journey-chapter__scene {
+  min-height: 0;
+  padding-bottom: 0;
+  margin-bottom: -40px;
+}
+.journey-art--frameworks {
+  width: min(300px, 98%);
+  transform: translateY(6px);
+}
+.journey-art--frameworks .journey-art__shadow {
+  display: none;
+}
+.journey-art--frameworks img {
+  background: transparent;
+  object-fit: contain;
+  object-position: center bottom;
+}
 .journey-art__shadow {
   position: absolute;
   inset: 12% 8% -6% 12%;
@@ -972,7 +1036,8 @@ html[data-theme="dark"] .journey-walker__frame {
   transform: rotate(-2deg);
   z-index: 0;
 }
-.journey-art svg {
+.journey-art svg,
+.journey-art img {
   position: relative;
   z-index: 1;
   width: 100%;
