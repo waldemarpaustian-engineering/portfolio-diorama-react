@@ -14,6 +14,7 @@ const ROCK_LARGE_WIDTH = Math.round(ROCK_LARGE_HEIGHT * (1024 / 929))
 const SKY_CLOUD_HEIGHT = 80
 const SUN_SIZE = 118
 const MOON_SIZE = 112
+const SIGN_HEIGHT = 64
 
 // Wolke, aus der gelegentlich Nieselregen fällt (Light Mode)
 export const JOURNEY_RAIN_CLOUD_ID = 'cloud-2'
@@ -143,6 +144,30 @@ function buildNightSkyDecor() {
     moonItem('moon-1', '62%', '7%'),
   ]
 }
+
+// Small path signposts — one per chapter, meadow layer (behind grass strip)
+function signItem(id, src, left, nativeW, nativeH) {
+  const width = Math.round((nativeW / nativeH) * SIGN_HEIGHT)
+  return {
+    id,
+    type: 'image',
+    src,
+    fallback: 'rock',
+    className: 'journey-cutout--ground journey-cutout--sign',
+    width,
+    height: SIGN_HEIGHT,
+    style: { left, zIndex: 1 },
+  }
+}
+
+export const JOURNEY_SIGNPOST_DECOR = [
+  signItem('sign-1', '/journey/cutouts/signs/sign-1-early-web.png', '9%', 232, 269),
+  signItem('sign-2', '/journey/cutouts/signs/sign-2-frameworks.png', '25%', 226, 266),
+  signItem('sign-3', '/journey/cutouts/signs/sign-3-architecture.png', '43%', 252, 269),
+  signItem('sign-4', '/journey/cutouts/signs/sign-4-platforms.png', '59%', 233, 259),
+  signItem('sign-5', '/journey/cutouts/signs/sign-6-design.png', '77%', 250, 269),
+  signItem('sign-6', '/journey/cutouts/signs/sign-5-ai.png', '95%', 251, 258),
+]
 
 export const JOURNEY_FRONT_DECOR = [
   {

@@ -840,6 +840,14 @@ html[data-theme="dark"] .journey-cutout--star {
   background-position: left bottom;
   background-size: auto 100%;
   pointer-events: none;
+  z-index: 2;
+}
+.journey-cutout--sign {
+  bottom: calc(var(--journey-meadow-bottom) + 14px);
+  filter: drop-shadow(0 3px 5px rgba(43, 42, 51, 0.14));
+}
+html[data-theme="dark"] .journey-cutout--sign {
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35)) brightness(0.94);
 }
 .journey-walker {
   position: absolute;
@@ -874,7 +882,7 @@ html[data-theme="dark"] .journey-walker__frame {
 }
 
 .journey-chapter {
-  flex: 0 0 clamp(276px, 35vw, 360px);
+  flex: 0 0 clamp(292px, 37vw, 388px);
   position: relative;
   z-index: 1;
   display: grid;
@@ -885,15 +893,15 @@ html[data-theme="dark"] .journey-walker__frame {
 }
 .journey-chapter--slot-2,
 .journey-chapter--slot-5 {
-  flex: 0 0 clamp(304px, 39vw, 404px);
+  flex: 0 0 clamp(320px, 40vw, 436px);
 }
 .journey-chapter--slot-2 .journey-note,
 .journey-chapter--slot-5 .journey-note {
-  max-width: 404px;
+  max-width: 436px;
 }
 .journey-chapter--slot-2 .journey-note__body,
 .journey-chapter--slot-5 .journey-note__body {
-  padding-bottom: 21%;
+  padding-bottom: 23%;
 }
 .journey-chapter__scene {
   min-height: 92px;
@@ -906,10 +914,8 @@ html[data-theme="dark"] .journey-walker__frame {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 360px;
+  max-width: 388px;
   aspect-ratio: 1024 / 769;
-  container-type: inline-size;
-  container-name: note;
   background: transparent;
   isolation: isolate;
   transform-origin: 50% 12%;
@@ -918,7 +924,7 @@ html[data-theme="dark"] .journey-walker__frame {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url('/journey/note-paper.png') no-repeat center / contain;
+  background: url('/journey/note-paper.png') no-repeat center / 100% 100%;
   pointer-events: none;
 }
 .journey-note__body {
@@ -926,7 +932,7 @@ html[data-theme="dark"] .journey-walker__frame {
   z-index: 1;
   height: 100%;
   box-sizing: border-box;
-  padding: 11% 9% 18% 10%;
+  padding: 13% 11.5% 20% 11.5%;
   color: #2b2a33;
   display: flex;
   flex-direction: column;
@@ -945,6 +951,9 @@ html[data-theme="dark"] .journey-walker__frame {
   text-transform: uppercase;
   color: #2b2a33;
 }
+.journey-note .journey-chapter__title {
+  font-size: 0.9375rem;
+}
 .journey-chapter__projects {
   margin-top: 0;
   font-family: 'Caveat', cursive;
@@ -955,6 +964,9 @@ html[data-theme="dark"] .journey-walker__frame {
   text-decoration-thickness: 1.5px;
   text-underline-offset: 2px;
   color: #2b2a33;
+}
+.journey-note .journey-chapter__projects {
+  font-size: 1rem;
 }
 .journey-chapter__tagline {
   margin-top: 0;
@@ -968,6 +980,9 @@ html[data-theme="dark"] .journey-walker__frame {
   text-underline-offset: 2px;
   color: #2b2a33;
 }
+.journey-note .journey-chapter__tagline {
+  font-size: 1.0625rem;
+}
 .journey-chapter__text {
   margin-top: 4px;
   padding-left: 8px;
@@ -976,6 +991,9 @@ html[data-theme="dark"] .journey-walker__frame {
   font-size: clamp(0.875rem, 4.2cqi, 1rem);
   line-height: 1.45;
   color: #2b2a33;
+}
+.journey-note .journey-chapter__text {
+  font-size: 0.9375rem;
 }
 .journey-chapter__note-inline {
   font-style: italic;
@@ -1141,7 +1159,7 @@ html[data-theme="dark"] .journey-walker__frame {
     display: none;
   }
   .journey-chapter {
-    flex: 0 0 clamp(252px, 76vw, 310px);
+    flex: 0 0 clamp(268px, 80vw, 372px);
     width: auto;
     max-width: none;
     gap: 0;
@@ -1152,7 +1170,7 @@ html[data-theme="dark"] .journey-walker__frame {
   }
   .journey-chapter--slot-2,
   .journey-chapter--slot-5 {
-    flex: 0 0 clamp(268px, 84vw, 348px);
+    flex: 0 0 clamp(284px, 86vw, 400px);
   }
   .journey-chapter__scene {
     display: none;
@@ -1160,8 +1178,8 @@ html[data-theme="dark"] .journey-walker__frame {
   .journey-note {
     max-width: none;
   }
-  .journey-chapter__text {
-    font-size: clamp(1rem, 4.5cqi, 1.0625rem);
+  .journey-note .journey-chapter__text {
+    font-size: 1rem;
     line-height: 1.5;
   }
   .journey-chapter[data-loop="clone"] {
