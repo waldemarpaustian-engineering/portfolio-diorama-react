@@ -13,7 +13,7 @@ const resources = {
         back: '← Back to island',
       },
       theme: { toLight: 'Switch to light mode', toDark: 'Switch to dark mode' },
-      signs: { about: 'About Me', work: 'Career', blog: 'Blog', contact: 'Contact' },
+      signs: { about: 'About Me', work: 'Time travel', blog: 'Blog', contact: 'Contact' },
       boards: {
         bicycle: { lines: ['Dream', 'Plan', 'Do'] },
         desk: { lines: ['Ideas', 'become', 'magic.'] },
@@ -40,14 +40,14 @@ const resources = {
             text: 'Accessibility is part of how I build — including components that are accessible from the start: semantic markup, keyboard navigation and screen readers, with WCAG in mind and practical testing using established tools.',
           },
         ],
-        workLink: 'My path →',
+        workLink: 'My journey →',
       },
       work: {
-        eyebrow: 'Career',
+        eyebrow: 'Time journey',
         title: 'My Journey Through Time',
         lead: 'From early web projects through modular UI systems to design systems, platform architectures and AI-assisted development. Freelance since 2012.',
         hint: 'Scroll to explore the stations →',
-        ariaTrack: 'Career chapters',
+        ariaTrack: 'Journey chapters',
         chapters: [
           {
             title: '1. Early Frontend & Web Craft (2000–2007)',
@@ -115,7 +115,7 @@ const resources = {
         back: '← Zurück zur Insel',
       },
       theme: { toLight: 'Hellmodus', toDark: 'Dunkelmodus' },
-      signs: { about: 'Über mich', work: 'Werdegang', blog: 'Blog', contact: 'Kontakt' },
+      signs: { about: 'Über mich', work: 'Zeitreise', blog: 'Blog', contact: 'Kontakt' },
       boards: {
         bicycle: { lines: ['Träumen', 'Planen', 'Machen'] },
         desk: { lines: ['Ideen', 'werden', 'Magie.'] },
@@ -142,14 +142,14 @@ const resources = {
             text: 'Barrierefreiheit gehört für mich zum guten Handwerk — auch beim Aufbau von Komponenten: saubere Semantik, Tastaturbedienung und Screenreader von Anfang an, WCAG im Blick und praxisnahe Tests mit etablierten Tools.',
           },
         ],
-        workLink: 'Mein Werdegang →',
+        workLink: 'Meine Zeitreise →',
       },
       work: {
-        eyebrow: 'Werdegang',
+        eyebrow: 'Zeitreise',
         title: 'Meine Zeitreise',
         lead: 'Von den ersten Webprojekten über modulare UI-Systeme bis zu Design Systems, Plattformarchitekturen und KI-gestützter Entwicklung. Freiberufler seit 2012.',
         hint: 'Scrollen für die Stationen →',
-        ariaTrack: 'Werdegang-Kapitel',
+        ariaTrack: 'Zeitreise-Kapitel',
         chapters: [
           {
             title: '1. Frühe Frontend-Entwicklung & Web-Handwerk (2000–2007)',
@@ -217,7 +217,7 @@ const resources = {
         back: '← Volver a la isla',
       },
       theme: { toLight: 'Modo claro', toDark: 'Modo oscuro' },
-      signs: { about: 'Sobre mí', work: 'Trayectoria', blog: 'Blog', contact: 'Contacto' },
+      signs: { about: 'Sobre mí', work: 'Viaje', blog: 'Blog', contact: 'Contacto' },
       boards: {
         bicycle: { lines: ['Soñar', 'Planear', 'Hacer'] },
         desk: { lines: ['Las ideas', 'se vuelven', 'magia.'] },
@@ -244,14 +244,14 @@ const resources = {
             text: 'La accesibilidad forma parte de cómo desarrollo — también al construir componentes: marcado semántico, teclado y lectores de pantalla desde el inicio, WCAG como referencia y pruebas prácticas con herramientas consolidadas.',
           },
         ],
-        workLink: 'Mi trayectoria →',
+        workLink: 'Mi viaje en el tiempo →',
       },
       work: {
-        eyebrow: 'Trayectoria',
+        eyebrow: 'Viaje en el tiempo',
         title: 'Mi viaje en el tiempo',
         lead: 'Desde los primeros proyectos web, pasando por sistemas UI modulares, hasta design systems, arquitecturas de plataforma y desarrollo asistido por IA. Freelance desde 2012.',
         hint: 'Desplázate para descubrir las estaciones →',
-        ariaTrack: 'Capítulos del trayecto profesional',
+        ariaTrack: 'Capítulos del viaje en el tiempo',
         chapters: [
           {
             title: '1. Primeras experiencias en frontend y desarrollo web (2000–2007)',
@@ -319,7 +319,7 @@ const resources = {
         back: '← Retour à l’île',
       },
       theme: { toLight: 'Mode clair', toDark: 'Mode sombre' },
-      signs: { about: 'À propos', work: 'Parcours', blog: 'Blog', contact: 'Contact' },
+      signs: { about: 'À propos', work: 'Voyage', blog: 'Blog', contact: 'Contact' },
       boards: {
         bicycle: { lines: ['Rêver', 'Planifier', 'Faire'] },
         desk: { lines: ['Les idées', 'deviennent', 'magie.'] },
@@ -346,14 +346,14 @@ const resources = {
             text: 'L’accessibilité fait partie de ma façon de développer — y compris pour les composants : balisage sémantique, clavier et lecteurs d’écran dès la conception, WCAG comme repère et tests concrets avec des outils éprouvés.',
           },
         ],
-        workLink: 'Mon parcours →',
+        workLink: 'Mon voyage dans le temps →',
       },
       work: {
-        eyebrow: 'Parcours',
+        eyebrow: 'Voyage dans le temps',
         title: 'Mon voyage dans le temps',
         lead: 'Des premiers projets web aux systèmes UI modulaires, puis aux design systems, architectures de plateforme et développement assisté par l’IA. Freelance depuis 2012.',
         hint: 'Fais défiler pour découvrir les stations →',
-        ariaTrack: 'Chapitres du parcours professionnel',
+        ariaTrack: 'Chapitres du voyage dans le temps',
         chapters: [
           {
             title: '1. Premiers pas en frontend & développement web (2000–2007)',
