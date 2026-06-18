@@ -545,7 +545,7 @@ html[data-theme="dark"] .journey-page {
 }
 
 .journey-intro {
-  padding: 0 var(--journey-side) 24px;
+  padding: 40px var(--journey-side) 24px;
   margin-bottom: 8px;
   max-width: 980px;
 }
