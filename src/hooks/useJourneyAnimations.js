@@ -412,9 +412,10 @@ export function useJourneyRockDepth(trackRef, walkerRef) {
 }
 
 const LINE_TO_PX = 64
-const MOUSE_PIXEL_BOOST = 6
-const TRACKPAD_BOOST = 0.72
-const WHEEL_SCROLL_DURATION = 0.72
+const MOUSE_PIXEL_BOOST = 4.5
+const TRACKPAD_BOOST = 0.52
+const WHEEL_SCROLL_GAIN = 0.62
+const WHEEL_SCROLL_DURATION = 0.88
 
 // Near/front shift at p=1: tree-3 (118%) lands ~54% — third tree as journey destination
 const PARALLAX_PAPER = 12
@@ -470,7 +471,7 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
       const deltaX = e.deltaX
       const deltaY = wheelToPixels(e)
       const useX = Math.abs(deltaX) > Math.abs(deltaY) * 0.6
-      const delta = useX ? deltaX : deltaY
+      const delta = (useX ? deltaX : deltaY) * WHEEL_SCROLL_GAIN
       if (Math.abs(delta) < 0.5) return
 
       if (!shouldHijackHorizontalWheel(stage, track, delta)) return
@@ -973,10 +974,10 @@ export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {
       pinTrigger = ScrollTrigger.create({
         trigger: stage,
         start: 'top top',
-        end: () => `+=${Math.max(window.innerHeight * 1.15, getMobileScrollSpan(track) * 1.4) * JOURNEY_LOOP_PIN_MULTIPLIER}`,
+        end: () => `+=${Math.max(window.innerHeight * 1.15, getMobileScrollSpan(track) * 1.75) * JOURNEY_LOOP_PIN_MULTIPLIER}`,
         pin: true,
         pinSpacing: true,
-        scrub: 0.55,
+        scrub: 0.68,
         invalidateOnRefresh: true,
         anticipatePin: 1,
         onUpdate(self) {
@@ -998,7 +999,7 @@ export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {
 
       const deltaX = e.deltaX
       const deltaY = wheelToPixels(e)
-      const delta = Math.abs(deltaX) > Math.abs(deltaY) * 0.6 ? deltaX : deltaY
+      const delta = (Math.abs(deltaX) > Math.abs(deltaY) * 0.6 ? deltaX : deltaY) * WHEEL_SCROLL_GAIN
       if (Math.abs(delta) < 0.5) return
 
       if (reducedMq.matches) {
