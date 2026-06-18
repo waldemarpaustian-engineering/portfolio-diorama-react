@@ -545,13 +545,18 @@ html[data-theme="dark"] .journey-page {
 }
 
 .journey-intro {
-  padding: 40px var(--journey-side) 24px;
-  margin-bottom: 8px;
-  max-width: 980px;
+  padding: 22px var(--journey-side) 10px;
+  margin-bottom: 0;
+  max-width: 720px;
+}
+.journey-intro .title {
+  margin-top: 0;
+  font-size: clamp(28px, 4.8vw, 44px);
+  line-height: 1.08;
 }
 .journey-hint {
-  margin-top: 14px;
-  font-size: 13px;
+  margin-top: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.02em;
@@ -570,7 +575,7 @@ html[data-theme="dark"] .journey-page {
 
 .journey-stage {
   position: relative;
-  margin: 28px var(--journey-side) 0;
+  margin: 14px var(--journey-side) 0;
   min-height: min(78vh, 720px);
   perspective: 1200px;
   border-radius: 2px;

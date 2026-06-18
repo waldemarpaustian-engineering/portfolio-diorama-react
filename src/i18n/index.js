@@ -44,9 +44,9 @@ const resources = {
       },
       work: {
         eyebrow: 'Career',
-        title: 'My Frontend Evolution.',
+        title: 'My Journey Through Time',
         lead: 'From early web projects through modular UI systems to design systems, platform architectures and AI-assisted development. Freelance since 2012.',
-        hint: 'Scroll down to explore each station — on desktop, scroll sideways →',
+        hint: 'Scroll to explore the stations →',
         ariaTrack: 'Career chapters',
         chapters: [
           {
@@ -146,9 +146,9 @@ const resources = {
       },
       work: {
         eyebrow: 'Werdegang',
-        title: 'Meine Frontend-Evolution.',
+        title: 'Meine Zeitreise',
         lead: 'Von den ersten Webprojekten über modulare UI-Systeme bis zu Design Systems, Plattformarchitekturen und KI-gestützter Entwicklung. Freiberufler seit 2012.',
-        hint: 'Nach unten scrollen, um die Stationen zu entdecken — am Desktop seitlich scrollen →',
+        hint: 'Scrollen für die Stationen →',
         ariaTrack: 'Werdegang-Kapitel',
         chapters: [
           {
@@ -248,9 +248,9 @@ const resources = {
       },
       work: {
         eyebrow: 'Trayectoria',
-        title: 'Mi evolución frontend.',
+        title: 'Mi viaje en el tiempo',
         lead: 'Desde los primeros proyectos web, pasando por sistemas UI modulares, hasta design systems, arquitecturas de plataforma y desarrollo asistido por IA. Freelance desde 2012.',
-        hint: 'Desplázate hacia abajo para descubrir cada estación — en escritorio, desplázate lateralmente →',
+        hint: 'Desplázate para descubrir las estaciones →',
         ariaTrack: 'Capítulos del trayecto profesional',
         chapters: [
           {
@@ -350,9 +350,9 @@ const resources = {
       },
       work: {
         eyebrow: 'Parcours',
-        title: 'Mon évolution frontend.',
+        title: 'Mon voyage dans le temps',
         lead: 'Des premiers projets web aux systèmes UI modulaires, puis aux design systems, architectures de plateforme et développement assisté par l’IA. Freelance depuis 2012.',
-        hint: 'Fais défiler vers le bas pour découvrir chaque station — sur ordinateur, fais défiler latéralement →',
+        hint: 'Fais défiler pour découvrir les stations →',
         ariaTrack: 'Chapitres du parcours professionnel',
         chapters: [
           {

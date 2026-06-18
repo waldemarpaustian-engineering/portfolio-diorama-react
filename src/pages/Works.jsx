@@ -48,9 +48,7 @@ export default function Works() {
     <div className="page journey-page" ref={pageRef}>
       <PageNav />
       <header className="journey-intro">
-        <div className="eyebrow">{t('work.eyebrow')}</div>
         <h1 className="title">{t('work.title')}</h1>
-        <p className="lead">{t('work.lead')}</p>
         <p className="journey-hint">{t('work.hint')}</p>
       </header>
 
