@@ -87,15 +87,14 @@ export function JourneyArt({ variant }) {
       )
     case 'design':
       return (
-        <PaperShadow className="journey-art--design">
-          <svg viewBox="0 0 200 160" aria-hidden>
-            <rect x="42" y="44" width="48" height="32" rx="4" fill="#fff" stroke="#2b2a33" strokeWidth="2" />
-            <rect x="98" y="44" width="48" height="32" rx="4" fill="#fff" stroke="#2b2a33" strokeWidth="2" />
-            <rect x="42" y="88" width="48" height="32" rx="4" fill="#b8ddf5" stroke="#2b2a33" strokeWidth="2" />
-            <rect x="98" y="88" width="48" height="32" rx="4" fill="#ffe8c8" stroke="#2b2a33" strokeWidth="2" />
-            <circle cx="66" cy="58" r="6" fill="#4a7fd4" />
-            <rect x="110" y="54" width="24" height="4" rx="1" fill="#d6e4f0" />
-          </svg>
+        <PaperShadow className="journey-art journey-art--design">
+          <img
+            src="/journey/art-design.png"
+            alt=""
+            aria-hidden
+            decoding="async"
+            draggable={false}
+          />
         </PaperShadow>
       )
     case 'today':

@@ -98,7 +98,7 @@ export default function Works() {
             return (
               <article
                 key={`${chapter.id}-${isOriginal ? 'original' : 'clone'}`}
-                className="journey-chapter"
+                className={`journey-chapter journey-chapter--slot-${baseIndex + 1}`}
                 data-chapter-id={chapter.id}
                 data-loop={isOriginal ? 'original' : 'clone'}
                 aria-hidden={!isOriginal}

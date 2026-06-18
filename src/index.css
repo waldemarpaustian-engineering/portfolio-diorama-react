@@ -1010,7 +1010,8 @@ html[data-theme="dark"] .journey-walker__frame {
 .journey-chapter:has(.journey-art--frameworks),
 .journey-chapter:has(.journey-art--banking),
 .journey-chapter:has(.journey-art--startup),
-.journey-chapter:has(.journey-art--today) {
+.journey-chapter:has(.journey-art--today),
+.journey-chapter:has(.journey-art--design) {
   gap: 0;
   padding-top: 12px;
 }
@@ -1020,6 +1021,11 @@ html[data-theme="dark"] .journey-walker__frame {
   min-height: 0;
   padding-bottom: 0;
   margin-bottom: -40px;
+}
+.journey-chapter:has(.journey-art--design) .journey-chapter__scene {
+  min-height: 0;
+  padding-bottom: 0;
+  margin-bottom: 8px;
 }
 .journey-chapter:has(.journey-art--banking) .journey-chapter__scene {
   min-height: 0;
@@ -1035,6 +1041,10 @@ html[data-theme="dark"] .journey-walker__frame {
   width: min(260px, 86%);
   transform: translateY(6px);
 }
+.journey-art--design {
+  width: min(208px, 72%);
+  transform: translateY(6px);
+}
 .journey-art--banking {
   width: min(272px, 90%);
   transform: translateY(6px);
@@ -1042,13 +1052,15 @@ html[data-theme="dark"] .journey-walker__frame {
 .journey-art--frameworks .journey-art__shadow,
 .journey-art--banking .journey-art__shadow,
 .journey-art--startup .journey-art__shadow,
-.journey-art--today .journey-art__shadow {
+.journey-art--today .journey-art__shadow,
+.journey-art--design .journey-art__shadow {
   display: none;
 }
 .journey-art--frameworks img,
 .journey-art--banking img,
 .journey-art--startup img,
-.journey-art--today img {
+.journey-art--today img,
+.journey-art--design img {
   background: transparent;
   object-fit: contain;
   object-position: center bottom;

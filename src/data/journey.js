@@ -4,6 +4,6 @@ export const JOURNEY_CHAPTERS = [
   { id: 'framework-engineering', art: 'frameworks' },
   { id: 'modern-architecture', art: 'banking' },
   { id: 'product-platform', art: 'startup' },
-  { id: 'ai-augmented', art: 'today' },
   { id: 'design-systems', art: 'design' },
+  { id: 'ai-augmented', art: 'today' },
 ]
