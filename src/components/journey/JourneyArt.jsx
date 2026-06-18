@@ -125,6 +125,49 @@ export function JourneyCutout({ item }) {
   const [imageFailed, setImageFailed] = useState(false)
 
   if (item.type === 'image' && !imageFailed) {
+    const imageStyle = item.celestial
+      ? undefined
+      : {
+          ...(item.width != null ? { width: item.width } : {}),
+          ...(item.height != null ? { height: item.height } : {}),
+          ...item.style,
+        }
+
+    const img = (
+      <img
+        className={`journey-cutout journey-cutout--image${item.className ? ` ${item.className}` : ''}`}
+        src={item.src}
+        alt=""
+        aria-hidden
+        decoding="async"
+        draggable={false}
+        onError={() => setImageFailed(true)}
+        style={imageStyle}
+      />
+    )
+
+    if (item.celestial) {
+      return (
+        <div
+          data-decor-id={item.id}
+          className={`journey-celestial journey-celestial--${item.celestial}${item.className ? ` ${item.className}` : ''}`}
+          style={{
+            left: item.style?.left,
+            top: item.style?.top,
+            zIndex: item.style?.zIndex,
+            width: item.width,
+            height: item.height,
+          }}
+          aria-hidden
+        >
+          <span className="journey-celestial__halo" aria-hidden>
+            <span className="journey-celestial__halo-glow" aria-hidden />
+          </span>
+          {img}
+        </div>
+      )
+    }
+
     return (
       <img
         data-decor-id={item.id}
@@ -135,11 +178,7 @@ export function JourneyCutout({ item }) {
         decoding="async"
         draggable={false}
         onError={() => setImageFailed(true)}
-        style={{
-          ...(item.width != null ? { width: item.width } : {}),
-          ...(item.height != null ? { height: item.height } : {}),
-          ...item.style,
-        }}
+        style={imageStyle}
       />
     )
   }

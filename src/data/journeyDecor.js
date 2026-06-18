@@ -33,6 +33,7 @@ function sunItem(id, left, top) {
   return {
     id,
     type: 'image',
+    celestial: 'sun',
     src: '/journey/cutouts/sun.png',
     fallback: 'sun',
     className: 'journey-cutout--sky journey-cutout--sky-back',
@@ -46,6 +47,7 @@ function moonItem(id, left, top) {
   return {
     id,
     type: 'image',
+    celestial: 'moon',
     src: '/journey/cutouts/moon.png',
     fallback: 'sun',
     className: 'journey-cutout--sky journey-cutout--moon journey-cutout--sky-front',

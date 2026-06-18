@@ -460,6 +460,77 @@ function setJourneyScrollProgress(track, progress) {
   track.scrollLeft = metrics.loopStart + clamped * metrics.journeySpan
 }
 
+export function useJourneySkyGlow(stageRef, theme) {
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage) return undefined
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) return undefined
+
+    const tweens = []
+
+    stage.querySelectorAll('.journey-celestial--sun .journey-celestial__halo-glow').forEach((glow, index) => {
+      gsap.set(glow, { scale: 0.9, opacity: 0.5, transformOrigin: '50% 50%' })
+      tweens.push(gsap.to(glow, {
+        scale: 1.22,
+        opacity: 0.92,
+        duration: 2.4 + index * 0.25,
+        yoyo: true,
+        repeat: -1,
+        ease: 'sine.inOut',
+        delay: index * 0.35,
+      }))
+    })
+
+    stage.querySelectorAll('.journey-celestial--sun img').forEach((img, index) => {
+      tweens.push(gsap.fromTo(
+        img,
+        { filter: 'drop-shadow(0 0 10px rgba(255, 196, 90, 0.35))' },
+        {
+          filter: 'drop-shadow(0 0 22px rgba(255, 210, 110, 0.72))',
+          duration: 2.1 + index * 0.2,
+          yoyo: true,
+          repeat: -1,
+          ease: 'sine.inOut',
+          delay: index * 0.25,
+        },
+      ))
+    })
+
+    stage.querySelectorAll('.journey-celestial--moon .journey-celestial__halo-glow').forEach((glow) => {
+      gsap.set(glow, { scale: 0.86, opacity: 0.42, transformOrigin: '50% 50%' })
+      tweens.push(gsap.to(glow, {
+        scale: 1.14,
+        opacity: 0.78,
+        duration: 4,
+        yoyo: true,
+        repeat: -1,
+        ease: 'sine.inOut',
+      }))
+    })
+
+    stage.querySelectorAll('.journey-celestial--moon img').forEach((img) => {
+      tweens.push(gsap.fromTo(
+        img,
+        { filter: 'drop-shadow(0 0 8px rgba(210, 220, 255, 0.28))' },
+        {
+          filter: 'drop-shadow(0 0 20px rgba(230, 238, 255, 0.58))',
+          duration: 3.6,
+          yoyo: true,
+          repeat: -1,
+          ease: 'sine.inOut',
+        },
+      ))
+    })
+
+    return () => {
+      tweens.forEach((tween) => tween.kill())
+      gsap.set(stage.querySelectorAll('.journey-celestial__halo-glow, .journey-celestial img'), { clearProps: 'all' })
+    }
+  }, [stageRef, theme])
+}
+
 export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {
   useEffect(() => {
     const stage = stageRef.current

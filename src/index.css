@@ -724,8 +724,83 @@ html[data-theme="dark"] .journey-page {
 html[data-theme="dark"] .journey-cutout--star {
   filter: drop-shadow(0 0 2px rgba(255, 248, 220, 0.22));
 }
-html[data-theme="dark"] .journey-cutout--moon {
-  filter: drop-shadow(0 0 18px rgba(255, 248, 220, 0.28));
+.journey-celestial {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  overflow: visible;
+}
+.journey-celestial__halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 175%;
+  height: 175%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.journey-celestial__halo-glow {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: scale(0.9);
+  opacity: 0.55;
+  will-change: transform, opacity;
+}
+.journey-celestial--sun .journey-celestial__halo-glow {
+  background: radial-gradient(
+    circle,
+    rgba(255, 232, 150, 0.75) 0%,
+    rgba(255, 196, 80, 0.38) 36%,
+    rgba(255, 168, 48, 0.1) 58%,
+    transparent 74%
+  );
+}
+.journey-celestial--moon .journey-celestial__halo-glow {
+  background: radial-gradient(
+    circle,
+    rgba(236, 242, 255, 0.62) 0%,
+    rgba(205, 218, 255, 0.28) 40%,
+    rgba(180, 200, 255, 0.08) 60%,
+    transparent 74%
+  );
+}
+.journey-celestial img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  will-change: filter;
+}
+.journey-celestial--sun img.journey-cutout--sky {
+  filter: drop-shadow(0 0 12px rgba(255, 200, 90, 0.45));
+}
+.journey-celestial--moon img.journey-cutout--sky {
+  filter: drop-shadow(0 0 10px rgba(220, 230, 255, 0.38));
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey-celestial--sun .journey-celestial__halo-glow {
+    opacity: 0.78;
+    transform: scale(1.08);
+  }
+  .journey-celestial--moon .journey-celestial__halo-glow {
+    opacity: 0.62;
+    transform: scale(1.04);
+  }
+  .journey-celestial--sun img.journey-cutout--sky {
+    filter: drop-shadow(0 0 18px rgba(255, 210, 100, 0.62));
+  }
+  .journey-celestial--moon img.journey-cutout--sky {
+    filter: drop-shadow(0 0 16px rgba(230, 238, 255, 0.52));
+  }
 }
 .journey-cutout--ground {
   bottom: var(--journey-ground);

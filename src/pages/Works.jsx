@@ -12,6 +12,7 @@ import {
   useJourneyWheel,
   useJourneyParallax,
   useJourneyMobileScroll,
+  useJourneySkyGlow,
 } from '../hooks/useJourneyAnimations.js'
 
 export default function Works() {
@@ -38,6 +39,7 @@ export default function Works() {
   useJourneyWheel(pageRef, trackRef)
   useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef, layerMeadowRef, layerFrontRef, stageRef)
   useJourneyMobileScroll(stageRef, trackRef, pageRef)
+  useJourneySkyGlow(stageRef, theme)
 
   return (
     <div className="page journey-page" ref={pageRef}>
