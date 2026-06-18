@@ -1285,42 +1285,42 @@ html[data-theme="dark"] .journey-walker__frame {
     margin-top: 0;
   }
   .journey-chapter:has(.journey-art--frameworks) .journey-chapter__scene {
-    margin-bottom: -64px;
+    margin-bottom: -82px;
   }
   .journey-chapter:has(.journey-art--today) .journey-chapter__scene {
-    margin-bottom: -50px;
+    margin-bottom: -68px;
   }
   .journey-chapter:has(.journey-art--startup) .journey-chapter__scene {
-    margin-bottom: -28px;
+    margin-bottom: -46px;
   }
   .journey-chapter:has(.journey-art--design) .journey-chapter__scene {
-    margin-bottom: -18px;
+    margin-bottom: -36px;
   }
   .journey-chapter:has(.journey-art--banking) .journey-chapter__scene {
-    margin-bottom: -30px;
+    margin-bottom: -48px;
   }
   .journey-art--banking {
     width: min(248px, 82%);
-    margin-top: 10px;
+    margin-top: 0;
     margin-bottom: 0;
   }
   .journey-art--startup {
     width: min(232px, 76%);
-    margin-top: 12px;
+    margin-top: 0;
     margin-bottom: 0;
   }
   .journey-art--design {
     width: min(184px, 62%);
-    margin-top: 2px;
+    margin-top: 0;
     margin-bottom: 0;
   }
   .journey-art--today {
     width: min(248px, 82%);
-    margin-top: 2px;
+    margin-top: 0;
     margin-bottom: 0;
   }
   .journey-chapter:has(.journey-art--studium) .journey-chapter__scene {
-    margin-bottom: -30px;
+    margin-bottom: -48px;
   }
   html[data-theme="dark"] .journey-chapter__sign {
     filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35)) brightness(0.94);
