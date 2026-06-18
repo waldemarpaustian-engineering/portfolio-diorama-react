@@ -1183,7 +1183,7 @@ html[data-theme="dark"] .journey-walker__frame {
     display: none;
   }
   .journey-chapter__sign {
-    margin-top: 12px;
+    margin-top: 18px;
     display: flex;
     justify-content: center;
     filter: drop-shadow(0 3px 5px rgba(43, 42, 51, 0.14));
@@ -1274,7 +1274,7 @@ html[data-theme="dark"] .journey-walker__frame {
     transform: none;
     justify-self: center;
     align-self: end;
-    margin: 2px 0 calc(var(--journey-meadow-bottom) - 40px);
+    margin: 2px 0 calc(var(--journey-meadow-bottom) - 46px);
     padding: 0;
     display: flex;
     justify-content: center;
