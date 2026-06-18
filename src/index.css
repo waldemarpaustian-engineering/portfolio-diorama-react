@@ -895,40 +895,25 @@ html[data-theme="dark"] .journey-walker__frame {
   z-index: 2;
   width: 100%;
   max-width: 360px;
-  aspect-ratio: 904 / 605;
+  aspect-ratio: 1024 / 769;
   container-type: inline-size;
   container-name: note;
-  background: #efe8db;
+  background: transparent;
   isolation: isolate;
-  filter: drop-shadow(0 8px 14px rgba(43, 42, 51, 0.1));
 }
-.journey-note__backing {
+.journey-note__frame {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #efe8db;
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 14%),
-    calc(100% - 10%) 100%,
-    0 100%
-  );
-  pointer-events: none;
-}
-.journey-note__paper {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: url('/journey/note-paper.png') no-repeat center / 100% 100%;
+  background: url('/journey/note-paper.png') no-repeat center / contain;
   pointer-events: none;
 }
 .journey-note__body {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   height: 100%;
   box-sizing: border-box;
-  padding: 10.5% 7.5% 16% 8.5%;
+  padding: 11% 9% 18% 10%;
   color: #2b2a33;
   display: flex;
   flex-direction: column;

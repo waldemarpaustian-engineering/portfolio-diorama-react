@@ -110,8 +110,7 @@ export default function Works() {
                   <JourneyArt variant={chapter.art} />
                 </div>
                 <div className="journey-chapter__inner journey-note">
-                  <div className="journey-note__backing" aria-hidden />
-                  <div className="journey-note__paper" aria-hidden />
+                  <div className="journey-note__frame" aria-hidden />
                   <div className="journey-note__body">
                     <h2 className="journey-chapter__title">{text.title}</h2>
                     {text.projects ? (
