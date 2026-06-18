@@ -1244,6 +1244,11 @@ html[data-theme="dark"] .journey-walker__frame {
     padding-top: 0;
     gap: 0;
   }
+  .journey-chapter__scene,
+  .journey-note {
+    position: relative;
+    top: -24px;
+  }
   .journey-chapter__scene {
     grid-row: 1;
     min-height: 0;
@@ -1253,7 +1258,6 @@ html[data-theme="dark"] .journey-walker__frame {
   .journey-note {
     grid-row: 2;
     z-index: 2;
-    margin-top: -32px;
   }
   .journey-chapter__sign {
     grid-row: 3;
