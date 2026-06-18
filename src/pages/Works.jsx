@@ -67,10 +67,6 @@ export default function Works() {
           ))}
         </div>
 
-        <div className="journey-walker" ref={walkerRef} aria-hidden>
-          <JourneyWalker />
-        </div>
-
         <div className="journey-layer journey-layer--meadow" ref={layerMeadowRef} aria-hidden>
           <div className="journey-meadow-strip" aria-hidden />
           {JOURNEY_MEADOW_DECOR.map((item) => (
@@ -85,6 +81,10 @@ export default function Works() {
         </div>
 
         <div className="journey-layer journey-layer--rain" ref={layerRainRef} aria-hidden />
+
+        <div className="journey-walker" ref={walkerRef} aria-hidden>
+          <JourneyWalker />
+        </div>
 
         <div className="journey-track" ref={trackRef} role="region" aria-label={t('work.ariaTrack')}>
           <div className="journey-track__rail" aria-hidden />

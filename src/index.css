@@ -855,7 +855,7 @@ html[data-theme="dark"] .journey-cutout--sign {
   left: clamp(72px, 18vw, 168px);
   width: clamp(70px, 11.5vh, 100px);
   height: clamp(102px, 17vh, 148px);
-  z-index: 28;
+  z-index: 2;
   transform: translateX(-50%);
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.16));
   pointer-events: none;
