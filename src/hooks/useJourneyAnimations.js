@@ -8,7 +8,9 @@ const WALKER_FRAME_COUNT = WALKER_BOY_FRAMES.length
 
 gsap.registerPlugin(ScrollTrigger)
 
-function getLoopMetrics(track) {
+const journeyMetricsCache = new WeakMap()
+
+function computeLoopMetrics(track) {
   const originals = [...track.querySelectorAll('.journey-chapter[data-loop="original"]')]
   if (!originals.length) return null
 
@@ -16,11 +18,11 @@ function getLoopMetrics(track) {
   const lastOriginal = originals[originals.length - 1]
   const pad = 32
   const loopStart = Math.max(0, firstOriginal.offsetLeft - pad)
-  const walkerX = Math.min(Math.max(72, track.clientWidth * 0.18), 168)
-  const signEl = lastOriginal.querySelector('.journey-chapter__sign [data-decor-id]')
-  let journeyEndScroll = lastOriginal.offsetLeft + lastOriginal.offsetWidth - walkerX + 24
-  if (signEl) {
-    journeyEndScroll = lastOriginal.offsetLeft + signEl.offsetLeft + signEl.offsetWidth * 0.5 - walkerX
+  const walkerViewportX = getWalkerViewportX()
+  const noteEl = lastOriginal.querySelector('.journey-note')
+  let journeyEndScroll = lastOriginal.offsetLeft + lastOriginal.offsetWidth - walkerViewportX + 24
+  if (noteEl) {
+    journeyEndScroll = getNoteRightContentX(track, noteEl) - walkerViewportX
   }
   const journeySpan = Math.max(1, journeyEndScroll - loopStart)
 
@@ -44,18 +46,80 @@ function getLoopMetrics(track) {
   return { loopStart, loopDistance, loopEnd, journeySpan }
 }
 
-function clampJourneyScroll(value, metrics) {
+function refreshJourneyMetrics(track) {
+  const metrics = computeLoopMetrics(track)
+  if (metrics) journeyMetricsCache.set(track, metrics)
+  else journeyMetricsCache.delete(track)
+  return metrics
+}
+
+function getJourneyMetrics(track) {
+  return journeyMetricsCache.get(track) ?? refreshJourneyMetrics(track)
+}
+
+function getJourneyScrollEnd(track, metrics) {
+  const physicalMax = Math.max(0, track.scrollWidth - track.clientWidth)
+  const idealEnd = metrics.loopStart + metrics.journeySpan
+  return Math.min(physicalMax, idealEnd)
+}
+
+function getJourneyProgress(track, metrics) {
+  const scrollEnd = getJourneyScrollEnd(track, metrics)
+  const offset = track.scrollLeft - metrics.loopStart
+  const span = Math.max(1, scrollEnd - metrics.loopStart)
+  if (offset <= 0) return 0
+  return Math.min(1, offset / span)
+}
+
+function clampJourneyScroll(track, value, metrics) {
   if (!metrics) return value
-  const journeyEnd = metrics.loopStart + metrics.journeySpan
+  const journeyEnd = getJourneyScrollEnd(track, metrics)
   return Math.max(metrics.loopStart, Math.min(journeyEnd, value))
 }
 
+function getWalkerEndFeetStageX(track, metrics, noteEl) {
+  const stage = track.closest('.journey-stage')
+  if (!stage || !noteEl) return 0
+  const scrollEnd = getJourneyScrollEnd(track, metrics)
+  const noteRightContent = getNoteRightContentX(track, noteEl)
+  const trackRect = track.getBoundingClientRect()
+  const stageRect = stage.getBoundingClientRect()
+  return (trackRect.left - stageRect.left) + noteRightContent - scrollEnd
+}
+
 function initJourneyTrackScroll(track) {
-  const metrics = getLoopMetrics(track)
+  const metrics = refreshJourneyMetrics(track)
   if (!metrics) return
   if (track.scrollLeft < metrics.loopStart - 0.5) {
     track.scrollLeft = metrics.loopStart
   }
+}
+
+function getWalkerViewportX() {
+  const desktop = window.matchMedia('(min-width: 900px)').matches
+  const vw = window.innerWidth
+  return desktop
+    ? Math.min(Math.max(72, vw * 0.18), 168)
+    : Math.min(Math.max(56, vw * 0.16), 120)
+}
+
+function getWalkerFeetStageX(walker) {
+  const stage = walker.closest('.journey-stage')
+  if (!stage) return 0
+  const stageRect = stage.getBoundingClientRect()
+  const walkerRect = walker.getBoundingClientRect()
+  return walkerRect.left + walkerRect.width * 0.42 - stageRect.left
+}
+
+function getLastOriginalChapter(track) {
+  const originals = [...track.querySelectorAll('.journey-chapter[data-loop="original"]')]
+  return originals[originals.length - 1] ?? null
+}
+
+function getNoteRightContentX(track, noteEl) {
+  const trackRect = track.getBoundingClientRect()
+  const noteRect = noteEl.getBoundingClientRect()
+  return noteRect.right - trackRect.left + track.scrollLeft
 }
 
 function shouldHijackHorizontalWheel(stage, track, delta) {
@@ -67,7 +131,7 @@ function shouldHijackHorizontalWheel(stage, track, delta) {
   // Erst vertikal scrollen, bis der untere Rand der Szene sichtbar ist
   if (stageRect.bottom > viewportH + 8) return false
 
-  const metrics = getLoopMetrics(track)
+  const metrics = getJourneyMetrics(track)
   if (delta < 0 && metrics) {
     const atStart = track.scrollLeft <= metrics.loopStart + 2
     if (atStart && window.scrollY > 0) return false
@@ -165,6 +229,8 @@ export function useJourneyAnimations(trackRef, chaptersRef) {
 
 export function useJourneyWalker(trackRef, walkerRef) {
   const idleTimerRef = useRef(0)
+  const baseFeetRef = useRef(0)
+  const endFeetRef = useRef(0)
 
   useEffect(() => {
     const track = trackRef.current
@@ -172,6 +238,7 @@ export function useJourneyWalker(trackRef, walkerRef) {
     if (!track || !walker) return undefined
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const desktopMq = window.matchMedia('(min-width: 900px)')
     const frameImg = walker.querySelector('.journey-walker__frame')
 
     WALKER_BOY_FRAMES.forEach((src) => {
@@ -186,40 +253,78 @@ export function useJourneyWalker(trackRef, walkerRef) {
       frameImg.dataset.frame = String(normalized)
     }
 
-    function syncWalkerFrame() {
-      const metrics = getLoopMetrics(track)
-      if (!metrics) {
-        setFrame(0)
+    function measureWalkerFeet() {
+      const metrics = refreshJourneyMetrics(track)
+      const lastNote = getLastOriginalChapter(track)?.querySelector('.journey-note')
+      if (!metrics || !lastNote || !desktopMq.matches) {
+        baseFeetRef.current = 0
+        endFeetRef.current = 0
         return
       }
-      const offset = Math.max(0, track.scrollLeft - metrics.loopStart)
-      const progress = Math.min(1, offset / metrics.journeySpan)
-      setFrame(progress * WALKER_FRAME_COUNT)
+
+      gsap.set(walker, { xPercent: -50, x: 0 })
+      baseFeetRef.current = getWalkerFeetStageX(walker)
+      endFeetRef.current = getWalkerEndFeetStageX(track, metrics, lastNote)
     }
 
-    syncWalkerFrame()
+    function syncWalker() {
+      const metrics = getJourneyMetrics(track)
+      if (!metrics) {
+        setFrame(0)
+        gsap.set(walker, { xPercent: -50, x: 0 })
+        return
+      }
+      const progress = getJourneyProgress(track, metrics)
+      setFrame(progress * WALKER_FRAME_COUNT)
+      if (!desktopMq.matches) return
+
+      const targetFeet = baseFeetRef.current + progress * (endFeetRef.current - baseFeetRef.current)
+      gsap.set(walker, { xPercent: -50, x: targetFeet - baseFeetRef.current })
+    }
+
+    gsap.set(walker, { xPercent: -50, transformOrigin: '50% 100%' })
+
+    measureWalkerFeet()
+    syncWalker()
     initJourneyTrackScroll(track)
     requestAnimationFrame(() => {
+      measureWalkerFeet()
       initJourneyTrackScroll(track)
-      syncWalkerFrame()
+      syncWalker()
     })
 
     function onScroll() {
+      syncWalker()
       if (reduced || !frameImg) return
-      syncWalkerFrame()
       walker.classList.add('journey-walker--run')
 
       clearTimeout(idleTimerRef.current)
       idleTimerRef.current = window.setTimeout(() => {
         walker.classList.remove('journey-walker--run')
-        syncWalkerFrame()
+        syncWalker()
       }, 220)
     }
 
+    let layoutTimer = 0
+    function onLayoutChange() {
+      clearTimeout(layoutTimer)
+      layoutTimer = window.setTimeout(() => {
+        measureWalkerFeet()
+        syncWalker()
+      }, 120)
+    }
+
     track.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onLayoutChange)
+    desktopMq.addEventListener('change', onLayoutChange)
+
     return () => {
       track.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onLayoutChange)
+      desktopMq.removeEventListener('change', onLayoutChange)
+      clearTimeout(layoutTimer)
       clearTimeout(idleTimerRef.current)
+      gsap.set(walker, { clearProps: 'transform' })
     }
   }, [trackRef, walkerRef])
 }
@@ -294,6 +399,7 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
         wheelTweenRef.current.kill()
         wheelTweenRef.current = null
       }
+      refreshJourneyMetrics(track)
       initJourneyTrackScroll(track)
       ScrollTrigger.refresh()
     }
@@ -322,10 +428,10 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
 
       if (!shouldHijackHorizontalWheel(stage, track, delta)) return
 
-      const metrics = getLoopMetrics(track)
-      const startValue = metrics ? clampJourneyScroll(track.scrollLeft, metrics) : track.scrollLeft
+      const metrics = getJourneyMetrics(track)
+      const startValue = metrics ? clampJourneyScroll(track, track.scrollLeft, metrics) : track.scrollLeft
       const rawTarget = startValue + delta
-      const next = metrics ? clampJourneyScroll(rawTarget, metrics) : clamp(rawTarget)
+      const next = metrics ? clampJourneyScroll(track, rawTarget, metrics) : clamp(rawTarget)
       if (Math.abs(next - startValue) < 0.5) return
 
       e.preventDefault()
@@ -338,9 +444,9 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
         ease: 'power3.out',
         overwrite: true,
         onUpdate: () => {
-          const m = getLoopMetrics(track)
+          const m = getJourneyMetrics(track)
           const wrapped = m
-            ? clampJourneyScroll(wheelStateRef.current.value, m)
+            ? clampJourneyScroll(track, wheelStateRef.current.value, m)
             : clamp(wheelStateRef.current.value)
           isNormalizing = true
           track.scrollLeft = wrapped
@@ -351,9 +457,9 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
 
     function onTrackScroll() {
       if (!mq.matches || isNormalizing) return
-      const metrics = getLoopMetrics(track)
+      const metrics = getJourneyMetrics(track)
       if (!metrics) return
-      const normalized = clampJourneyScroll(track.scrollLeft, metrics)
+      const normalized = clampJourneyScroll(track, track.scrollLeft, metrics)
       if (Math.abs(normalized - track.scrollLeft) > 0.5) {
         isNormalizing = true
         track.scrollLeft = normalized
@@ -361,7 +467,10 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
       }
     }
 
-    const initScroll = () => initJourneyTrackScroll(track)
+    const initScroll = () => {
+      refreshJourneyMetrics(track)
+      initJourneyTrackScroll(track)
+    }
     initScroll()
     const bootRaf = requestAnimationFrame(() => {
       requestAnimationFrame(initScroll)
@@ -393,15 +502,13 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
 }
 
 function getParallaxProgress(track) {
-  const metrics = getLoopMetrics(track)
+  const metrics = getJourneyMetrics(track)
   if (!metrics) {
     const max = Math.max(0, track.scrollWidth - track.clientWidth)
     return max > 0 ? track.scrollLeft / max : 0
   }
 
-  const offset = track.scrollLeft - metrics.loopStart
-  if (offset <= 0) return 0
-  return Math.min(1, offset / metrics.journeySpan)
+  return getJourneyProgress(track, metrics)
 }
 
 function applyParallax(
@@ -510,19 +617,20 @@ export function useJourneyParallax(
 }
 
 function getMobileScrollSpan(track) {
-  const metrics = getLoopMetrics(track)
+  const metrics = getJourneyMetrics(track)
   return metrics?.journeySpan ?? Math.max(1, track.scrollWidth - track.clientWidth)
 }
 
 function setJourneyScrollProgress(track, progress) {
-  const metrics = getLoopMetrics(track)
+  const metrics = getJourneyMetrics(track)
   const clamped = Math.max(0, Math.min(1, progress))
   if (!metrics) {
     const max = Math.max(0, track.scrollWidth - track.clientWidth)
     track.scrollLeft = clamped * max
     return
   }
-  track.scrollLeft = metrics.loopStart + clamped * metrics.journeySpan
+  const scrollEnd = getJourneyScrollEnd(track, metrics)
+  track.scrollLeft = metrics.loopStart + clamped * (scrollEnd - metrics.loopStart)
 }
 
 export function useJourneySkyGlow(stageRef, theme) {
