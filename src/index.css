@@ -891,6 +891,12 @@ html[data-theme="dark"] .journey-walker__frame {
   padding-top: 2px;
   isolation: isolate;
 }
+.journey-chapter--slot-1 {
+  flex: 0 0 clamp(310px, 39vw, 420px);
+}
+.journey-chapter--slot-1 .journey-note {
+  max-width: 420px;
+}
 .journey-chapter--slot-2,
 .journey-chapter--slot-5 {
   flex: 0 0 clamp(320px, 40vw, 436px);
@@ -901,7 +907,7 @@ html[data-theme="dark"] .journey-walker__frame {
 }
 .journey-chapter--slot-2 .journey-note__body,
 .journey-chapter--slot-5 .journey-note__body {
-  padding-bottom: 23%;
+  padding-bottom: 21%;
 }
 .journey-chapter__scene {
   min-height: 92px;
@@ -915,7 +921,7 @@ html[data-theme="dark"] .journey-walker__frame {
   z-index: 2;
   width: 100%;
   max-width: 388px;
-  aspect-ratio: 1024 / 769;
+  aspect-ratio: 1024 / 768;
   background: transparent;
   isolation: isolate;
   transform-origin: 50% 12%;
@@ -932,7 +938,7 @@ html[data-theme="dark"] .journey-walker__frame {
   z-index: 1;
   height: 100%;
   box-sizing: border-box;
-  padding: 13% 11.5% 20% 11.5%;
+  padding: 15.5% 11% 20.5% 12.5%;
   color: #2b2a33;
   display: flex;
   flex-direction: column;
@@ -1168,6 +1174,7 @@ html[data-theme="dark"] .journey-walker__frame {
     margin-bottom: 0;
     scroll-snap-align: none;
   }
+  .journey-chapter--slot-1,
   .journey-chapter--slot-2,
   .journey-chapter--slot-5 {
     flex: 0 0 clamp(284px, 86vw, 400px);
