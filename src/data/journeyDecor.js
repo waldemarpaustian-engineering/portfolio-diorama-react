@@ -161,12 +161,12 @@ function signItem(id, src, left, nativeW, nativeH) {
 }
 
 export const JOURNEY_SIGNPOST_DECOR = [
-  signItem('sign-1', '/journey/cutouts/signs/sign-1-early-web.png', '9%', 232, 269),
-  signItem('sign-2', '/journey/cutouts/signs/sign-2-frameworks.png', '25%', 226, 266),
-  signItem('sign-3', '/journey/cutouts/signs/sign-3-architecture.png', '43%', 252, 269),
-  signItem('sign-4', '/journey/cutouts/signs/sign-4-platforms.png', '59%', 233, 259),
-  signItem('sign-5', '/journey/cutouts/signs/sign-6-design.png', '77%', 250, 269),
-  signItem('sign-6', '/journey/cutouts/signs/sign-5-ai.png', '95%', 251, 258),
+  signItem('sign-1', '/journey/cutouts/signs/sign-1-early-web.png', '9%', 244, 330),
+  signItem('sign-2', '/journey/cutouts/signs/sign-2-frameworks.png', '25%', 252, 330),
+  signItem('sign-3', '/journey/cutouts/signs/sign-3-architecture.png', '43%', 252, 327),
+  signItem('sign-4', '/journey/cutouts/signs/sign-4-platforms.png', '59%', 252, 316),
+  signItem('sign-5', '/journey/cutouts/signs/sign-6-design.png', '77%', 260, 300),
+  signItem('sign-6', '/journey/cutouts/signs/sign-5-ai.png', '95%', 254, 316),
 ]
 
 export const JOURNEY_FRONT_DECOR = [
