@@ -17,7 +17,9 @@ function computeLoopMetrics(track) {
   const firstOriginal = originals[0]
   const lastOriginal = originals[originals.length - 1]
   const pad = 32
-  const loopStart = Math.max(0, firstOriginal.offsetLeft - pad)
+  const startAnchor = track.querySelector('.journey-portal-anchor--start')
+  const contentStart = startAnchor?.offsetLeft ?? firstOriginal.offsetLeft
+  const loopStart = Math.max(0, contentStart - pad)
   const walkerViewportX = getWalkerViewportX()
   const noteEl = lastOriginal.querySelector('.journey-note')
   let journeyEndScroll = lastOriginal.offsetLeft + lastOriginal.offsetWidth - walkerViewportX + 24
@@ -989,4 +991,60 @@ export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {
       teardown()
     }
   }, [stageRef, trackRef, pageRef])
+}
+
+export function useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalRef) {
+  useEffect(() => {
+    const track = trackRef.current
+    const stage = stageRef.current
+    if (!track || !stage) return undefined
+
+    const sync = () => {
+      const startPortal = startPortalRef.current
+      const endPortal = endPortalRef.current
+      const startAnchor = track.querySelector('.journey-portal-anchor--start')
+      const endAnchor = track.querySelector('.journey-portal-anchor--end')
+      if (!startPortal || !endPortal || !startAnchor || !endAnchor) return
+
+      const stageRect = stage.getBoundingClientRect()
+      const startRect = startAnchor.getBoundingClientRect()
+      const endRect = endAnchor.getBoundingClientRect()
+
+      gsap.set(startPortal, {
+        left: startRect.left - stageRect.left,
+        top: startRect.top - stageRect.top,
+        width: startRect.width,
+        height: startRect.height,
+      })
+      gsap.set(endPortal, {
+        left: endRect.left - stageRect.left,
+        top: endRect.top - stageRect.top,
+        width: endRect.width,
+        height: endRect.height,
+      })
+    }
+
+    refreshJourneyMetrics(track)
+    initJourneyTrackScroll(track)
+    sync()
+    const rafId = requestAnimationFrame(sync)
+
+    track.addEventListener('scroll', sync, { passive: true })
+    window.addEventListener('resize', sync)
+    gsap.ticker.add(sync)
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(sync)
+      : null
+    resizeObserver?.observe(track)
+    resizeObserver?.observe(stage)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      track.removeEventListener('scroll', sync)
+      window.removeEventListener('resize', sync)
+      gsap.ticker.remove(sync)
+      resizeObserver?.disconnect()
+    }
+  }, [trackRef, stageRef, startPortalRef, endPortalRef])
 }

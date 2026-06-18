@@ -1,6 +1,6 @@
 // Hand-cut paper style SVG scenes — placeholders until custom illustrations land in /public/journey/.
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function PaperShadow({ children, className = '' }) {
   return (
@@ -116,6 +116,44 @@ export function JourneyArt({ variant }) {
 export const WALKER_BOY_FRAMES = Array.from({ length: 30 }, (_, i) =>
   `/journey/walker-boy/${String(i + 1).padStart(2, '0')}.png`,
 )
+
+export const PORTAL_FRAMES = Array.from({ length: 6 }, (_, i) =>
+  `/journey/portal/${String(i + 1).padStart(2, '0')}.png`,
+)
+
+const PORTAL_FRAME_MS = 140
+
+export function JourneyPortal({ variant = 'start' }) {
+  const [frame, setFrame] = useState(0)
+
+  useEffect(() => {
+    PORTAL_FRAMES.forEach((src) => {
+      const img = new Image()
+      img.src = src
+    })
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) return undefined
+
+    const timer = window.setInterval(() => {
+      setFrame((current) => (current + 1) % PORTAL_FRAMES.length)
+    }, PORTAL_FRAME_MS)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
+  return (
+    <div className={`journey-portal journey-portal--${variant}`} aria-hidden>
+      <img
+        className="journey-portal__frame"
+        src={PORTAL_FRAMES[frame]}
+        alt=""
+        decoding="async"
+        draggable={false}
+      />
+    </div>
+  )
+}
 
 export function JourneyCutout({ item }) {
   const [imageFailed, setImageFailed] = useState(false)

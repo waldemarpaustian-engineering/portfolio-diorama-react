@@ -1,9 +1,9 @@
-import { useRef } from 'react'
+import { Fragment, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 import { JOURNEY_CHAPTERS } from '../data/journey.js'
 import { JOURNEY_NEAR_DECOR, JOURNEY_FRONT_DECOR, JOURNEY_MEADOW_DECOR, JOURNEY_CHAPTER_SIGNS, getJourneyFarDecor } from '../data/journeyDecor.js'
-import { JourneyArt, JourneyCutout, JourneyWalker } from '../components/journey/JourneyArt.jsx'
+import { JourneyArt, JourneyCutout, JourneyPortal, JourneyWalker } from '../components/journey/JourneyArt.jsx'
 import { useTheme } from '../hooks/useTheme.js'
 import {
   useJourneyAnimations,
@@ -14,6 +14,7 @@ import {
   useJourneyMobileScroll,
   useJourneySkyGlow,
   useJourneyRain,
+  useJourneyPortals,
 } from '../hooks/useJourneyAnimations.js'
 
 export default function Works() {
@@ -30,6 +31,8 @@ export default function Works() {
   const layerNearRef = useRef(null)
   const layerMeadowRef = useRef(null)
   const layerFrontRef = useRef(null)
+  const startPortalRef = useRef(null)
+  const endPortalRef = useRef(null)
   const chaptersRef = useRef([])
   const copy = t('work.chapters', { returnObjects: true })
   const desktopChapters = JOURNEY_CHAPTERS
@@ -43,6 +46,7 @@ export default function Works() {
   useJourneyMobileScroll(stageRef, trackRef, pageRef)
   useJourneySkyGlow(stageRef, theme)
   useJourneyRain(stageRef, layerRainRef, theme)
+  useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalRef)
 
   return (
     <div className="page journey-page" ref={pageRef}>
@@ -63,6 +67,15 @@ export default function Works() {
           {JOURNEY_NEAR_DECOR.map((item) => (
             <JourneyCutout key={item.id} item={item} />
           ))}
+        </div>
+
+        <div className="journey-layer journey-layer--portals" aria-hidden>
+          <div ref={startPortalRef} className="journey-portal-mount">
+            <JourneyPortal variant="start" />
+          </div>
+          <div ref={endPortalRef} className="journey-portal-mount">
+            <JourneyPortal variant="end" />
+          </div>
         </div>
 
         <div className="journey-layer journey-layer--meadow" ref={layerMeadowRef} aria-hidden>
@@ -89,51 +102,58 @@ export default function Works() {
 
           <div className="journey-track__spacer" aria-hidden />
 
+          <div className="journey-portal-anchor journey-portal-anchor--start" aria-hidden />
+
           {loopedChapters.map((chapter, i) => {
             const baseIndex = i % desktopChapters.length
             const text = copy[baseIndex] || {}
             const isOriginal = i < desktopChapters.length
+            const isLastOriginal = isOriginal && i === desktopChapters.length - 1
             return (
-              <article
-                key={`${chapter.id}-${isOriginal ? 'original' : 'clone'}`}
-                className={`journey-chapter journey-chapter--slot-${baseIndex + 1}`}
-                data-chapter-id={chapter.id}
-                data-loop={isOriginal ? 'original' : 'clone'}
-                aria-hidden={!isOriginal}
-                ref={(el) => {
-                  if (isOriginal) chaptersRef.current[baseIndex] = el
-                }}
-              >
-                <div className="journey-chapter__scene">
-                  <JourneyArt variant={chapter.art} />
-                </div>
-                <div className="journey-chapter__inner journey-note">
-                  <div className="journey-note__frame" aria-hidden />
-                  <div className="journey-note__body">
-                    <h2 className="journey-chapter__title">{text.title}</h2>
-                    {text.projects ? (
-                      <p className="journey-chapter__projects">{text.projects}</p>
-                    ) : null}
-                    {text.tagline ? (
-                      <p className="journey-chapter__tagline">{text.tagline}</p>
-                    ) : null}
-                    <p className="journey-chapter__text">
-                      {text.text}
-                      {text.note ? (
-                        <>
-                          {' '}
-                          <em className="journey-chapter__note-inline">{text.note}</em>
-                        </>
+              <Fragment key={`${chapter.id}-${isOriginal ? 'original' : 'clone'}`}>
+                <article
+                  className={`journey-chapter journey-chapter--slot-${baseIndex + 1}`}
+                  data-chapter-id={chapter.id}
+                  data-loop={isOriginal ? 'original' : 'clone'}
+                  aria-hidden={!isOriginal}
+                  ref={(el) => {
+                    if (isOriginal) chaptersRef.current[baseIndex] = el
+                  }}
+                >
+                  <div className="journey-chapter__scene">
+                    <JourneyArt variant={chapter.art} />
+                  </div>
+                  <div className="journey-chapter__inner journey-note">
+                    <div className="journey-note__frame" aria-hidden />
+                    <div className="journey-note__body">
+                      <h2 className="journey-chapter__title">{text.title}</h2>
+                      {text.projects ? (
+                        <p className="journey-chapter__projects">{text.projects}</p>
                       ) : null}
-                    </p>
+                      {text.tagline ? (
+                        <p className="journey-chapter__tagline">{text.tagline}</p>
+                      ) : null}
+                      <p className="journey-chapter__text">
+                        {text.text}
+                        {text.note ? (
+                          <>
+                            {' '}
+                            <em className="journey-chapter__note-inline">{text.note}</em>
+                          </>
+                        ) : null}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                {isOriginal ? (
-                  <div className="journey-chapter__sign" aria-hidden>
-                    <JourneyCutout item={JOURNEY_CHAPTER_SIGNS[baseIndex]} />
-                  </div>
+                  {isOriginal ? (
+                    <div className="journey-chapter__sign" aria-hidden>
+                      <JourneyCutout item={JOURNEY_CHAPTER_SIGNS[baseIndex]} />
+                    </div>
+                  ) : null}
+                </article>
+                {isLastOriginal ? (
+                  <div className="journey-portal-anchor journey-portal-anchor--end" aria-hidden />
                 ) : null}
-              </article>
+              </Fragment>
             )
           })}
 

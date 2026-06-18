@@ -669,6 +669,9 @@ html[data-theme="dark"] .journey-page {
 .journey-layer--near {
   z-index: 2;
 }
+.journey-layer--portals {
+  z-index: 2;
+}
 .journey-layer--meadow {
   z-index: 3;
 }
@@ -853,6 +856,49 @@ html[data-theme="dark"] .journey-cutout--star {
 }
 html[data-theme="dark"] .journey-cutout--sign {
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35)) brightness(0.94);
+}
+.journey-portal-anchor {
+  flex: 0 0 auto;
+  align-self: flex-end;
+  width: clamp(92px, 13vh, 172px);
+  height: clamp(118px, 16.5vh, 220px);
+  margin-bottom: calc(var(--journey-meadow-bottom) - 62px);
+  visibility: hidden;
+  pointer-events: none;
+}
+.journey-portal-anchor--start {
+  margin-right: clamp(-48px, -4vw, -24px);
+}
+.journey-portal-anchor--end {
+  margin-left: clamp(-48px, -4vw, -24px);
+}
+.journey-portal-mount {
+  position: absolute;
+  width: clamp(92px, 13vh, 172px);
+  height: clamp(118px, 16.5vh, 220px);
+  pointer-events: none;
+}
+.journey-portal {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  filter: drop-shadow(0 8px 14px rgba(43, 42, 51, 0.16));
+}
+.journey-portal--end {
+  transform: scaleX(-1);
+}
+.journey-portal__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+html[data-theme="dark"] .journey-portal__frame {
+  filter: brightness(0.94) contrast(1.04);
 }
 .journey-walker {
   position: absolute;
