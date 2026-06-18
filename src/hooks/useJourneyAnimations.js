@@ -17,11 +17,15 @@ function getLoopMetrics(track) {
   const pad = 32
   const loopStart = Math.max(0, firstOriginal.offsetLeft - pad)
   const walkerX = Math.min(Math.max(72, track.clientWidth * 0.18), 168)
-  const journeyEndScroll = lastOriginal.offsetLeft + lastOriginal.offsetWidth - walkerX + 24
+  const signEl = lastOriginal.querySelector('.journey-chapter__sign [data-decor-id]')
+  let journeyEndScroll = lastOriginal.offsetLeft + lastOriginal.offsetWidth - walkerX + 24
+  if (signEl) {
+    journeyEndScroll = lastOriginal.offsetLeft + signEl.offsetLeft + signEl.offsetWidth * 0.5 - walkerX
+  }
   const journeySpan = Math.max(1, journeyEndScroll - loopStart)
 
   const firstClone = track.querySelector('.journey-chapter[data-loop="clone"]')
-  const seamDistance = firstClone
+  const seamDistance = firstClone && firstClone.offsetWidth > 0
     ? firstClone.offsetLeft - firstOriginal.offsetLeft
     : 0
 
@@ -40,13 +44,36 @@ function getLoopMetrics(track) {
   return { loopStart, loopDistance, loopEnd, journeySpan }
 }
 
-function normalizeLoopPosition(value, metrics) {
+function clampJourneyScroll(value, metrics) {
   if (!metrics) return value
-  const { loopStart, loopDistance, loopEnd } = metrics
-  let out = value
-  while (out < loopStart) out += loopDistance
-  while (out >= loopEnd) out -= loopDistance
-  return out
+  const journeyEnd = metrics.loopStart + metrics.journeySpan
+  return Math.max(metrics.loopStart, Math.min(journeyEnd, value))
+}
+
+function initJourneyTrackScroll(track) {
+  const metrics = getLoopMetrics(track)
+  if (!metrics) return
+  if (track.scrollLeft < metrics.loopStart - 0.5) {
+    track.scrollLeft = metrics.loopStart
+  }
+}
+
+function shouldHijackHorizontalWheel(stage, track, delta) {
+  if (!stage) return true
+
+  const stageRect = stage.getBoundingClientRect()
+  const viewportH = window.innerHeight
+
+  // Erst vertikal scrollen, bis der untere Rand der Szene sichtbar ist
+  if (stageRect.bottom > viewportH + 8) return false
+
+  const metrics = getLoopMetrics(track)
+  if (delta < 0 && metrics) {
+    const atStart = track.scrollLeft <= metrics.loopStart + 2
+    if (atStart && window.scrollY > 0) return false
+  }
+
+  return true
 }
 
 function showChapter(el) {
@@ -171,6 +198,11 @@ export function useJourneyWalker(trackRef, walkerRef) {
     }
 
     syncWalkerFrame()
+    initJourneyTrackScroll(track)
+    requestAnimationFrame(() => {
+      initJourneyTrackScroll(track)
+      syncWalkerFrame()
+    })
 
     function onScroll() {
       if (reduced || !frameImg) return
@@ -228,8 +260,9 @@ export function useJourneyRockDepth(trackRef, walkerRef) {
 }
 
 const LINE_TO_PX = 64
-const MOUSE_PIXEL_BOOST = 12
-const TRACKPAD_BOOST = 1.15
+const MOUSE_PIXEL_BOOST = 6
+const TRACKPAD_BOOST = 0.72
+const WHEEL_SCROLL_DURATION = 0.72
 
 // Near/front shift at p=1: tree-3 (118%) lands ~54% — third tree as journey destination
 const PARALLAX_PAPER = 12
@@ -244,13 +277,14 @@ function wheelToPixels(e) {
   return deltaY * TRACKPAD_BOOST
 }
 
-export function useJourneyWheel(containerRef, trackRef) {
+export function useJourneyWheel(containerRef, trackRef, stageRef) {
   const wheelTweenRef = useRef(null)
   const wheelStateRef = useRef({ value: 0 })
 
   useEffect(() => {
     const container = containerRef.current
     const track = trackRef.current
+    const stage = stageRef?.current
     if (!container || !track) return undefined
 
     const mq = window.matchMedia('(min-width: 900px)')
@@ -260,6 +294,7 @@ export function useJourneyWheel(containerRef, trackRef) {
         wheelTweenRef.current.kill()
         wheelTweenRef.current = null
       }
+      initJourneyTrackScroll(track)
       ScrollTrigger.refresh()
     }
 
@@ -285,10 +320,12 @@ export function useJourneyWheel(containerRef, trackRef) {
       const delta = useX ? deltaX : deltaY
       if (Math.abs(delta) < 0.5) return
 
+      if (!shouldHijackHorizontalWheel(stage, track, delta)) return
+
       const metrics = getLoopMetrics(track)
-      const startValue = metrics ? normalizeLoopPosition(track.scrollLeft, metrics) : track.scrollLeft
+      const startValue = metrics ? clampJourneyScroll(track.scrollLeft, metrics) : track.scrollLeft
       const rawTarget = startValue + delta
-      const next = metrics ? normalizeLoopPosition(rawTarget, metrics) : clamp(rawTarget)
+      const next = metrics ? clampJourneyScroll(rawTarget, metrics) : clamp(rawTarget)
       if (Math.abs(next - startValue) < 0.5) return
 
       e.preventDefault()
@@ -297,13 +334,13 @@ export function useJourneyWheel(containerRef, trackRef) {
       wheelStateRef.current.value = startValue
       wheelTweenRef.current = gsap.to(wheelStateRef.current, {
         value: rawTarget,
-        duration: 0.55,
+        duration: WHEEL_SCROLL_DURATION,
         ease: 'power3.out',
         overwrite: true,
         onUpdate: () => {
           const m = getLoopMetrics(track)
           const wrapped = m
-            ? normalizeLoopPosition(wheelStateRef.current.value, m)
+            ? clampJourneyScroll(wheelStateRef.current.value, m)
             : clamp(wheelStateRef.current.value)
           isNormalizing = true
           track.scrollLeft = wrapped
@@ -316,7 +353,7 @@ export function useJourneyWheel(containerRef, trackRef) {
       if (!mq.matches || isNormalizing) return
       const metrics = getLoopMetrics(track)
       if (!metrics) return
-      const normalized = normalizeLoopPosition(track.scrollLeft, metrics)
+      const normalized = clampJourneyScroll(track.scrollLeft, metrics)
       if (Math.abs(normalized - track.scrollLeft) > 0.5) {
         isNormalizing = true
         track.scrollLeft = normalized
@@ -324,11 +361,26 @@ export function useJourneyWheel(containerRef, trackRef) {
       }
     }
 
+    const initScroll = () => initJourneyTrackScroll(track)
+    initScroll()
+    const bootRaf = requestAnimationFrame(() => {
+      requestAnimationFrame(initScroll)
+    })
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(initScroll)
+      : null
+    resizeObserver?.observe(track)
+
     container.addEventListener('wheel', onWheel, { passive: false })
     track.addEventListener('scroll', onTrackScroll, { passive: true })
     mq.addEventListener('change', onMqChange)
+    window.addEventListener('resize', initScroll)
 
     return () => {
+      cancelAnimationFrame(bootRaf)
+      resizeObserver?.disconnect()
+      window.removeEventListener('resize', initScroll)
       container.removeEventListener('wheel', onWheel)
       track.removeEventListener('scroll', onTrackScroll)
       mq.removeEventListener('change', onMqChange)
@@ -337,7 +389,7 @@ export function useJourneyWheel(containerRef, trackRef) {
         wheelTweenRef.current = null
       }
     }
-  }, [containerRef, trackRef])
+  }, [containerRef, trackRef, stageRef])
 }
 
 function getParallaxProgress(track) {
@@ -764,6 +816,8 @@ export function useJourneyMobileScroll(stageRef, trackRef, pageRef) {
           setJourneyScrollProgress(track, self.progress)
         },
       })
+
+      initJourneyTrackScroll(track)
     }
 
     function chaptersShowAll(trackEl) {

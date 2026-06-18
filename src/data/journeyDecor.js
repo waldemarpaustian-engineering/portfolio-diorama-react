@@ -145,28 +145,27 @@ function buildNightSkyDecor() {
   ]
 }
 
-// Small path signposts — one per chapter, meadow layer (behind grass strip)
-function signItem(id, src, left, nativeW, nativeH) {
+// Chapter signposts — scroll with each station (same speed as notes)
+function chapterSignItem(id, src, nativeW, nativeH) {
   const width = Math.round((nativeW / nativeH) * SIGN_HEIGHT)
   return {
     id,
     type: 'image',
     src,
     fallback: 'rock',
-    className: 'journey-cutout--ground journey-cutout--sign',
+    className: 'journey-cutout--chapter-sign',
     width,
     height: SIGN_HEIGHT,
-    style: { left, zIndex: 1 },
   }
 }
 
-export const JOURNEY_SIGNPOST_DECOR = [
-  signItem('sign-1', '/journey/cutouts/signs/sign-1-early-web.png', '9%', 244, 330),
-  signItem('sign-2', '/journey/cutouts/signs/sign-2-frameworks.png', '25%', 252, 330),
-  signItem('sign-3', '/journey/cutouts/signs/sign-3-architecture.png', '43%', 252, 327),
-  signItem('sign-4', '/journey/cutouts/signs/sign-4-platforms.png', '59%', 252, 316),
-  signItem('sign-5', '/journey/cutouts/signs/sign-6-design.png', '77%', 260, 300),
-  signItem('sign-6', '/journey/cutouts/signs/sign-5-ai.png', '95%', 254, 316),
+export const JOURNEY_CHAPTER_SIGNS = [
+  chapterSignItem('sign-ch-1', '/journey/cutouts/signs/sign-1-early-web.png', 244, 330),
+  chapterSignItem('sign-ch-2', '/journey/cutouts/signs/sign-2-frameworks.png', 252, 330),
+  chapterSignItem('sign-ch-3', '/journey/cutouts/signs/sign-3-architecture.png', 252, 327),
+  chapterSignItem('sign-ch-4', '/journey/cutouts/signs/sign-4-platforms.png', 252, 316),
+  chapterSignItem('sign-ch-5', '/journey/cutouts/signs/sign-6-design.png', 260, 300),
+  chapterSignItem('sign-ch-6', '/journey/cutouts/signs/sign-5-ai.png', 254, 316),
 ]
 
 export const JOURNEY_FRONT_DECOR = [

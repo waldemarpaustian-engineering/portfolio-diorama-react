@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 import { JOURNEY_CHAPTERS } from '../data/journey.js'
-import { JOURNEY_NEAR_DECOR, JOURNEY_FRONT_DECOR, JOURNEY_MEADOW_DECOR, JOURNEY_SIGNPOST_DECOR, getJourneyFarDecor } from '../data/journeyDecor.js'
+import { JOURNEY_NEAR_DECOR, JOURNEY_FRONT_DECOR, JOURNEY_MEADOW_DECOR, JOURNEY_CHAPTER_SIGNS, getJourneyFarDecor } from '../data/journeyDecor.js'
 import { JourneyArt, JourneyCutout, JourneyWalker } from '../components/journey/JourneyArt.jsx'
 import { useTheme } from '../hooks/useTheme.js'
 import {
@@ -38,7 +38,7 @@ export default function Works() {
   useJourneyAnimations(trackRef, chaptersRef)
   useJourneyWalker(trackRef, walkerRef)
   useJourneyRockDepth(trackRef, walkerRef)
-  useJourneyWheel(pageRef, trackRef)
+  useJourneyWheel(pageRef, trackRef, stageRef)
   useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef, layerMeadowRef, layerFrontRef, stageRef)
   useJourneyMobileScroll(stageRef, trackRef, pageRef)
   useJourneySkyGlow(stageRef, theme)
@@ -72,9 +72,6 @@ export default function Works() {
         </div>
 
         <div className="journey-layer journey-layer--meadow" ref={layerMeadowRef} aria-hidden>
-          {JOURNEY_SIGNPOST_DECOR.map((item) => (
-            <JourneyCutout key={item.id} item={item} />
-          ))}
           <div className="journey-meadow-strip" aria-hidden />
           {JOURNEY_MEADOW_DECOR.map((item) => (
             <JourneyCutout key={item.id} item={item} />
@@ -133,6 +130,11 @@ export default function Works() {
                     </p>
                   </div>
                 </div>
+                {isOriginal ? (
+                  <div className="journey-chapter__sign" aria-hidden>
+                    <JourneyCutout item={JOURNEY_CHAPTER_SIGNS[baseIndex]} />
+                  </div>
+                ) : null}
               </article>
             )
           })}
