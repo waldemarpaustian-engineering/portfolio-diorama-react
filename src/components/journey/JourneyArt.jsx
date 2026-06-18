@@ -63,13 +63,14 @@ export function JourneyArt({ variant }) {
       )
     case 'startup':
       return (
-        <PaperShadow className="journey-art--startup">
-          <svg viewBox="0 0 200 160" aria-hidden>
-            <path d="M100 118c-20-40-20-72 0-90 20 18 20 50 0 90z" fill="#c8f0c8" stroke="#2b2a33" strokeWidth="2" />
-            <path d="M100 118c20-40 20-72 0-90" fill="#a8d8a8" stroke="#2b2a33" strokeWidth="2" />
-            <rect x="72" y="118" width="56" height="14" rx="3" fill="#e8dcc8" stroke="#2b2a33" strokeWidth="1.8" />
-            <circle cx="148" cy="48" r="14" fill="#ffe8c8" stroke="#2b2a33" strokeWidth="1.8" />
-          </svg>
+        <PaperShadow className="journey-art journey-art--startup">
+          <img
+            src="/journey/art-startup.png"
+            alt=""
+            aria-hidden
+            decoding="async"
+            draggable={false}
+          />
         </PaperShadow>
       )
     case 'mobility':
