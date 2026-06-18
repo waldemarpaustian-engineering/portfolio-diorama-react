@@ -196,11 +196,11 @@ export function useJourneyRockDepth(trackRef, walkerRef) {
       const rockCenter = rockBox.left + rockBox.width * 0.5
 
       if (rockCenter > walkerFeet + 18) {
-        rock.style.zIndex = '3'
+        rock.style.zIndex = '1'
       } else if (rockCenter > walkerFeet - 12) {
-        rock.style.zIndex = '5'
-      } else {
         rock.style.zIndex = '3'
+      } else {
+        rock.style.zIndex = '1'
       }
     }
 

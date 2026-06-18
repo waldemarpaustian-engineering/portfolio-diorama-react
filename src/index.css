@@ -578,7 +578,7 @@ html[data-theme="dark"] .journey-page {
   background: var(--journey-paper);
   --journey-ground: clamp(56px, 9vh, 74px);
   --journey-meadow-bottom: clamp(60px, 9.5vh, 78px);
-  --journey-walker-bottom: clamp(64px, 10.5vh, 84px);
+  --journey-walker-bottom: clamp(56px, 9.5vh, 76px);
   --journey-meadow-h: clamp(52px, 9vh, 72px);
 }
 .journey-stage::before {
@@ -847,7 +847,7 @@ html[data-theme="dark"] .journey-cutout--star {
   left: clamp(72px, 18vw, 168px);
   width: clamp(70px, 11.5vh, 100px);
   height: clamp(102px, 17vh, 148px);
-  z-index: 26;
+  z-index: 3;
   transform: translateX(-50%);
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.16));
   pointer-events: none;
@@ -1101,7 +1101,7 @@ html[data-theme="dark"] .journey-walker__frame {
     overflow: hidden;
     --journey-ground: clamp(50px, 8.5vh, 66px);
     --journey-meadow-bottom: clamp(54px, 9vh, 70px);
-    --journey-walker-bottom: clamp(58px, 9.5vh, 74px);
+    --journey-walker-bottom: clamp(50px, 8.5vh, 66px);
     --journey-meadow-h: clamp(44px, 7.5vh, 60px);
   }
   /* Himmel etwas tiefer — näher an den Zetteln */

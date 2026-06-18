@@ -146,16 +146,6 @@ function buildNightSkyDecor() {
 
 export const JOURNEY_FRONT_DECOR = [
   {
-    id: 'tree-start',
-    type: 'image',
-    src: '/journey/cutouts/tree-start.png',
-    fallback: 'tree',
-    className: 'journey-cutout--ground',
-    width: TREE_START_SIZE,
-    height: TREE_START_SIZE,
-    style: { left: '4%' },
-  },
-  {
     id: 'rocks-start',
     type: 'image',
     src: '/journey/cutouts/rocks-cluster.png',
@@ -201,6 +191,16 @@ export function getJourneyFarDecor(theme) {
 export const JOURNEY_FAR_DECOR = JOURNEY_FAR_DECOR_LIGHT
 
 export const JOURNEY_NEAR_DECOR = [
+  {
+    id: 'tree-start',
+    type: 'image',
+    src: '/journey/cutouts/tree-start.png',
+    fallback: 'tree',
+    className: 'journey-cutout--ground',
+    width: TREE_START_SIZE,
+    height: TREE_START_SIZE,
+    style: { left: '4%' },
+  },
   {
     id: 'tree-1',
     type: 'image',
