@@ -883,6 +883,18 @@ html[data-theme="dark"] .journey-walker__frame {
   padding-top: 2px;
   isolation: isolate;
 }
+.journey-chapter--slot-2,
+.journey-chapter--slot-5 {
+  flex: 0 0 clamp(304px, 39vw, 404px);
+}
+.journey-chapter--slot-2 .journey-note,
+.journey-chapter--slot-5 .journey-note {
+  max-width: 404px;
+}
+.journey-chapter--slot-2 .journey-note__body,
+.journey-chapter--slot-5 .journey-note__body {
+  padding-bottom: 21%;
+}
 .journey-chapter__scene {
   min-height: 92px;
   display: flex;
@@ -900,6 +912,7 @@ html[data-theme="dark"] .journey-walker__frame {
   container-name: note;
   background: transparent;
   isolation: isolate;
+  transform-origin: 50% 12%;
 }
 .journey-note__frame {
   position: absolute;
@@ -975,16 +988,16 @@ html[data-theme="dark"] .journey-walker__frame {
 }
 .journey-chapter:has(.journey-art--studium) {
   gap: 0;
-  padding-top: 24px;
+  padding-top: 14px;
 }
 .journey-chapter:has(.journey-art--studium) .journey-chapter__scene {
   min-height: 64px;
   padding-bottom: 0;
-  margin-bottom: -8px;
+  margin-bottom: -30px;
 }
 .journey-art--studium {
   width: min(184px, 66%);
-  transform: translateY(14px);
+  margin-top: 24px;
 }
 .journey-art--studium .journey-art__shadow {
   display: none;
@@ -998,41 +1011,41 @@ html[data-theme="dark"] .journey-walker__frame {
 .journey-chapter:has(.journey-art--today),
 .journey-chapter:has(.journey-art--design) {
   gap: 0;
-  padding-top: 12px;
+  padding-top: 4px;
 }
 .journey-chapter:has(.journey-art--frameworks) .journey-chapter__scene,
 .journey-chapter:has(.journey-art--startup) .journey-chapter__scene,
 .journey-chapter:has(.journey-art--today) .journey-chapter__scene {
   min-height: 0;
   padding-bottom: 0;
-  margin-bottom: -40px;
+  margin-bottom: -64px;
 }
 .journey-chapter:has(.journey-art--design) .journey-chapter__scene {
   min-height: 0;
   padding-bottom: 0;
-  margin-bottom: 8px;
+  margin-bottom: -40px;
 }
 .journey-chapter:has(.journey-art--banking) .journey-chapter__scene {
   min-height: 0;
   padding-bottom: 0;
-  margin-bottom: -28px;
+  margin-bottom: -50px;
 }
 .journey-art--frameworks {
   width: min(300px, 98%);
-  transform: translateY(6px);
+  margin-top: 22px;
 }
 .journey-art--startup,
 .journey-art--today {
   width: min(260px, 86%);
-  transform: translateY(6px);
+  margin-top: 22px;
 }
 .journey-art--design {
   width: min(208px, 72%);
-  transform: translateY(6px);
+  margin-top: 22px;
 }
 .journey-art--banking {
   width: min(272px, 90%);
-  transform: translateY(6px);
+  margin-top: 22px;
 }
 .journey-art--frameworks .journey-art__shadow,
 .journey-art--banking .journey-art__shadow,
@@ -1084,7 +1097,7 @@ html[data-theme="dark"] .journey-walker__frame {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .journey-note__body > * { opacity: 0; }
+  .journey-note { opacity: 0; }
   .journey-art { opacity: 0; }
 }
 
@@ -1136,6 +1149,10 @@ html[data-theme="dark"] .journey-walker__frame {
     padding-top: 0;
     margin-bottom: 0;
     scroll-snap-align: none;
+  }
+  .journey-chapter--slot-2,
+  .journey-chapter--slot-5 {
+    flex: 0 0 clamp(268px, 84vw, 348px);
   }
   .journey-chapter__scene {
     display: none;

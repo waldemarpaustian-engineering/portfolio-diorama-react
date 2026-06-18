@@ -50,10 +50,11 @@ function normalizeLoopPosition(value, metrics) {
 }
 
 function showChapter(el) {
-  el.querySelectorAll('.journey-note__body > *').forEach((node) => {
-    node.style.opacity = '1'
-    node.style.transform = 'none'
-  })
+  const note = el.querySelector('.journey-note')
+  if (note) {
+    note.style.opacity = '1'
+    note.style.transform = 'none'
+  }
   const art = el.querySelector('.journey-art')
   if (art) {
     art.style.opacity = '1'
@@ -78,9 +79,9 @@ export function useJourneyAnimations(trackRef, chaptersRef) {
 
     chapters.forEach((chapter) => {
       if (!chapter) return
-      const targets = chapter.querySelectorAll('.journey-note__body > *')
+      const note = chapter.querySelector('.journey-note')
       const art = chapter.querySelector('.journey-art')
-      if (!targets.length) return
+      if (!note) return
 
       const tl = gsap.timeline({
         paused: true,
@@ -88,9 +89,20 @@ export function useJourneyAnimations(trackRef, chaptersRef) {
       })
 
       tl.fromTo(
-        targets,
-        { autoAlpha: 0, y: 24 },
-        { autoAlpha: 1, y: 0, duration: 0.62, stagger: 0.08 },
+        note,
+        {
+          autoAlpha: 0,
+          y: -22,
+          rotate: -1.8,
+          transformOrigin: '50% 12%',
+        },
+        {
+          autoAlpha: 1,
+          y: 0,
+          rotate: 0,
+          duration: 0.72,
+          ease: 'back.out(1.15)',
+        },
       )
 
       if (art) {
