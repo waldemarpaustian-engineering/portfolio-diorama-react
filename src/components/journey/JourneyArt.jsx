@@ -101,15 +101,14 @@ export function JourneyArt({ variant }) {
     case 'today':
     default:
       return (
-        <PaperShadow className="journey-art--today">
-          <svg viewBox="0 0 200 160" aria-hidden>
-            <path d="M100 36c-8 0-14 10-14 22v8h28v-8c0-12-6-22-14-22z" fill="#ffe8c8" stroke="#2b2a33" strokeWidth="2" />
-            <rect x="86" y="66" width="28" height="36" rx="4" fill="#f8f4ec" stroke="#2b2a33" strokeWidth="2" />
-            <circle cx="100" cy="88" r="10" fill="#fff6d8" stroke="#2b2a33" strokeWidth="1.5" />
-            <path d="M70 118h60" stroke="#8b9aff" strokeWidth="3" strokeLinecap="round" opacity="0.8" />
-            <rect x="128" y="96" width="36" height="28" rx="4" fill="#fff" stroke="#2b2a33" strokeWidth="1.8" />
-            <circle cx="146" cy="110" r="6" fill="none" stroke="#4a7fd4" strokeWidth="2" />
-          </svg>
+        <PaperShadow className="journey-art journey-art--today">
+          <img
+            src="/journey/art-today.png"
+            alt=""
+            aria-hidden
+            decoding="async"
+            draggable={false}
+          />
         </PaperShadow>
       )
   }
