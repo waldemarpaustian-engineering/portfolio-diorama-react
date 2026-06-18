@@ -27,13 +27,14 @@ export function JourneyArt({ variant }) {
       )
     case 'banking':
       return (
-        <PaperShadow className="journey-art--banking">
-          <svg viewBox="0 0 200 160" aria-hidden>
-            <path d="M40 118h120v18H40z" fill="#e8dcc8" stroke="#2b2a33" strokeWidth="2" />
-            <path d="M55 118V72h18v46M95 118V58h18v60M145 118V80h18v38" fill="#f0ebe3" stroke="#2b2a33" strokeWidth="2" />
-            <path d="M35 72h130l-12-28H47z" fill="#f8f4ec" stroke="#2b2a33" strokeWidth="2" />
-            <circle cx="100" cy="48" r="10" fill="#ffe8c8" stroke="#2b2a33" strokeWidth="1.8" />
-          </svg>
+        <PaperShadow className="journey-art journey-art--banking">
+          <img
+            src="/journey/art-banking.png"
+            alt=""
+            aria-hidden
+            decoding="async"
+            draggable={false}
+          />
         </PaperShadow>
       )
     case 'frameworks':
