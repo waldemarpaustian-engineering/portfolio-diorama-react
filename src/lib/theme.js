@@ -4,11 +4,12 @@ const KEY = 'portfolio-theme'
 
 export function getTheme() {
   if (typeof window === 'undefined') return 'light'
-  return localStorage.getItem(KEY) === 'dark' ? 'dark' : 'light'
+  const stored = localStorage.getItem(KEY)
+  return stored === 'dark' ? 'dark' : 'light'
 }
 
 export function applyTheme(theme) {
-  document.documentElement.dataset.theme = theme
+  document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light'
 }
 
 export function setTheme(theme) {
@@ -26,7 +27,11 @@ export function toggleTheme() {
 }
 
 export function initTheme() {
-  applyTheme(getTheme())
+  const theme = getTheme()
+  applyTheme(theme)
+  if (localStorage.getItem(KEY) == null) {
+    localStorage.setItem(KEY, 'light')
+  }
 }
 
 export function subscribeTheme(fn) {
