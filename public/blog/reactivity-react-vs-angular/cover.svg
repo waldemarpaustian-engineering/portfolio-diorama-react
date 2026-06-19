@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Reaktivität: React vs. Angular">
+  <defs>
+    <linearGradient id="skyC" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d4f5"/>
+      <stop offset="0.6" stop-color="#cbe5f7"/>
+      <stop offset="1" stop-color="#eef6fc"/>
+    </linearGradient>
+    <linearGradient id="shieldC" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6aa0d8"/>
+      <stop offset="1" stop-color="#3d6fc0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#skyC)"/>
+
+  <!-- React atom, left -->
+  <g transform="translate(310 250)" fill="none" stroke="#3a8fbf" stroke-width="7">
+    <ellipse rx="120" ry="45"/>
+    <ellipse rx="120" ry="45" transform="rotate(60)"/>
+    <ellipse rx="120" ry="45" transform="rotate(120)"/>
+    <circle r="18" fill="#3a8fbf" stroke="none"/>
+  </g>
+
+  <!-- vs -->
+  <text x="600" y="270" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="60" font-weight="700" fill="#2b2a33">vs</text>
+
+  <!-- Angular shield, right -->
+  <g transform="translate(890 250)">
+    <path d="M0 -130 L115 -89 L97 81 L0 137 L-97 81 L-115 -89 Z" fill="url(#shieldC)"/>
+    <path d="M0 -130 L115 -89 L97 81 L0 137 Z" fill="#34619f" opacity="0.6"/>
+    <path d="M0 -82 L53 65 L33 65 L22 36 L-22 36 L-33 65 L-53 65 Z" fill="#fff"/>
+    <path d="M-14 15 L14 15 L0 -19 Z" fill="#fff"/>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33" text-anchor="middle">
+    <text x="600" y="450" font-size="66" font-weight="700" letter-spacing="-2">Reaktivität im Vergleich</text>
+    <text x="600" y="510" font-size="32" font-weight="600" fill="#4a7fd4">Re-Render &amp; Compiler vs. Signals</text>
+    <text x="600" y="558" font-size="24" font-weight="500" fill="#7a7782">Eine Geschichte bis Juni 2026</text>
+  </g>
+</svg>

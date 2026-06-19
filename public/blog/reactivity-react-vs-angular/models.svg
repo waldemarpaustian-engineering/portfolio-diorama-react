@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="1000" height="400" role="img" aria-label="Re-Render vs. fine-grained Signals">
+  <rect width="1000" height="400" rx="18" fill="#eef6fc"/>
+
+  <!-- React side -->
+  <g transform="translate(40 30)">
+    <text x="0" y="20" font-family="-apple-system, sans-serif" font-size="18" font-weight="700" fill="#3a8fbf">React · grob-granular</text>
+    <text x="0" y="44" font-family="-apple-system, sans-serif" font-size="13.5" fill="#7a7782">State ändert sich → Komponente läuft neu</text>
+    <!-- tree, all re-run -->
+    <g>
+      <circle cx="200" cy="90" r="20" fill="#3a8fbf"/>
+      <line x1="200" y1="110" x2="120" y2="160" stroke="#9bbdd6" stroke-width="3"/>
+      <line x1="200" y1="110" x2="280" y2="160" stroke="#9bbdd6" stroke-width="3"/>
+      <circle cx="120" cy="180" r="20" fill="#86c2dd"/>
+      <circle cx="280" cy="180" r="20" fill="#86c2dd"/>
+      <line x1="120" y1="200" x2="80" y2="250" stroke="#9bbdd6" stroke-width="3"/>
+      <line x1="120" y1="200" x2="160" y2="250" stroke="#9bbdd6" stroke-width="3"/>
+      <circle cx="80" cy="270" r="18" fill="#b9dcec"/>
+      <circle cx="160" cy="270" r="18" fill="#b9dcec"/>
+    </g>
+    <text x="200" y="330" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13.5" fill="#2b2a33">re-run + Virtual-DOM-Diff,</text>
+    <text x="200" y="350" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13.5" fill="#2b2a33">Compiler überspringt Unnötiges</text>
+  </g>
+
+  <line x1="500" y1="40" x2="500" y2="360" stroke="#cddff0" stroke-width="2"/>
+
+  <!-- Angular side -->
+  <g transform="translate(540 30)">
+    <text x="0" y="20" font-family="-apple-system, sans-serif" font-size="18" font-weight="700" fill="#3d6fc0">Angular · fein-granular</text>
+    <text x="0" y="44" font-family="-apple-system, sans-serif" font-size="13.5" fill="#7a7782">Signal ändert sich → nur Abhängige updaten</text>
+    <g>
+      <circle cx="200" cy="90" r="20" fill="#d6e4f0"/>
+      <line x1="200" y1="110" x2="120" y2="160" stroke="#d6e4f0" stroke-width="3"/>
+      <line x1="200" y1="110" x2="280" y2="160" stroke="#9bb8de" stroke-width="3"/>
+      <circle cx="120" cy="180" r="20" fill="#d6e4f0"/>
+      <circle cx="280" cy="180" r="20" fill="#3d6fc0"/>
+      <line x1="280" y1="200" x2="280" y2="250" stroke="#9bb8de" stroke-width="3"/>
+      <circle cx="280" cy="270" r="18" fill="#3d6fc0"/>
+    </g>
+    <!-- signal label -->
+    <text x="200" y="330" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13.5" fill="#2b2a33">nur die Knoten, die das Signal</text>
+    <text x="200" y="350" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13.5" fill="#2b2a33">lesen — kein Virtual DOM</text>
+  </g>
+</svg>

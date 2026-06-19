@@ -1,0 +1,164 @@
+---
+title: "Reaktivität: React vs. Angular — eine Geschichte bis Juni 2026"
+date: 2026-06-18
+excerpt: "Beide Frameworks haben ihre Reaktivität in den letzten Jahren neu gebaut — aber aus entgegengesetzten Richtungen. Angular ging zu fein-granularen Signals, React blieb beim Re-Render und optimiert per Compiler. Geschichte, Modelle und Code-Beispiele im Vergleich."
+tags: ["react", "angular", "reactivity", "frontend"]
+cover: /blog/reactivity-react-vs-angular/cover.svg
+---
+
+„Reaktivität" heißt: Wie kommt eine Änderung an deinen Daten auf den Bildschirm?
+React und Angular beantworten diese Frage **grundverschieden** — und beide haben
+ihre Antwort zwischen 2022 und 2026 noch einmal umgebaut. Spannend ist: Sie
+nähern sich demselben Ziel (feinere, automatischere Updates) aus **entgegen-
+gesetzten Richtungen**.
+
+![Reaktivität im Zeitverlauf](/blog/reactivity-react-vs-angular/timeline.svg)
+
+## Die zwei Grundmodelle in einem Satz
+
+- **React**: *„UI = f(State)"*. Ändert sich State, **läuft die Komponente neu**,
+  React vergleicht das Ergebnis (Virtual DOM) und patcht nur die Unterschiede.
+  Grob-granular, dafür extrem simpel im Kopf.
+- **Angular** (heute): **Signals** — ein reaktiver Wert, der weiß, **wer ihn
+  liest**. Ändert er sich, updaten nur genau diese Stellen. Fein-granular, ohne
+  Virtual DOM.
+
+![Re-Render vs. fine-grained Signals](/blog/reactivity-react-vs-angular/models.svg)
+
+## Geschichte: Wie React dahin kam
+
+| Jahr | Meilenstein | Reaktivität |
+|---|---|---|
+| 2013 | React + Virtual DOM | `this.setState()` → Re-Render + Diff |
+| 2019 | Hooks (16.8) | `useState`, manuelle Memoization (`useMemo`) |
+| 2022 | Concurrent (18) | `useTransition`, `useDeferredValue`, Batching |
+| 2024 | React 19 | Actions, `use()`, Server Components |
+| 2024/25 | **React Compiler** | Memoization automatisch — kein `useMemo` mehr |
+
+Reacts Modell ist seit 2013 im Kern gleich geblieben: Die Komponente ist eine
+Funktion, die bei jeder Änderung **neu aufgerufen** wird. Das Problem dabei —
+unnötige Re-Renders — hat man lange **von Hand** mit `useMemo`, `useCallback` und
+`React.memo` bekämpft. Der **React Compiler** nimmt einem diese Handarbeit ab,
+**ohne** das Modell zu ändern.
+
+```jsx
+// React: State ist ein roher Wert, abgeleitete Werte rechnet man einfach aus
+function Counter() {
+  const [count, setCount] = useState(0);
+  const doubled = count * 2; // kein computed nötig — Compiler memoisiert
+
+  return <button onClick={() => setCount(count + 1)}>{count} / {doubled}</button>;
+}
+```
+
+Bewusst hat das React-Team **keine** Signals eingeführt. Das Argument: die
+**Rohheit der Daten**. `count` ist ein einfacher Wert — du gibst ihn in
+Bedingungen, Schleifen und an andere Funktionen weiter, ohne `.value` oder
+Getter. „Etwas `computed` zu machen ist eine **Optimierung, keine Pflicht**" —
+und die packt der Compiler unter die Haube.
+
+## Geschichte: Wie Angular dahin kam
+
+| Jahr | Meilenstein | Reaktivität |
+|---|---|---|
+| 2010 | AngularJS | `$scope` + `$digest`-Dirty-Checking |
+| 2016 | Angular 2 | **zone.js** + RxJS, Change Detection über den Baum |
+| 2023 | Angular 16/17 | **Signals** eingeführt (stabil ab v17) |
+| 2024 | Angular 19 | Signal-`input`/`output` stabil, standalone Default |
+| 2025 | Angular 21 | **zoneless** wird Default |
+| 2026 | Angular 22 | Signal Forms & Resource stabil, OnPush Default |
+
+Angulars Weg ist eine echte Wanderung. Früher hat **zone.js** jedes Browser-Event
+abgefangen und danach **den ganzen Komponentenbaum** auf Änderungen geprüft —
+robust, aber verschwenderisch. Async-Datenflüsse liefen über **RxJS**
+(`Observable`, `subscribe`, `takeUntil`).
+
+Mit **Angular 16 (2023)** kamen **Signals** — und damit der Wechsel von
+*„prüfe den ganzen Baum"* zu *„benachrichtige genau den Knoten"*:
+
+```typescript
+// Angular: Signals sind Getter-Funktionen — Lesen mit count()
+@Component({ template: `{{ count() }} / {{ doubled() }}` })
+export class CounterComponent {
+  count = signal(0);
+  doubled = computed(() => this.count() * 2); // automatisch abgeleitet
+
+  inc() { this.count.update((c) => c + 1); }
+}
+
+// Seiteneffekt bei jeder Änderung
+effect(() => console.log('count:', this.count()));
+```
+
+Seitdem ist Angular Schritt für Schritt „signal-first" geworden: stabile
+Signal-Inputs (v19), `linkedSignal`/`resource` (v20), und schließlich
+**zoneless als Default** (v21) — zone.js ist damit optional. Mehr dazu in der
+[Angular-22-vs-21](/blog/angular-22-vs-21)- und
+[21-vs-20](/blog/angular-21-vs-20)-Serie.
+
+## Direkter Vergleich
+
+| | React (2026) | Angular (2026) |
+|---|---|---|
+| Reaktives Primitiv | roher Wert + `useState` | `signal()` (Getter) |
+| Abgeleiteter Wert | einfach ausrechnen | `computed()` |
+| Seiteneffekt | `useEffect(fn, deps)` | `effect(fn)` (auto-tracked) |
+| Granularität | Komponente (grob) | Ausdruck/Knoten (fein) |
+| Diff-Mechanismus | Virtual DOM | kein VDOM, direkte Updates |
+| Optimierung | **Compiler** (auto-memo) | **Signals** (von Natur aus fein) |
+| Dependencies | `deps`-Array, manuell | automatisch verfolgt |
+
+Der vielleicht greifbarste Unterschied: In React schreibst du
+`const x = a + b` und der Wert ist sofort *roh* verfügbar. In Angular ist
+`x = computed(() => a() + b())` und du **liest** ihn als `x()`. React versteckt
+die Reaktivität, Angular macht sie **explizit**.
+
+## Die „große Konvergenz" — und warum sie trotzdem verschieden bleiben
+
+Beide lösen 2026 dasselbe Problem (zu viele unnötige Updates), aber mit
+gegensätzlicher Philosophie:
+
+- **Angular** setzt auf **explizite Kontrolle & Nachvollziehbarkeit**: Du kannst
+  genau zurückverfolgen, welches Signal sich geändert hat und welche Views
+  deshalb updaten. Laut Miško Hevery (Angulars Erfinder) sind Signals
+  *grundsätzlich effizienter*, weil sie **nicht an den Render-Baum gebunden**
+  sind.
+- **React** setzt auf **Ergonomie & Automatik**: Du schreibst weiter „normalen"
+  Code mit rohen Werten, der Compiler optimiert. Der Preis ist eine Schicht
+  Indirektion, die das Debugging etwas undurchsichtiger macht.
+
+> **Kernaussage:** Angular **hat Signals übernommen** (wie Solid, Svelte 5, Vue,
+> Qwik, Preact). React ist das große Framework, das **bewusst dabei bleibt**, die
+> Komponente neu laufen zu lassen — und die Effizienz dem Compiler überlässt.
+
+Und die Performance? In realen Apps meist ein **Unentschieden**. Fein-granular
+gewinnt bei sehr vielen „Blättern" (große Listen, viele unabhängige Werte). Aber
+über Tempo entscheiden in der Praxis öfter **Datenfluss, Bundle-Größe und
+Render-Grenzen** als das Reaktivitätsmodell selbst.
+
+## Was das für dich heißt
+
+- **React-Mindset**: Denke in „die Funktion läuft neu". Mit dem Compiler kannst
+  du die meisten `useMemo`/`useCallback` weglassen. Reaktivität ist implizit.
+- **Angular-Mindset**: Denke in „wer liest dieses Signal?". `computed` statt
+  Neuberechnung, `effect` statt manueller Subscriptions, `signal()`-Lesen mit
+  Klammern. Reaktivität ist explizit.
+- **Beim Wechseln** zwischen beiden ist genau das die größte Umstellung — nicht
+  die Syntax, sondern **wo die Reaktivität sitzt**: im Aufruf der Komponente
+  (React) oder im einzelnen Wert (Angular).
+
+## Fazit
+
+Zwei Frameworks, ein Ziel, zwei Wege. Angular hat seine Reaktivität von Grund auf
+zu **Signals** umgebaut und damit zone.js den Rang abgelaufen. React hat sein
+bewährtes **Re-Render-Modell behalten** und die Schmerzpunkte per **Compiler**
+geglättet. Keiner der beiden Wege ist „richtiger" — sie spiegeln zwei
+unterschiedliche Wetten darauf, was Entwickler mehr schätzen: **explizite
+Kontrolle** oder **unsichtbare Automatik**.
+
+---
+
+*Quellen: [Angular vs. React: The Great Convergence — Blackthorn Vision](https://blackthorn-vision.com/blog/angular-vs-react/),
+[Signals vs. React Compiler — RedMonk](https://redmonk.com/kholterhoff/2025/05/13/javascript-signals-react-compiler/),
+[React vs. Signals: 10 Years Later — dev.to](https://dev.to/this-is-learning/react-vs-signals-10-years-later-3k71),
+[React 19 — react.dev](https://react.dev/blog/2024/12/05/react-19).*
