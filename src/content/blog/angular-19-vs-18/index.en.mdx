@@ -1,0 +1,161 @@
+---
+title: "Angular 19 vs. 18 — Standalone Becomes the Standard"
+date: 2024-12-09
+excerpt: "Angular 19 makes standalone components the default, the signal-based inputs/outputs/queries become stable, and with linkedSignal, resource() and @let new reactive building blocks arrive. The most important changes with code and migration tips."
+tags: ["angular", "frontend", "upgrade"]
+cover: /blog/angular-19-vs-18/cover.svg
+---
+
+Angular **19** was released on **November 19, 2024**. After the signal-heavy
+Angular 18, v19 draws the next logical conclusion: **Standalone becomes the
+default**, the signal-based APIs become stable, and a few new reactive
+primitives are added.
+
+![Standalone: opt-in (v18) vs. default (v19)](/blog/angular-19-vs-18/standalone.svg)
+
+## The Changes at a Glance
+
+| Area | Angular 18 | Angular 19 |
+|---|---|---|
+| Standalone components | opt-in (`standalone: true`) | **Default** |
+| Signal `input` / `output` / `model` / queries | Developer Preview | **stable** |
+| `linkedSignal`, `resource()` | — | **new (experimental)** |
+| `@let` in the template | Preview | **stable** |
+| Incremental Hydration | — | **new (experimental)** |
+| `effect()` | with `allowSignalWrites` | **simplified** |
+| TypeScript | 5.4 | **5.6** |
+
+> **Tip up front:** Most of it is migrated via `ng update` and the bundled schematics
+> — among other things, the switch to `inject()` and to lazy-loaded routes.
+> `ng update` shows you the affected spots.
+
+## 1. Standalone Components as the Default
+
+The most visible change: New components, directives, and pipes are automatically
+standalone **without `standalone: true`**. If you need the old behavior
+in an exceptional case, you explicitly set `standalone: false`.
+
+```typescript
+// v19: no standalone flag needed anymore
+@Component({
+  selector: 'app-profile',
+  imports: [UserCardComponent],
+  template: `<app-user-card />`,
+})
+export class ProfileComponent {}
+```
+
+Also new is the compiler flag **`strictStandalone`**: When it's active,
+non-standalone declarations are forbidden — handy for enforcing the modern style
+project-wide.
+
+> **Tip:** A migration converts existing components automatically. Afterwards
+> it's worth turning on `strictStandalone`, so that nobody accidentally
+> reintroduces NgModule patterns.
+
+## 2. Signal APIs Become Stable
+
+The signal-based APIs introduced as a preview in v17/v18 are now **stable**
+and production-ready: `input()`, `output()`, `model()` as well as the
+signal-based queries (`viewChild`, `contentChild` …).
+
+```typescript
+@Component({ selector: 'app-counter', template: `{{ label() }}: {{ value() }}` })
+export class CounterComponent {
+  value = input(0);                 // instead of @Input()
+  label = input.required<string>(); // required input
+  changed = output<number>();       // instead of @Output()
+}
+```
+
+## 3. New Reactive Primitives: linkedSignal & resource
+
+**`linkedSignal`** (experimental) is a *writable* signal that reacts to a
+source and can reset itself when that source changes — ideal for
+local state that depends on other signals:
+
+```typescript
+favoriteColorId = linkedSignal<Color[], number | null>({
+  source: this.colorOptions,
+  computation: (source, previous) =>
+    source.some((c) => c.id === previous?.value) ? previous!.value : null,
+});
+```
+
+**`resource()`** (experimental) takes care of asynchronous data including
+loading/error states and race conditions:
+
+```typescript
+fruitDetails = resource({
+  request: this.fruitId,
+  loader: async ({ request }) => {
+    const res = await fetch(`/api/fruit/${request}`);
+    return res.json();
+  },
+});
+```
+
+> **Tip:** Both are **experimental** in v19. Good for trying out, but
+> API changes are possible — they won't become stable until later (Resource in v22).
+
+## 4. @let in the Template Is Stable
+
+Local, read-only variables directly in the template — now officially stable:
+
+```html
+@let userName = user.firstName + ' ' + user.lastName;
+<h1>Welcome, {{ userName }}</h1>
+```
+
+This saves repeated expressions and unnecessary getters in the component.
+
+## 5. Incremental Hydration (Experimental)
+
+For SSR apps: Instead of hydrating the whole page all at once, regions become
+active **on demand** — controlled via `@defer` triggers like `hover`, `idle`,
+`interaction`, or `viewport`. Also new (experimental): **Server Route
+Configuration**, to define the render mode per route (Server, Prerender,
+Client).
+
+## 6. effect() Becomes Simpler
+
+The `allowSignalWrites` flag is gone — writing to signals from within effects
+is now regularly allowed. Effects also run within the
+change detection cycle instead of as a microtask, which makes the timing more predictable.
+
+## 7. Router, DX & Tooling
+
+- **Router**: `routerOutletData` passes data through to outlet components;
+  `RouterLink` accepts `UrlTree` (including query params).
+- **Migrations**: `ng g @angular/core:inject` converts constructor injection into
+  `inject()`; `ng g @angular/core:route-lazy-loading` makes routes lazy.
+- **Initializer providers**: `provideAppInitializer()`,
+  `provideEnvironmentInitializer()`, `providePlatformInitializer()`.
+- **Diagnostics**: Warnings for uncalled functions in bindings and for
+  unused standalone imports.
+- **Hot Module Replacement** for faster dev cycles, **Playwright** as an
+  e2e option, **TypeScript 5.6**.
+
+## Upgrade Checklist
+
+1. Run `ng update @angular/core @angular/cli`.
+2. Run the standalone migration, then enable `strictStandalone`.
+3. Optionally migrate to `inject()` and lazy routes (schematics available).
+4. Gradually adopt signal `input`/`output` instead of `@Input()`/`@Output()`.
+5. Test `linkedSignal`/`resource` only in well-scoped new features.
+
+## Conclusion
+
+Angular 18 made signals a first-class concept, **Angular 19 makes the
+modern style the standard**: standalone by default, stable signal inputs and
+first building blocks like `linkedSignal`. The biggest cleanup step is the
+standalone migration — and the schematic takes almost all of it off your hands.
+
+What comes next is covered in the follow-up article:
+[Angular 20 vs. 19 — Signals Come of Age](/blog/angular-20-vs-19).
+
+---
+
+*Sources: [Angular 19 — Angular.love](https://angular.love/angular-19-whats-new),
+[Angular 19 Features — Pretius](https://pretius.com/blog/angular-19-features),
+[What Is LinkedSignal — Telerik](https://www.telerik.com/blogs/angular-19-features-linkedsignal-angular).*

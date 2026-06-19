@@ -1,0 +1,140 @@
+---
+title: "Angular 20 vs. 19 — Signals werden erwachsen"
+date: 2025-06-16
+excerpt: "Angular 19 brachte die Signals als Preview, Angular 20 macht sie produktionsreif: effect und linkedSignal werden stabil, die Resource-/httpResource-APIs kommen, Incremental Hydration wird stabil und zoneless rückt näher. Die wichtigsten Änderungen mit Code."
+tags: ["angular", "frontend", "upgrade"]
+cover: /blog/angular-20-vs-19/cover.svg
+---
+
+Angular **20** ist am **28. Mai 2025** erschienen. Wo Angular 19 die reaktive
+Zukunft als *Preview* gezeigt hat, macht Angular 20 sie **alltagstauglich**:
+Viele Signal-APIs werden stabil, neue Resource-APIs vereinfachen async-Daten, und
+die Weichen Richtung zoneless sind gestellt.
+
+![Signal-APIs: von Preview (v19) zu stabil (v20)](/blog/angular-20-vs-19/signals.svg)
+
+## Die Änderungen auf einen Blick
+
+| Bereich | Angular 19 | Angular 20 |
+|---|---|---|
+| `effect`, `linkedSignal` | Developer Preview | **stabil** |
+| `toSignal` / `toObservable` | Preview | **stabil** |
+| Resource-APIs (`resource`, `httpResource`) | — | **neu (experimentell)** |
+| Incremental Hydration | Preview | **stabil** |
+| Zoneless Change Detection | experimentell | **Developer Preview** |
+| Template-Syntax | Control Flow | **+ Template Literals & Operatoren** |
+| Node / TypeScript | älter | **Node 20.11+/22.11+, TS 5.8** |
+
+> **Tipp vorweg:** v20 ist vor allem ein *Stabilisierungs-Release*. Wer schon mit
+> Signals arbeitet, kann Preview-Warnungen entfernen und die APIs ohne Bedenken
+> in Produktion nutzen. `ng update` erledigt die meisten Anpassungen.
+
+## 1. Die Signal-APIs werden stabil
+
+Das Herzstück: Mehrere Signal-Bausteine verlassen den Preview-Status. `effect()`
+für Seiteneffekte, `linkedSignal()` für abgeleitete *schreibbare* Signals und die
+Brücken `toSignal()` / `toObservable()` sind jetzt stabil.
+
+```typescript
+const count = signal(0);
+
+// abgeleitetes, aber schreibbares Signal
+const doubled = linkedSignal(() => count() * 2);
+
+// Seiteneffekt bei jeder Änderung
+effect(() => {
+  console.log('count ist jetzt', count());
+});
+```
+
+Außerdem sind die Render-Hooks `afterEveryRender()` und `afterNextRender()`
+(früher unter `afterRender`) dazugekommen.
+
+## 2. Resource-APIs: async-Daten als Signal
+
+Neu — wenn auch noch experimentell — sind `resource()`, `rxResource()` und
+`httpResource()`. Sie holen asynchrone Daten und stellen den Zustand (`idle`,
+`loading`, `error`, `resolved`) direkt als Signal bereit. `httpResource` nutzt
+darunter den `HttpClient` (inkl. Interceptoren):
+
+```typescript
+const userId = signal(1);
+
+const user = httpResource<User>(
+  () => `/api/users/${userId()}`,
+);
+
+// im Template: user.value(), user.isLoading(), user.error()
+```
+
+> **Tipp:** In v20 sind diese APIs **experimentell** — ideal für neue Features,
+> aber API-Änderungen sind möglich. Stabil werden sie erst in Angular 22.
+
+## 3. Incremental Hydration wird stabil
+
+Für SSR-Apps wichtig: **Incremental Hydration** ist jetzt stabil. Statt die
+ganze Seite auf einmal zu hydratisieren, werden Bereiche erst aktiv, wenn sie
+gebraucht werden — das verbessert die wahrgenommene Performance spürbar. Auch die
+`PendingTasks`-API für SSR ist stabil.
+
+## 4. Zoneless rückt näher
+
+`zone.js`-freie Change Detection steigt von *experimentell* auf **Developer
+Preview**. Default ist sie hier noch **nicht** — das kommt erst in Angular 21 —
+aber du kannst sie bewusst aktivieren und testen.
+
+> **Hinweis:** Wenn du zoneless ausprobierst, brauchst du konsequentes `OnPush`
+> und Signals. Das ist die ideale Vorbereitung auf v21, wo zoneless Default wird.
+
+## 5. Template-Syntax: mehr JavaScript im Template
+
+Die Templates lernen ein paar Ausdrücke dazu:
+
+- **Template Literals** direkt im Template (statt String-Concat)
+- **Potenz-Operator** (`**`) ohne eigene Pipe
+- **`in`-Operator** zum Prüfen von Objekt-Eigenschaften
+- **`void`-Operator**, um Rückgabewerte in Event-Bindings zu ignorieren
+
+```html
+<p>{{ `Hallo ${user.name}, Level ${2 ** level}` }}</p>
+<span>{{ 'admin' in roles ? 'Admin' : 'User' }}</span>
+```
+
+## 6. Router & dynamische Komponenten
+
+- Asynchrone Redirect-Funktionen unterstützen jetzt **Promises und Observables**.
+- `Router.getCurrentNavigation()?.abort()` bricht eine laufende Navigation ab.
+- Dynamische Bindings für `NgComponentOutlet` via `inputBinding`,
+  `twoWayBinding` und `outputBinding`.
+
+## 7. Mehr Sicherheit beim Kompilieren
+
+Der Compiler wird strenger und hilfreicher:
+
+- **Type-Checking für Host-Bindings**
+- Warnung bei **nicht aufgerufenen `track`-Funktionen** in `@for`
+- Diagnose bei ungültigem Nullish-Coalescing und fehlenden Imports für eigene
+  strukturelle Direktiven
+
+## 8. Breaking Changes
+
+- **Node** `^20.11.1 || ^22.11.0 || ^24.0.0`, **TypeScript** `>=5.8 <5.9`.
+- `InjectFlags` entfernt (Migration vorhanden).
+- `ng-reflect-*`-Attribute im Dev-Modus entfernt.
+- Offizieller **HammerJS**-Support deprecated.
+
+## Fazit
+
+Angular 19 hat die reaktive Richtung vorgezeichnet, **Angular 20 macht sie
+produktionsreif**. Der größte Mehrwert im Alltag: stabile Signal-APIs und die
+neuen Resource-Helfer — beides reduziert RxJS-Boilerplate deutlich. Und mit
+zoneless in Developer Preview ist die Bühne für Angular 21 bereitet.
+
+Wie es weitergeht, steht im Folgeartikel:
+[Angular 21 vs. 20 — das Aufräum-Release](/blog/angular-21-vs-20).
+
+---
+
+*Quellen: [Angular 20 — Angular.love](https://angular.love/angular-20-whats-new),
+[Angular 20 New Features — Kellton](https://www.kellton.com/kellton-tech-blog/angular-20-new-features-guide),
+[Getting started with httpResource — Telerik](https://www.telerik.com/blogs/getting-started-httpresource-api-angular).*

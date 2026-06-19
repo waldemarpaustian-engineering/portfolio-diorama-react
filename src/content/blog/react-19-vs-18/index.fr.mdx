@@ -1,0 +1,177 @@
+---
+title: "React 19 vs. 18 — Actions, use() et Server Components"
+date: 2026-06-10
+excerpt: "React versionne différemment d'Angular : pas de majeures semestrielles fixes, mais du Semver selon les besoins. React 19 est la première majeure depuis la 18 (2,5 ans) et apporte les Actions, de nouveaux Hooks de formulaire, l'API use() et les Server Components. En plus : ce qu'ont ajouté les mineures 19.1 et 19.2."
+tags: ["react", "frontend", "upgrade"]
+cover: /blog/react-19-vs-18/cover.svg
+---
+
+Une petite mise au point, car cela prête souvent à confusion : **React versionne différemment
+d'Angular.** Angular sort une nouvelle majeure tous les ~6 mois. React suit
+**Semver sans calendrier fixe** — une nouvelle majeure n'arrive qu'en cas de breaking
+changes. C'est pourquoi il s'est écoulé un bon **2,5 ans** entre **React 18** (mars 2022) et **React 19**
+(5 décembre 2024). La « dernière et l'avant-dernière » majeure, c'est donc
+la 19 vs. la 18 — au sein de la 19 ont suivi ensuite les mineures 19.1 et 19.2.
+
+## Les changements en un coup d'œil
+
+| Domaine | React 18 | React 19 |
+|---|---|---|
+| Formulaires / mutations | `useState` + flags à la main | **Actions** |
+| Nouveaux Hooks | `useTransition`, `useDeferredValue` | **`useActionState`, `useFormStatus`, `useOptimistic`** |
+| Promises/Context dans le render | — | **API `use()`** |
+| Server Components | expérimental (frameworks) | **stable** |
+| Transmettre `ref` | `forwardRef` | **`ref` comme prop normale** |
+| Provider de Context | `<Context.Provider>` | **`<Context>` directement** |
+| Metadata / styles / scripts | manuel / Helmet | **natif dans le JSX** |
+
+> **Un conseil au préalable :** React 18 était le *socle concurrent* (automatic batching,
+> `useTransition`, SSR avec Suspense). React 19 utilise ce socle pour rendre **les données,
+> les formulaires et le SSR plus ergonomiques**. Il existe des codemods pour la mise à niveau.
+
+## 1. Actions — async sans boilerplate
+
+Sans doute la nouveauté la plus pratique. Au lieu de jongler à la main avec `useState` pour les flags de chargement et
+d'erreur, une **Action** s'en charge automatiquement.
+Une fonction async dans `startTransition` est déjà une Action :
+
+![Formulaire async : manuel (18) vs. Actions (19)](/blog/react-19-vs-18/actions.svg)
+
+```jsx
+const [isPending, startTransition] = useTransition();
+
+const handleSubmit = () => {
+  startTransition(async () => {
+    const error = await updateName(name);
+    if (error) return setError(error);
+    redirect('/path');
+  });
+};
+```
+
+## 2. De nouveaux Hooks autour des formulaires
+
+**`useActionState`** regroupe l'Action, l'erreur et l'état pending dans un seul Hook :
+
+```jsx
+const [error, submitAction, isPending] = useActionState(
+  async (prevState, formData) => {
+    const error = await updateName(formData.get('name'));
+    if (error) return error;
+    redirect('/path');
+    return null;
+  },
+  null,
+);
+```
+
+Dans la même logique, **`<form>` accepte désormais une fonction comme `action`** et
+exécute automatiquement l'Action lors de la soumission. **`useFormStatus`** lit le
+statut du formulaire englobant — sans aucun prop drilling :
+
+```jsx
+import { useFormStatus } from 'react-dom';
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return <button type="submit" disabled={pending}>Speichern</button>;
+}
+```
+
+Et **`useOptimistic`** affiche le résultat immédiatement pendant que le serveur travaille
+encore :
+
+```jsx
+const [optimisticName, setOptimisticName] = useOptimistic(currentName);
+```
+
+## 3. L'API use()
+
+`use()` lit des ressources — **des Promises ou du Context** — directement dans le render et
+s'intègre à Suspense. Contrairement aux Hooks, il peut être appelé de façon **conditionnelle**
+(par ex. après un early return) :
+
+```jsx
+import { use } from 'react';
+
+function Comments({ commentsPromise }) {
+  const comments = use(commentsPromise); // suspend jusqu'à résolution
+  return comments.map((c) => <p key={c.id}>{c.text}</p>);
+}
+```
+
+## 4. Server Components et Server Actions
+
+**Les Server Components** s'affichent au préalable dans un environnement serveur et envoient
+moins de JavaScript au client — un bundle plus petit, un premier affichage plus rapide.
+Dans React 19, ils font officiellement partie de l'API stable (utilisation via un
+framework comme Next.js). À cela s'ajoutent les **Server Actions** avec `'use server'` :
+
+```jsx
+// actions.js
+'use server';
+export async function updateName(name) {
+  // s'exécute uniquement sur le serveur
+}
+```
+
+Les deux directives `'use client'` et `'use server'` indiquent où le code s'exécute.
+
+## 5. Des améliorations plus petites, mais perceptibles
+
+- **`ref` comme prop :** les composants fonctionnels reçoivent `ref` directement comme prop —
+  `forwardRef` devient superflu à long terme.
+  ```jsx
+  function MyInput({ placeholder, ref }) {
+    return <input placeholder={placeholder} ref={ref} />;
+  }
+  ```
+- **`<Context>` comme provider :** `<Context value={...}>` au lieu de
+  `<Context.Provider value={...}>`.
+- **Nettoyage de ref :** les callbacks de ref peuvent renvoyer une fonction de nettoyage.
+- **Document Metadata :** `<title>`, `<meta>` et `<link>` dans le JSX migrent
+  automatiquement dans le `<head>` — plus besoin de react-helmet.
+- **Feuilles de style et scripts async** avec `precedence` directement dans les composants.
+- **Préchargement des ressources :** `preload`, `preinit`, `prefetchDNS`, `preconnect`
+  depuis `react-dom`.
+- **De meilleures erreurs d'hydratation :** un message clair avec un diff au lieu de nombreux
+  avertissements ; nouvelles options de root `onCaughtError` / `onUncaughtError`.
+- **APIs statiques :** `prerender` / `prerenderToNodeStream` pour le SSG.
+
+> **Remarque :** Le **React Compiler** est souvent cité dans la même foulée, mais c'est
+> un **outil autonome** (qui ne fait pas partie de React 19 en lui-même). Il
+> automatise la mémoïsation, si bien que `useMemo`/`useCallback` sont nécessaires moins souvent.
+
+## Et depuis la 19.0 ? Les mineures 19.1 et 19.2
+
+Comme React continue d'évoluer en mineures, voici les ajouts les plus importants après
+la 19.0 — l'actuelle est la **19.2** (patch 19.2.7, juin 2026) :
+
+- **`<Activity>`** (19.2) : basculer des zones entre `visible`/`hidden` — afficher au préalable les
+  parties masquées sans ralentir l'UI visible.
+  ```jsx
+  <Activity mode={isVisible ? 'visible' : 'hidden'}>
+    <Page />
+  </Activity>
+  ```
+- **`useEffectEvent`** (19.2) : sépare la « logique d'événement » des dépendances de l'effet,
+  pour que les effets ne se relancent pas inutilement.
+- **Partial Pre-rendering** (19.2) : afficher au préalable les parties statiques et reprendre plus tard
+  (`prerender` + `resume`).
+- **`cacheSignal`** (19.2, Server Components) et **performance tracks** dans les
+  Chrome DevTools.
+
+## Conclusion
+
+React 18 a apporté le rendu concurrent, **React 19 en fait
+un confort du quotidien** : les Actions et les nouveaux Hooks de formulaire font le ménage dans le
+boilerplate `useState`-chargement-erreur, `use()` simplifie les données async, et
+les Server Components sont enfin officiels. Qui vient de la 18 devrait aborder la mise à niveau
+avec les **codemods** (`forwardRef` → `ref`, `useFormState` →
+`useActionState`) puis introduire les nouvelles fonctionnalités progressivement.
+
+---
+
+*Sources : [React 19 — react.dev](https://react.dev/blog/2024/12/05/react-19),
+[React 19.2 — react.dev](https://react.dev/blog/2025/10/01/react-19-2),
+[React Versions — react.dev](https://react.dev/versions).*

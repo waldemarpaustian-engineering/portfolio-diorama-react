@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="1000" height="360" role="img" aria-label="Mit zone.js vs. zoneless">
+  <rect width="1000" height="360" rx="18" fill="#eef6fc"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Change Detection: mit zone.js vs. zoneless</text>
+
+  <!-- with zone.js -->
+  <g transform="translate(70 80)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#7a7782">bis v20 · mit zone.js</text>
+    <rect x="0" y="20" width="380" height="190" rx="12" fill="#fff" stroke="#d6e4f0"/>
+    <text x="20" y="58"  font-family="-apple-system, sans-serif" font-size="15" fill="#2b2a33">zone.js patcht jedes Browser-Event</text>
+    <text x="20" y="92"  font-family="-apple-system, sans-serif" font-size="15" fill="#2b2a33">setTimeout · Promise · addEventListener</text>
+    <g fill="#c9a23a">
+      <circle cx="40" cy="125" r="11"/><circle cx="90" cy="125" r="11"/>
+      <circle cx="140" cy="125" r="11"/><circle cx="190" cy="125" r="11"/>
+      <circle cx="240" cy="125" r="11"/><circle cx="290" cy="125" r="11"/>
+    </g>
+    <text x="20" y="180" font-family="-apple-system, sans-serif" font-size="14" fill="#7a7782">prüft „sicherheitshalber" überall</text>
+  </g>
+
+  <!-- zoneless -->
+  <g transform="translate(550 80)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#3d6fc0">ab v21 · zoneless (Default)</text>
+    <rect x="0" y="20" width="380" height="190" rx="12" fill="#fff" stroke="#3d6fc0"/>
+    <text x="20" y="58"  font-family="-apple-system, sans-serif" font-size="15" fill="#2b2a33">Signals melden Änderungen selbst</text>
+    <text x="20" y="92"  font-family="-apple-system, sans-serif" font-size="15" fill="#2b2a33">kein Monkey-Patching der Events</text>
+    <g fill="#3d6fc0">
+      <circle cx="40" cy="125" r="11"/><circle cx="90" cy="125" r="11"/>
+    </g>
+    <g fill="#d6e4f0">
+      <circle cx="140" cy="125" r="11"/><circle cx="190" cy="125" r="11"/>
+      <circle cx="240" cy="125" r="11"/><circle cx="290" cy="125" r="11"/>
+    </g>
+    <text x="20" y="180" font-family="-apple-system, sans-serif" font-size="14" fill="#7a7782">prüft gezielt, weniger Overhead</text>
+  </g>
+</svg>

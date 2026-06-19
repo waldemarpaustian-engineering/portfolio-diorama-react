@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="1000" height="360" role="img" aria-label="Standalone: opt-in (v18) vs. Default (v19)">
+  <rect width="1000" height="360" rx="18" fill="#f3f9fd"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Standalone-Komponenten</text>
+
+  <!-- v18 -->
+  <g transform="translate(70 80)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#7a7782">bis v18 · opt-in</text>
+    <rect x="0" y="20" width="380" height="200" rx="12" fill="#fff" stroke="#d6e4f0"/>
+    <text x="20" y="58"  font-family="ui-monospace, monospace" font-size="15" fill="#7a7782">@Component({</text>
+    <text x="40" y="84"  font-family="ui-monospace, monospace" font-size="15" fill="#c46a2b">standalone: true,</text>
+    <text x="40" y="110" font-family="ui-monospace, monospace" font-size="15" fill="#2b2a33">selector: 'app-x',</text>
+    <text x="20" y="136" font-family="ui-monospace, monospace" font-size="15" fill="#7a7782">})</text>
+    <text x="20" y="178" font-family="-apple-system, sans-serif" font-size="14" fill="#7a7782">explizit setzen — oder NgModule</text>
+  </g>
+
+  <!-- arrow -->
+  <g transform="translate(500 175)">
+    <line x1="-20" y1="0" x2="60" y2="0" stroke="#5a86c4" stroke-width="4"/>
+    <path d="M55 -12 L80 0 L55 12 Z" fill="#5a86c4"/>
+  </g>
+
+  <!-- v19 -->
+  <g transform="translate(610 80)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#5a86c4">ab v19 · Default</text>
+    <rect x="0" y="20" width="320" height="200" rx="12" fill="#fff" stroke="#5a86c4"/>
+    <text x="20" y="58"  font-family="ui-monospace, monospace" font-size="15" fill="#7a7782">@Component({</text>
+    <text x="40" y="84"  font-family="ui-monospace, monospace" font-size="15" fill="#2b2a33">selector: 'app-x',</text>
+    <text x="20" y="110" font-family="ui-monospace, monospace" font-size="15" fill="#7a7782">})</text>
+    <text x="20" y="150" font-family="-apple-system, sans-serif" font-size="14" fill="#2e9e6b">✓ standalone ist Default</text>
+    <text x="20" y="178" font-family="-apple-system, sans-serif" font-size="14" fill="#7a7782">strictStandalone erzwingt es</text>
+  </g>
+</svg>

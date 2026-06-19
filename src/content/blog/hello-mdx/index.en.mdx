@@ -1,0 +1,58 @@
+---
+title: "Hello MDX — how this blog works"
+date: 2026-06-19
+excerpt: "Every article is an MDX file in the git repo. Here you'll see how frontmatter, images, and code work together — and how to create a new post."
+tags: ["meta", "mdx", "react"]
+cover: /blog/hello-mdx/cover.svg
+---
+
+Welcome to the blog. This site is **not a classic CMS with a database** —
+every article is a single `.mdx` file in the repository. That means: fully
+versioned in git, no backend, no running costs.
+
+## How an article is structured
+
+At the top sits the **frontmatter** (between the `---`). From it, the blog
+pulls the title, date, tags, cover image, and the excerpt for the overview:
+
+```yaml
+---
+title: "Hello MDX"
+date: 2026-06-19
+excerpt: "Short excerpt for the card view."
+tags: ["mdx", "react"]
+cover: /blog/hello-mdx/cover.svg
+---
+```
+
+Below that follows the actual text in **Markdown** — headings, lists,
+links, quotes, all as usual.
+
+## Images
+
+Images live in `public/blog/<slug>/` and are embedded with an absolute
+path:
+
+![Example cover](/blog/hello-mdx/cover.svg)
+
+## Code with syntax highlighting
+
+Because it's MDX, you can also embed React components — and code blocks
+are automatically highlighted:
+
+```jsx
+function useReadingTime(text) {
+  const words = text.trim().split(/\s+/).length
+  return Math.max(1, Math.round(words / 200))
+}
+```
+
+## Creating a new article
+
+1. Create the folder `src/content/blog/my-article/`
+2. Inside it, create `index.mdx` with frontmatter
+3. Place the cover in `public/blog/my-article/`
+4. Save — the post appears automatically in the overview
+
+> Tip: You can also have the AI write the entire text and just
+> commit the finished `.mdx` file.

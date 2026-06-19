@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="1000" height="400" role="img" aria-label="Framework-Nutzung unter Profis, 2026">
+  <rect width="1000" height="400" rx="18" fill="#eef6fc"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Framework usage — professional devs, 2026</text>
+  <text x="500" y="68" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13" fill="#7a7782">Stack Overflow Developer Survey (rounded)</text>
+
+  <!-- baseline -->
+  <line x1="220" y1="110" x2="220" y2="350" stroke="#cddff0" stroke-width="2"/>
+
+  <!-- React 45% -->
+  <text x="205" y="135" text-anchor="end" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#2b2a33">React</text>
+  <rect x="222" y="118" width="630" height="34" rx="6" fill="#3a8fbf"/>
+  <text x="865" y="140" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#3a8fbf">~45%</text>
+
+  <!-- Angular 20% -->
+  <text x="205" y="195" text-anchor="end" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#2b2a33">Angular</text>
+  <rect x="222" y="178" width="280" height="34" rx="6" fill="#3d6fc0"/>
+  <text x="515" y="200" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#3d6fc0">~20%</text>
+
+  <!-- Vue 17% -->
+  <text x="205" y="255" text-anchor="end" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#2b2a33">Vue</text>
+  <rect x="222" y="238" width="238" height="34" rx="6" fill="#35a06b"/>
+  <text x="473" y="260" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#35a06b">~17%</text>
+
+  <!-- Svelte 8% -->
+  <text x="205" y="315" text-anchor="end" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#2b2a33">Svelte</text>
+  <rect x="222" y="298" width="112" height="34" rx="6" fill="#e07a3a"/>
+  <text x="347" y="320" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#e07a3a">~8%</text>
+
+  <text x="500" y="380" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-style="italic" fill="#7a7782">React appears in 70–80% of frontend job listings</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320" width="1000" height="320" role="img" aria-label="Change Detection: Default vs OnPush">
+  <rect width="1000" height="320" rx="18" fill="#eef6fc"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Standard-Change-Detection</text>
+
+  <!-- before -->
+  <g transform="translate(70 80)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#7a7782">bis v21 · Default (eager)</text>
+    <g>
+      <rect x="0"   y="20" width="380" height="56" rx="10" fill="#fff" stroke="#d6e4f0"/>
+      <text x="190" y="54" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="16" fill="#2b2a33">jedes Event prüft den ganzen Baum</text>
+    </g>
+    <g fill="#c9a23a">
+      <circle cx="40"  cy="120" r="13"/><circle cx="100" cy="120" r="13"/>
+      <circle cx="160" cy="120" r="13"/><circle cx="220" cy="120" r="13"/>
+      <circle cx="280" cy="120" r="13"/><circle cx="340" cy="120" r="13"/>
+    </g>
+    <text x="0" y="165" font-family="-apple-system, sans-serif" font-size="14" fill="#7a7782">mehr Prüfungen, mehr Arbeit</text>
+  </g>
+
+  <!-- after -->
+  <g transform="translate(550 80)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#4a7fd4">ab v22 · OnPush (Default)</text>
+    <g>
+      <rect x="0"   y="20" width="380" height="56" rx="10" fill="#fff" stroke="#4a7fd4"/>
+      <text x="190" y="54" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="16" fill="#2b2a33">prüft nur bei Signal-/Input-Änderung</text>
+    </g>
+    <g fill="#4a7fd4">
+      <circle cx="100" cy="120" r="13"/><circle cx="220" cy="120" r="13"/>
+    </g>
+    <g fill="#d6e4f0">
+      <circle cx="40"  cy="120" r="13"/><circle cx="160" cy="120" r="13"/>
+      <circle cx="280" cy="120" r="13"/><circle cx="340" cy="120" r="13"/>
+    </g>
+    <text x="0" y="165" font-family="-apple-system, sans-serif" font-size="14" fill="#7a7782">weniger Prüfungen, schneller</text>
+  </g>
+</svg>

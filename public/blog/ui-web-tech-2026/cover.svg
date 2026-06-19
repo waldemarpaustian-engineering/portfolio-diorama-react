@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Beste UI-Web-Technologien 2026">
+  <defs>
+    <linearGradient id="skyU" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d4f5"/>
+      <stop offset="0.6" stop-color="#cbe5f7"/>
+      <stop offset="1" stop-color="#eef6fc"/>
+    </linearGradient>
+    <linearGradient id="cubeT" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7eb8e8"/>
+      <stop offset="1" stop-color="#4a7fd4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#skyU)"/>
+
+  <!-- motion arcs -->
+  <g fill="none" stroke="#4a7fd4" stroke-width="5" stroke-linecap="round" opacity="0.5">
+    <path d="M820 470 q70 -120 150 -60"/>
+    <path d="M840 510 q90 -150 200 -70"/>
+  </g>
+  <g fill="#4a7fd4">
+    <circle cx="970" cy="410" r="9"/>
+    <circle cx="1040" cy="440" r="9"/>
+  </g>
+
+  <!-- 3D cube (isometric) -->
+  <g transform="translate(905 250)">
+    <path d="M0 -90 L78 -45 L78 45 L0 90 L-78 45 L-78 -45 Z" fill="none" stroke="#bcd6ee" stroke-width="3"/>
+    <path d="M0 -90 L78 -45 L0 0 L-78 -45 Z" fill="url(#cubeT)"/>
+    <path d="M0 0 L78 -45 L78 45 L0 90 Z" fill="#5d9fe4"/>
+    <path d="M0 0 L-78 -45 L-78 45 L0 90 Z" fill="#3d6fc0"/>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33">
+    <text x="110" y="250" font-size="76" font-weight="700" letter-spacing="-3">UI Web Tech</text>
+    <text x="110" y="330" font-size="76" font-weight="700" letter-spacing="-3">in 2026</text>
+    <text x="114" y="392" font-size="31" font-weight="600" fill="#4a7fd4">Animation · 3D · Scroll · Modern CSS</text>
+    <text x="116" y="438" font-size="24" font-weight="500" fill="#7a7782">What's best, what's popular — a field guide</text>
+  </g>
+</svg>

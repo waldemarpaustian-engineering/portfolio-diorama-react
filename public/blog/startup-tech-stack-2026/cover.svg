@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Tech-Stack fürs Startup 2026">
+  <defs>
+    <linearGradient id="skyS" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d4f5"/>
+      <stop offset="0.6" stop-color="#cbe5f7"/>
+      <stop offset="1" stop-color="#eef6fc"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd27a"/>
+      <stop offset="1" stop-color="#ff9d4a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#skyS)"/>
+
+  <!-- rocket -->
+  <g transform="translate(905 300) rotate(20)">
+    <path d="M0 -150 C45 -110 55 -40 50 30 L-50 30 C-55 -40 -45 -110 0 -150 Z" fill="#fff" stroke="#bcd6ee" stroke-width="4"/>
+    <circle cx="0" cy="-60" r="26" fill="#4a7fd4"/>
+    <circle cx="0" cy="-60" r="12" fill="#cbe5f7"/>
+    <path d="M-50 10 L-92 55 L-50 40 Z" fill="#4a7fd4"/>
+    <path d="M50 10 L92 55 L50 40 Z" fill="#4a7fd4"/>
+    <path d="M-26 32 C-16 80 16 80 26 32 Z" fill="url(#flame)"/>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33">
+    <text x="110" y="250" font-size="74" font-weight="700" letter-spacing="-3">Which Stack</text>
+    <text x="110" y="328" font-size="74" font-weight="700" letter-spacing="-3">for a Startup?</text>
+    <text x="114" y="392" font-size="32" font-weight="600" fill="#4a7fd4">React · Angular · Vue · Svelte</text>
+    <text x="116" y="438" font-size="24" font-weight="500" fill="#7a7782">Choosing in the AI era — June 2026</text>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="1000" height="360" role="img" aria-label="Signal-APIs: Preview (v19) zu stabil (v20)">
+  <defs>
+    <linearGradient id="bg20" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f1f8fd"/>
+      <stop offset="1" stop-color="#dcecf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="360" rx="18" fill="url(#bg20)"/>
+  <!-- v19 -->
+  <g transform="translate(70 60)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="26" font-weight="700" fill="#2b2a33">Angular 19</text>
+    <text x="0" y="30" font-family="-apple-system, sans-serif" font-size="15" fill="#7a7782">Developer Preview</text>
+    <g font-family="-apple-system, sans-serif" font-size="17" fill="#2b2a33">
+      <rect x="0" y="55"  width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="80">effect() (preview)</text>
+      <rect x="0" y="105" width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="130">linkedSignal() (preview)</text>
+      <rect x="0" y="155" width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="180">Incremental Hydration (preview)</text>
+      <rect x="0" y="205" width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="230">zoneless (experimental)</text>
+    </g>
+  </g>
+  <!-- arrow -->
+  <g transform="translate(500 175)">
+    <line x1="-20" y1="0" x2="60" y2="0" stroke="#4f7fc4" stroke-width="4"/>
+    <path d="M55 -12 L80 0 L55 12 Z" fill="#4f7fc4"/>
+  </g>
+  <!-- v20 -->
+  <g transform="translate(610 60)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="26" font-weight="700" fill="#4f7fc4">Angular 20</text>
+    <text x="0" y="30" font-family="-apple-system, sans-serif" font-size="15" fill="#7a7782">stabil</text>
+    <g font-family="-apple-system, sans-serif" font-size="17" fill="#2b2a33">
+      <rect x="0" y="55"  width="320" height="40" rx="9" fill="#fff" stroke="#4f7fc4"/>
+      <text x="16" y="80">effect() ✓ stabil</text>
+      <rect x="0" y="105" width="320" height="40" rx="9" fill="#fff" stroke="#4f7fc4"/>
+      <text x="16" y="130">linkedSignal() ✓ stabil</text>
+      <rect x="0" y="155" width="320" height="40" rx="9" fill="#fff" stroke="#4f7fc4"/>
+      <text x="16" y="180">Incremental Hydration ✓ stabil</text>
+      <rect x="0" y="205" width="320" height="40" rx="9" fill="#fff" stroke="#7a9cc8"/>
+      <text x="16" y="230">zoneless → Developer Preview</text>
+    </g>
+  </g>
+</svg>

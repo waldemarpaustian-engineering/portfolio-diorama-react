@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="1000" height="420" role="img" aria-label="Spektrum der Reaktivität: grob bis fein-granular">
+  <rect width="1000" height="420" rx="18" fill="#eef6fc"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Das Reaktivitäts-Spektrum</text>
+
+  <!-- axis -->
+  <line x1="90" y1="120" x2="910" y2="120" stroke="#b6c9dd" stroke-width="4"/>
+  <path d="M905 112 L925 120 L905 128 Z" fill="#b6c9dd"/>
+  <text x="90" y="100" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#7a7782">grob-granular</text>
+  <text x="910" y="100" text-anchor="end" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#7a7782">fein-granular</text>
+
+  <!-- React node -->
+  <g>
+    <circle cx="180" cy="120" r="11" fill="#3a8fbf"/>
+    <text x="180" y="170" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="19" font-weight="700" fill="#3a8fbf">React</text>
+    <rect x="60" y="190" width="240" height="180" rx="12" fill="#fff" stroke="#d6e4f0"/>
+    <text x="180" y="218" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#2b2a33">Re-Render + Virtual DOM</text>
+    <text x="80" y="250" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• Komponente läuft neu</text>
+    <text x="80" y="276" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• VDOM-Diff patcht</text>
+    <text x="80" y="302" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• Compiler memoisiert</text>
+    <text x="80" y="340" font-family="-apple-system, sans-serif" font-size="13" fill="#3a8fbf" font-weight="600">Reaktivität: implizit</text>
+  </g>
+
+  <!-- Vue node -->
+  <g>
+    <circle cx="560" cy="120" r="11" fill="#35a06b"/>
+    <text x="560" y="170" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="19" font-weight="700" fill="#35a06b">Vue</text>
+    <rect x="385" y="190" width="240" height="180" rx="12" fill="#fff" stroke="#cfe7da"/>
+    <text x="505" y="218" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#2b2a33">Reactive Proxy + VDOM</text>
+    <text x="405" y="250" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• fein reaktive Daten</text>
+    <text x="405" y="276" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• nur betroffene</text>
+    <text x="405" y="296" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">  Komponente rendert</text>
+    <text x="405" y="324" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• Vapor: kein VDOM mehr</text>
+    <text x="405" y="356" font-family="-apple-system, sans-serif" font-size="13" fill="#35a06b" font-weight="600">Reaktivität: automatisch</text>
+  </g>
+
+  <!-- Angular node -->
+  <g>
+    <circle cx="850" cy="120" r="11" fill="#3d6fc0"/>
+    <text x="850" y="170" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="19" font-weight="700" fill="#3d6fc0">Angular</text>
+    <rect x="700" y="190" width="240" height="180" rx="12" fill="#fff" stroke="#cdddf0"/>
+    <text x="820" y="218" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#2b2a33">Signals, kein VDOM</text>
+    <text x="720" y="250" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• Signal kennt seine Leser</text>
+    <text x="720" y="276" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• nur diese Knoten updaten</text>
+    <text x="720" y="302" font-family="-apple-system, sans-serif" font-size="13.5" fill="#5a6270">• zoneless Default</text>
+    <text x="720" y="340" font-family="-apple-system, sans-serif" font-size="13" fill="#3d6fc0" font-weight="600">Reaktivität: explizit</text>
+  </g>
+</svg>

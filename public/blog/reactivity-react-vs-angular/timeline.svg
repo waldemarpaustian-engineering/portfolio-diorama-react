@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" width="1000" height="540" role="img" aria-label="Zeitleiste der Reaktivität: Angular, Vue und React">
+  <rect width="1000" height="540" rx="18" fill="#eef6fc"/>
+  <text x="500" y="42" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Reaktivität im Zeitverlauf</text>
+
+  <!-- Angular track -->
+  <text x="40" y="100" font-family="-apple-system, sans-serif" font-size="17" font-weight="700" fill="#3d6fc0">Angular</text>
+  <line x1="40" y1="128" x2="960" y2="128" stroke="#bcd6ee" stroke-width="3"/>
+  <g font-family="-apple-system, sans-serif" fill="#2b2a33" text-anchor="middle">
+    <circle cx="110" cy="128" r="7" fill="#3d6fc0"/><text x="110" y="113" font-size="13" font-weight="700">2010</text><text x="110" y="152" font-size="12" fill="#5a6270">AngularJS · $digest</text>
+    <circle cx="330" cy="128" r="7" fill="#3d6fc0"/><text x="330" y="113" font-size="13" font-weight="700">2016</text><text x="330" y="152" font-size="12" fill="#5a6270">zone.js + RxJS</text>
+    <circle cx="620" cy="128" r="7" fill="#3d6fc0"/><text x="620" y="113" font-size="13" font-weight="700">2023 · v16/17</text><text x="620" y="152" font-size="12" fill="#5a6270">Signals (stabil v17)</text>
+    <circle cx="890" cy="128" r="7" fill="#3d6fc0"/><text x="890" y="113" font-size="13" font-weight="700">2025 · v21</text><text x="890" y="152" font-size="12" fill="#5a6270">zoneless Default</text>
+  </g>
+
+  <!-- Vue track -->
+  <text x="40" y="250" font-family="-apple-system, sans-serif" font-size="17" font-weight="700" fill="#35a06b">Vue</text>
+  <line x1="40" y1="278" x2="960" y2="278" stroke="#bcd6ee" stroke-width="3"/>
+  <g font-family="-apple-system, sans-serif" fill="#2b2a33" text-anchor="middle">
+    <circle cx="130" cy="278" r="7" fill="#35a06b"/><text x="130" y="263" font-size="13" font-weight="700">2014</text><text x="130" y="302" font-size="12" fill="#5a6270">defineProperty</text>
+    <circle cx="430" cy="278" r="7" fill="#35a06b"/><text x="430" y="263" font-size="13" font-weight="700">2020 · v3</text><text x="430" y="302" font-size="12" fill="#5a6270">Proxy + Composition</text>
+    <circle cx="690" cy="278" r="7" fill="#35a06b"/><text x="690" y="263" font-size="13" font-weight="700">2024 · v3.5</text><text x="690" y="302" font-size="12" fill="#5a6270">Reaktivität refactored</text>
+    <circle cx="900" cy="278" r="7" fill="#35a06b"/><text x="900" y="263" font-size="13" font-weight="700">2026 · v3.6</text><text x="900" y="302" font-size="12" fill="#5a6270">Vapor + Alien Signals</text>
+  </g>
+
+  <!-- React track -->
+  <text x="40" y="400" font-family="-apple-system, sans-serif" font-size="17" font-weight="700" fill="#3a8fbf">React</text>
+  <line x1="40" y1="428" x2="960" y2="428" stroke="#bcd6ee" stroke-width="3"/>
+  <g font-family="-apple-system, sans-serif" fill="#2b2a33" text-anchor="middle">
+    <circle cx="150" cy="428" r="7" fill="#3a8fbf"/><text x="150" y="413" font-size="13" font-weight="700">2013</text><text x="150" y="452" font-size="12" fill="#5a6270">setState + Virtual DOM</text>
+    <circle cx="400" cy="428" r="7" fill="#3a8fbf"/><text x="400" y="413" font-size="13" font-weight="700">2019 · 16.8</text><text x="400" y="452" font-size="12" fill="#5a6270">Hooks</text>
+    <circle cx="650" cy="428" r="7" fill="#3a8fbf"/><text x="650" y="413" font-size="13" font-weight="700">2022 · v18</text><text x="650" y="452" font-size="12" fill="#5a6270">Concurrent</text>
+    <circle cx="880" cy="428" r="7" fill="#3a8fbf"/><text x="880" y="413" font-size="13" font-weight="700">2024/25 · v19</text><text x="880" y="452" font-size="12" fill="#5a6270">React Compiler</text>
+  </g>
+
+  <text x="500" y="510" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-style="italic" fill="#7a7782">Angular &amp; Vue gehen zu Signals und entfernen den Virtual DOM · React bleibt beim Re-Render und optimiert per Compiler</text>
+</svg>
