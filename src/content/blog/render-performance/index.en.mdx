@@ -1,0 +1,54 @@
+---
+title: "React Three Fiber: optimizing the diorama scene"
+date: 2026-05-28
+excerpt: "How I got the 3D island on the home page running smoothly — from instanced meshes through on-demand rendering to sensible LODs."
+tags: ["three.js", "performance", "react"]
+cover: /blog/render-performance/cover.svg
+---
+
+The interactive island on the home page is built with
+[react-three-fiber](https://github.com/pmndrs/react-three-fiber). Nice to look
+at — but the first version stuttered on mobile. Here are the three levers that
+made the biggest difference.
+
+## 1. On-demand rendering
+
+The scene doesn't need to redraw 60 times per second when nothing is moving.
+With `frameloop="demand"`, R3F only renders when it's necessary:
+
+```jsx
+<Canvas frameloop="demand" dpr={[1, 2]}>
+  <Scene />
+</Canvas>
+```
+
+That alone cut idle consumption to nearly zero.
+
+## 2. Instancing instead of many meshes
+
+Trees, rocks, blades of grass — those are hundreds of nearly identical objects.
+Instead of individual meshes, you use **one** instanced geometry:
+
+```jsx
+<Instances limit={500}>
+  <coneGeometry />
+  <meshStandardMaterial />
+  {trees.map((t) => (
+    <Instance key={t.id} position={t.position} scale={t.scale} />
+  ))}
+</Instances>
+```
+
+One draw call instead of hundreds — the single biggest gain.
+
+## 3. What really counted
+
+- **Capping DPR** to `[1, 2]` instead of the full Retina pixel grid
+- Compressing textures ahead of time (here `sharp` helps in the build)
+- Shadows only where you actually see them
+
+> Measurement beats gut feeling: measure with the profiler first, then optimize —
+> not the other way around.
+
+For more on how the blog itself is structured, see the
+[Hello MDX article](/blog/hello-mdx).

@@ -1,0 +1,161 @@
+---
+title: "Angular 19 vs. 18 — Standalone se convierte en el estándar"
+date: 2024-12-09
+excerpt: "Angular 19 convierte los componentes standalone en el valor predeterminado, los inputs/outputs/queries basados en señales se vuelven estables y, con linkedSignal, resource() y @let, llegan nuevos bloques reactivos. Los cambios más importantes con código y consejos de migración."
+tags: ["angular", "frontend", "upgrade"]
+cover: /blog/angular-19-vs-18/cover.svg
+---
+
+Angular **19** se publicó el **19 de noviembre de 2024**. Tras el Angular 18 tan
+centrado en señales, la v19 saca la siguiente consecuencia lógica: **Standalone se
+convierte en el valor predeterminado**, las APIs basadas en señales se vuelven
+estables y se añaden algunas primitivas reactivas nuevas.
+
+![Standalone: opt-in (v18) vs. predeterminado (v19)](/blog/angular-19-vs-18/standalone.svg)
+
+## Los cambios de un vistazo
+
+| Área | Angular 18 | Angular 19 |
+|---|---|---|
+| Componentes standalone | opt-in (`standalone: true`) | **Predeterminado** |
+| Señal `input` / `output` / `model` / queries | Developer Preview | **estable** |
+| `linkedSignal`, `resource()` | — | **nuevo (experimental)** |
+| `@let` en la plantilla | Preview | **estable** |
+| Incremental Hydration | — | **nuevo (experimental)** |
+| `effect()` | con `allowSignalWrites` | **simplificado** |
+| TypeScript | 5.4 | **5.6** |
+
+> **Consejo previo:** La mayor parte se migra mediante `ng update` y los schematics
+> incluidos — entre otras cosas, el cambio a `inject()` y a las rutas con carga diferida.
+> `ng update` te muestra los puntos afectados.
+
+## 1. Componentes standalone como valor predeterminado
+
+El cambio más visible: Los nuevos componentes, directivas y pipes son
+standalone automáticamente **sin `standalone: true`**. Si excepcionalmente
+necesitas el comportamiento antiguo, indicas explícitamente `standalone: false`.
+
+```typescript
+// v19: ya no hace falta el flag standalone
+@Component({
+  selector: 'app-profile',
+  imports: [UserCardComponent],
+  template: `<app-user-card />`,
+})
+export class ProfileComponent {}
+```
+
+También es nuevo el flag del compilador **`strictStandalone`**: Cuando está
+activo, las declaraciones no standalone están prohibidas — práctico para imponer
+el estilo moderno en todo el proyecto.
+
+> **Consejo:** Una migración convierte automáticamente los componentes existentes.
+> Después, conviene activar `strictStandalone` para que nadie reintroduzca
+> accidentalmente patrones de NgModule.
+
+## 2. Las APIs de señales se vuelven estables
+
+Las APIs basadas en señales introducidas como preview en la v17/v18 ahora son
+**estables** y aptas para producción: `input()`, `output()`, `model()`, así como
+las queries basadas en señales (`viewChild`, `contentChild` …).
+
+```typescript
+@Component({ selector: 'app-counter', template: `{{ label() }}: {{ value() }}` })
+export class CounterComponent {
+  value = input(0);                 // en lugar de @Input()
+  label = input.required<string>(); // input obligatorio
+  changed = output<number>();       // en lugar de @Output()
+}
+```
+
+## 3. Nuevas primitivas reactivas: linkedSignal & resource
+
+**`linkedSignal`** (experimental) es una señal *escribible* que reacciona a una
+fuente y puede restablecerse cuando esta cambia — ideal para
+estado local que depende de otras señales:
+
+```typescript
+favoriteColorId = linkedSignal<Color[], number | null>({
+  source: this.colorOptions,
+  computation: (source, previous) =>
+    source.some((c) => c.id === previous?.value) ? previous!.value : null,
+});
+```
+
+**`resource()`** (experimental) se encarga de los datos asíncronos, incluidos los
+estados de carga/error y las condiciones de carrera:
+
+```typescript
+fruitDetails = resource({
+  request: this.fruitId,
+  loader: async ({ request }) => {
+    const res = await fetch(`/api/fruit/${request}`);
+    return res.json();
+  },
+});
+```
+
+> **Consejo:** Ambas son **experimentales** en la v19. Buenas para probar, pero
+> son posibles cambios en la API — no se vuelven estables hasta más adelante (Resource en la v22).
+
+## 4. @let en la plantilla es estable
+
+Variables locales de solo lectura directamente en la plantilla — ahora oficialmente estables:
+
+```html
+@let userName = user.firstName + ' ' + user.lastName;
+<h1>Bienvenido, {{ userName }}</h1>
+```
+
+Esto ahorra expresiones repetidas y getters innecesarios en el componente.
+
+## 5. Incremental Hydration (experimental)
+
+Para apps con SSR: En lugar de hidratar toda la página de una vez, las regiones se
+activan **bajo demanda** — controladas mediante triggers de `@defer` como `hover`, `idle`,
+`interaction` o `viewport`. También es nuevo (experimental): **Server Route
+Configuration**, para definir el modo de renderizado por ruta (Server, Prerender,
+Client).
+
+## 6. effect() se vuelve más sencillo
+
+El flag `allowSignalWrites` desaparece — escribir en señales desde dentro de los efectos
+ahora está permitido de forma habitual. Además, los efectos se ejecutan dentro del
+ciclo de detección de cambios en lugar de como un microtask, lo que hace que el timing sea más predecible.
+
+## 7. Router, DX y tooling
+
+- **Router**: `routerOutletData` pasa datos a los componentes de outlet;
+  `RouterLink` acepta `UrlTree` (incluidos los query params).
+- **Migraciones**: `ng g @angular/core:inject` convierte la inyección por constructor en
+  `inject()`; `ng g @angular/core:route-lazy-loading` hace que las rutas sean lazy.
+- **Proveedores de inicialización**: `provideAppInitializer()`,
+  `provideEnvironmentInitializer()`, `providePlatformInitializer()`.
+- **Diagnóstico**: Advertencias por funciones no invocadas en bindings y por
+  imports standalone sin usar.
+- **Hot Module Replacement** para ciclos de desarrollo más rápidos, **Playwright** como
+  opción e2e, **TypeScript 5.6**.
+
+## Lista de comprobación para la actualización
+
+1. Ejecuta `ng update @angular/core @angular/cli`.
+2. Ejecuta la migración standalone y luego activa `strictStandalone`.
+3. Opcionalmente, migra a `inject()` y a rutas lazy (hay schematics disponibles).
+4. Adopta progresivamente `input`/`output` de señales en lugar de `@Input()`/`@Output()`.
+5. Prueba `linkedSignal`/`resource` solo en funcionalidades nuevas y bien acotadas.
+
+## Conclusión
+
+Angular 18 convirtió las señales en un concepto de primera clase, **Angular 19 convierte el
+estilo moderno en el estándar**: standalone por defecto, inputs de señales estables y
+primeros bloques como `linkedSignal`. El mayor paso de limpieza es la
+migración standalone — y el schematic te la quita casi por completo de las manos.
+
+Cómo continúa la cosa se cuenta en el artículo siguiente:
+[Angular 20 vs. 19 — Las señales maduran](/blog/angular-20-vs-19).
+
+---
+
+*Fuentes: [Angular 19 — Angular.love](https://angular.love/angular-19-whats-new),
+[Angular 19 Features — Pretius](https://pretius.com/blog/angular-19-features),
+[What Is LinkedSignal — Telerik](https://www.telerik.com/blogs/angular-19-features-linkedsignal-angular).*

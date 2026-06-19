@@ -1,0 +1,60 @@
+---
+title: "Hello MDX — comment fonctionne ce blog"
+date: 2026-06-19
+excerpt: "Chaque article est un fichier MDX dans le dépôt git. Voici comment le frontmatter, les images et le code s'articulent — et comment créer un nouvel article."
+tags: ["meta", "mdx", "react"]
+cover: /blog/hello-mdx/cover.svg
+---
+
+Bienvenue sur le blog. Ce site **n'est pas un CMS classique avec base de
+données** — chaque article est un unique fichier `.mdx` dans le dépôt.
+Autrement dit : entièrement versionné dans git, sans backend, sans coûts
+récurrents.
+
+## Comment un article est structuré
+
+En haut se trouve le **frontmatter** (entre les `---`). Le blog en tire
+le titre, la date, les tags, l'image de couverture et l'extrait pour la
+vue d'ensemble :
+
+```yaml
+---
+title: "Hello MDX"
+date: 2026-06-19
+excerpt: "Court extrait pour la vue en carte."
+tags: ["mdx", "react"]
+cover: /blog/hello-mdx/cover.svg
+---
+```
+
+En dessous suit le texte proprement dit en **Markdown** — titres, listes,
+liens, citations, tout comme d'habitude.
+
+## Images
+
+Les images se trouvent dans `public/blog/<slug>/` et sont intégrées avec
+un chemin absolu :
+
+![Couverture d'exemple](/blog/hello-mdx/cover.svg)
+
+## Code avec coloration syntaxique
+
+Comme il s'agit de MDX, tu peux aussi intégrer des composants React — et
+les blocs de code sont automatiquement mis en évidence :
+
+```jsx
+function useReadingTime(text) {
+  const words = text.trim().split(/\s+/).length
+  return Math.max(1, Math.round(words / 200))
+}
+```
+
+## Créer un nouvel article
+
+1. Crée le dossier `src/content/blog/mon-article/`
+2. À l'intérieur, crée `index.mdx` avec un frontmatter
+3. Place la couverture dans `public/blog/mon-article/`
+4. Enregistre — l'article apparaît automatiquement dans la vue d'ensemble
+
+> Astuce : tu peux aussi laisser l'IA rédiger l'intégralité du texte et
+> simplement committer le fichier `.mdx` terminé.

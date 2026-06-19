@@ -1,0 +1,54 @@
+---
+title: "React Three Fiber: optimizar la escena del diorama"
+date: 2026-05-28
+excerpt: "Cómo logré que la isla 3D de la página de inicio funcionara con fluidez — desde instanced meshes hasta on-demand rendering y LODs razonables."
+tags: ["three.js", "performance", "react"]
+cover: /blog/render-performance/cover.svg
+---
+
+La isla interactiva de la página de inicio está construida con
+[react-three-fiber](https://github.com/pmndrs/react-three-fiber). Agradable a la
+vista — pero la primera versión iba a tirones en el móvil. Aquí están las tres
+palancas que más aportaron.
+
+## 1. On-demand rendering
+
+La escena no necesita redibujarse 60 veces por segundo cuando nada se mueve.
+Con `frameloop="demand"`, R3F solo renderiza cuando es necesario:
+
+```jsx
+<Canvas frameloop="demand" dpr={[1, 2]}>
+  <Scene />
+</Canvas>
+```
+
+Eso por sí solo redujo el consumo en reposo a casi cero.
+
+## 2. Instancing en lugar de muchos meshes
+
+Árboles, piedras, briznas de hierba — son cientos de objetos casi idénticos. En
+lugar de meshes individuales, se usa **una** geometría instanciada:
+
+```jsx
+<Instances limit={500}>
+  <coneGeometry />
+  <meshStandardMaterial />
+  {trees.map((t) => (
+    <Instance key={t.id} position={t.position} scale={t.scale} />
+  ))}
+</Instances>
+```
+
+Un draw call en lugar de cientos — la mayor ganancia individual.
+
+## 3. Lo que realmente contó
+
+- **Limitar el DPR** a `[1, 2]` en lugar de la cuadrícula de píxeles Retina completa
+- Comprimir las texturas de antemano (aquí `sharp` ayuda en el build)
+- Sombras solo donde realmente se ven
+
+> La medición gana al instinto: primero mide con el profiler, luego optimiza —
+> no al revés.
+
+Para saber más sobre cómo está estructurado el blog en sí, consulta el
+[artículo Hello MDX](/blog/hello-mdx).

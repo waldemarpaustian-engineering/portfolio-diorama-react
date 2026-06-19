@@ -1,0 +1,182 @@
+---
+title: "Reactividad: React, Angular y Vue — una historia hasta junio de 2026"
+date: 2026-06-18
+excerpt: "Tres frameworks, tres respuestas a la misma pregunta: ¿cómo llega un cambio de datos a la pantalla? React se mantuvo en el re-render y optimiza mediante un compilador, Angular cambió a Signals, y Vue fue reactivo de grano fino desde el principio — y ahora elimina el Virtual DOM con Vapor Mode. Historia, modelos y código comparados."
+tags: ["react", "angular", "vue", "reactivity", "frontend"]
+cover: /blog/reactivity-react-vs-angular/cover.svg
+---
+
+"Reactividad" significa: ¿cómo llega un cambio en tus datos a la pantalla?
+**React, Angular y Vue** responden a esta pregunta de forma distinta — y los
+tres afinaron su respuesta una vez más entre 2020 y 2026. Lo
+interesante: convergen hacia el mismo objetivo (actualizaciones más finas y automáticas), pero
+cada uno desde un rincón diferente.
+
+![La reactividad a lo largo del tiempo](/blog/reactivity-react-vs-angular/timeline.svg)
+
+## Los tres modelos fundamentales en una frase
+
+- **React**: *"UI = f(State)"*. Cuando cambia el estado, **el componente se ejecuta de nuevo**,
+  React compara el resultado (Virtual DOM) y parchea las diferencias.
+  De grano grueso, pero extremadamente simple de razonar.
+- **Angular** (hoy): **Signals** — un valor reactivo que sabe **quién
+  lo lee**. Cuando cambia, solo se actualizan exactamente esos puntos. De grano fino, sin
+  Virtual DOM.
+- **Vue**: **datos reactivos mediante Proxy** — mutas el valor con total
+  normalidad y Vue rastrea automáticamente **qué depende de él**. De grano fino como Angular, pero durante
+  mucho tiempo renderizó con un Virtual DOM — y es justo eso lo que ahora elimina Vapor Mode.
+
+![El espectro de la reactividad: de grano grueso a grano fino](/blog/reactivity-react-vs-angular/models.svg)
+
+## Historia: cómo llegó React hasta ahí
+
+| Año | Hito | Reactividad |
+|---|---|---|
+| 2013 | React + Virtual DOM | `this.setState()` → re-render + diff |
+| 2019 | Hooks (16.8) | `useState`, memoización manual |
+| 2022 | Concurrent (18) | `useTransition`, batching |
+| 2024/25 | **React Compiler** | Memoización automática |
+
+El modelo de React es esencialmente el mismo desde 2013: el componente es una función que
+se **vuelve a llamar** en cada cambio. Durante mucho tiempo se combatieron los re-renders innecesarios
+**a mano** con `useMemo`/`useCallback` — el **compilador** te libera de
+esa tarea sin cambiar el modelo.
+
+```jsx
+// React: el estado es un valor crudo, lo derivado simplemente se calcula
+function Counter() {
+  const [count, setCount] = useState(0);
+  const doubled = count * 2; // no hace falta computed — el compilador memoiza
+  return <button onClick={() => setCount(count + 1)}>{count} / {doubled}</button>;
+}
+```
+
+React deliberadamente **no** introdujo Signals. El argumento: la **crudeza de
+los datos**. `count` es un valor simple — sin `.value`, sin getter.
+
+## Historia: cómo llegó Angular hasta ahí
+
+| Año | Hito | Reactividad |
+|---|---|---|
+| 2010 | AngularJS | `$scope` + dirty-checking de `$digest` |
+| 2016 | Angular 2 | **zone.js** + RxJS, comprobación sobre el árbol |
+| 2023 | Angular 16/17 | **Signals** (estables desde v17) |
+| 2025 | Angular 21 | **zoneless** pasa a ser el valor por defecto |
+
+Angular pasó de *"comprobar todo el árbol"* (zone.js) a *"notificar exactamente al
+nodo"* (Signals):
+
+```typescript
+// Angular: los Signals son funciones getter — se leen con count()
+@Component({ template: `{{ count() }} / {{ doubled() }}` })
+export class CounterComponent {
+  count = signal(0);
+  doubled = computed(() => this.count() * 2);
+  inc() { this.count.update((c) => c + 1); }
+}
+```
+
+## Historia: cómo llegó Vue hasta ahí
+
+| Año | Hito | Reactividad |
+|---|---|---|
+| 2014 | Vue 1/2 | `Object.defineProperty` (getter/setter) |
+| 2020 | Vue 3 | **Proxy** + Composition API (`ref`, `reactive`) |
+| 2024 | Vue 3.5 | Reactividad reconstruida (más rápida, más ligera) |
+| 2026 | Vue 3.6 (Beta) | **Vapor Mode** + Alien Signals, **sin VDOM** |
+
+Vue es el caso especial interesante: fue **reactivo de grano fino
+desde el principio**. Ya Vue 2 rastreaba, mediante getters/setters, qué punto lee qué valor.
+Vue 3 lo reemplazó por **Proxies** — más robusto (también detecta propiedades
+recién añadidas) y más rápido. `ref()` es aquí prácticamente un Signal:
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+const count = ref(0)                          // como un signal
+const doubled = computed(() => count.value * 2)
+function inc() { count.value++ }              // en el script: .value
+</script>
+
+<template>
+  <!-- en la plantilla se "desempaqueta" automáticamente: sin .value -->
+  <button @click="inc">{{ count }} / {{ doubled }}</button>
+</template>
+```
+
+El golpe maestro en 2026: con **Vapor Mode** (Vue 3.6, Beta) Vue compila las plantillas directamente
+a **operaciones de DOM de grano fino — sin ningún Virtual DOM**, similar a Solid
+o Angular. Con ello, Vue alcanza en el lado del renderizado lo que su reactividad
+ya podía hacer desde hace tiempo. (A junio de 2026: Beta, "lista para evaluación en producción", todavía
+no es el valor por defecto; Suspense permanece de momento en la ruta del VDOM.)
+
+## Comparación directa
+
+| | React (2026) | Angular (2026) | Vue (2026) |
+|---|---|---|---|
+| Primitivo reactivo | valor crudo + `useState` | `signal()` (getter) | `ref()` / `reactive()` (Proxy) |
+| Valor derivado | simplemente se calcula | `computed()` | `computed()` |
+| Efecto secundario | `useEffect(fn, deps)` | `effect(fn)` | `watchEffect(fn)` |
+| Leer un valor | crudo: `count` | como llamada: `count()` | `.value` (plantilla: crudo) |
+| Dependencias | array `deps`, manual | automático | automático |
+| Render | Virtual DOM | sin VDOM | VDOM → **Vapor: sin VDOM** |
+| Optimización | **Compiler** | **Signals** | **Proxy tracking** |
+
+La filosofía se ve claramente en una sola línea: en **React**, `count` es un
+valor crudo (reactividad implícita), en **Angular** lees `count()` (explícito),
+en **Vue** `count.value` — y en la plantilla de Vue se desempaqueta automáticamente.
+
+## La "gran convergencia" — tres caminos, un objetivo
+
+En 2026, los tres quieren lo mismo: actualizaciones más finas sin memoización manual. Pero
+las apuestas son distintas:
+
+- **Vue y Angular** (y Solid, Svelte 5, Qwik, Preact) apuestan por **Signals /
+  reactividad de grano fino**. El propio valor sabe quién lo lee — no hace falta
+  "diffear" nada. Angular lo hace de forma explícita (`signal()`), Vue automáticamente
+  (Proxy). Ambos han eliminado ya el Virtual DOM (zoneless y Vapor, respectivamente).
+- **React** es el gran framework que **se mantiene deliberadamente en el re-render** y
+  deja la eficiencia al **compilador**. Escribes código "normal" con
+  valores crudos; la optimización ocurre de forma invisible.
+
+> **Idea clave:** El movimiento de los Signals fue moldeado de forma decisiva por **Vue** —
+> el modelo reactivo de Vue es, en cierto sentido, el antepasado. Angular se sumó más tarde,
+> y los tres (más Solid) trabajan incluso en un
+> **estándar de Signals de TC39** común. React es el único gran framework que toma el
+> camino del compilador.
+
+¿Y el rendimiento? En apps reales, casi siempre un **empate**. El grano fino
+(Vue/Angular/Solid) brilla con muchísimos valores independientes y listas grandes.
+Pero en la práctica, la velocidad la deciden más a menudo el **flujo de datos, el tamaño del bundle y
+los límites de renderizado** que el propio modelo de reactividad.
+
+## Qué significa esto para ti
+
+- **Mentalidad React**: "La función se ejecuta de nuevo." Con el compilador puedes prescindir
+  de la mayoría de `useMemo`/`useCallback`. La reactividad es **implícita**.
+- **Mentalidad Angular**: "¿Quién lee este Signal?" `computed` en lugar de
+  recalcular, `effect` en lugar de subscripciones, lectura con `()`. **Explícita**.
+- **Mentalidad Vue**: "Muta el valor, el resto sucede solo." `ref`/
+  `reactive`, `computed`, `watchEffect` — la reactividad es **automática** y
+  es la que más se siente como JavaScript "normal".
+
+## Conclusión
+
+Tres frameworks, un objetivo, tres apuestas. **Vue** fue reactivo de grano fino temprano
+y ahora elimina el último resto de VDOM con Vapor. **Angular** reconstruyó su
+reactividad por completo en torno a Signals y se despidió de zone.js. **React** se mantiene
+en el probado re-render y suaviza los puntos de dolor mediante el compilador. Ninguno de los
+caminos es "más correcto" — reflejan apuestas distintas sobre lo que los desarrolladores
+valoran más: **el control explícito**, **la reactividad automática** o
+**la optimización invisible**.
+
+Más sobre los saltos de versión concretos:
+[React 19 vs. 18](/blog/react-19-vs-18) ·
+[Angular 22 vs. 21](/blog/angular-22-vs-21).
+
+---
+
+*Fuentes: [Angular vs. React: The Great Convergence — Blackthorn Vision](https://blackthorn-vision.com/blog/angular-vs-react/),
+[Signals vs. React Compiler — RedMonk](https://redmonk.com/kholterhoff/2025/05/13/javascript-signals-react-compiler/),
+[Reactivity Fundamentals — vuejs.org](https://vuejs.org/guide/essentials/reactivity-fundamentals.html),
+[Vue 3.6 & Vapor Mode — Vue School](https://vueschool.io/articles/news/vn-talk-evan-you-preview-of-vue-3-6-vapor-mode/).*

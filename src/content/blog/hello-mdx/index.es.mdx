@@ -1,0 +1,59 @@
+---
+title: "Hello MDX — cómo funciona este blog"
+date: 2026-06-19
+excerpt: "Cada artículo es un archivo MDX en el repositorio git. Aquí verás cómo se combinan el frontmatter, las imágenes y el código — y cómo crear una nueva publicación."
+tags: ["meta", "mdx", "react"]
+cover: /blog/hello-mdx/cover.svg
+---
+
+Bienvenido al blog. Este sitio **no es un CMS clásico con base de datos** —
+cada artículo es un único archivo `.mdx` en el repositorio. Es decir:
+totalmente versionado en git, sin backend, sin costes recurrentes.
+
+## Cómo está estructurado un artículo
+
+Arriba se encuentra el **frontmatter** (entre los `---`). De él, el blog
+extrae el título, la fecha, los tags, la imagen de portada y el extracto
+para la vista general:
+
+```yaml
+---
+title: "Hello MDX"
+date: 2026-06-19
+excerpt: "Breve extracto para la vista de tarjeta."
+tags: ["mdx", "react"]
+cover: /blog/hello-mdx/cover.svg
+---
+```
+
+Debajo sigue el texto propiamente dicho en **Markdown** — encabezados,
+listas, enlaces, citas, todo como de costumbre.
+
+## Imágenes
+
+Las imágenes se encuentran en `public/blog/<slug>/` y se incrustan con una
+ruta absoluta:
+
+![Portada de ejemplo](/blog/hello-mdx/cover.svg)
+
+## Código con resaltado de sintaxis
+
+Como es MDX, también puedes incrustar componentes de React — y los bloques
+de código se resaltan automáticamente:
+
+```jsx
+function useReadingTime(text) {
+  const words = text.trim().split(/\s+/).length
+  return Math.max(1, Math.round(words / 200))
+}
+```
+
+## Crear un nuevo artículo
+
+1. Crea la carpeta `src/content/blog/mi-articulo/`
+2. Dentro, crea `index.mdx` con frontmatter
+3. Coloca la portada en `public/blog/mi-articulo/`
+4. Guarda — la publicación aparece automáticamente en la vista general
+
+> Consejo: También puedes dejar que la IA escriba todo el texto y solo
+> hacer commit del archivo `.mdx` terminado.

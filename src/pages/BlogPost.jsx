@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
-import { posts, getPost, formatDate } from '../lib/posts.js'
+import { useMemo } from 'react'
+import { getPosts, getPost, formatDate } from '../lib/posts.js'
 import { useReadingProgress, useScrollReveal } from '../hooks/useBlogAnimations.js'
 
 // Styling overrides for elements rendered from the MDX content.
@@ -21,9 +22,11 @@ const mdxComponents = {
 export default function BlogPost() {
   const { slug } = useParams()
   const { t, i18n } = useTranslation()
-  const post = getPost(slug)
+  const locale = (i18n.language || 'en').split('-')[0]
+  const post = getPost(slug, locale)
+  const posts = useMemo(() => getPosts(locale), [locale])
   const progress = useReadingProgress()
-  const revealRef = useScrollReveal('[data-reveal]', [slug])
+  const revealRef = useScrollReveal('[data-reveal]', [slug, locale])
 
   useEffect(() => {
     window.scrollTo(0, 0)

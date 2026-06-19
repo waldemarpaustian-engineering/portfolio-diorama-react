@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
-import { posts, allTags, formatDate } from '../lib/posts.js'
+import { getPosts, getAllTags, formatDate } from '../lib/posts.js'
 import { useScrollReveal } from '../hooks/useBlogAnimations.js'
 
 function Tag({ children }) {
@@ -39,16 +39,19 @@ function PostCard({ post, locale, featured = false }) {
 
 export default function Blog() {
   const { t, i18n } = useTranslation()
-  const locale = i18n.language
+  const locale = (i18n.language || 'en').split('-')[0]
   const [activeTag, setActiveTag] = useState(null)
+
+  const posts = useMemo(() => getPosts(locale), [locale])
+  const allTags = useMemo(() => getAllTags(locale), [locale])
 
   const filtered = useMemo(
     () => (activeTag ? posts.filter((p) => p.tags.includes(activeTag)) : posts),
-    [activeTag],
+    [activeTag, posts],
   )
 
   const [featured, ...rest] = filtered
-  const revealRef = useScrollReveal('[data-reveal]', [activeTag])
+  const revealRef = useScrollReveal('[data-reveal]', [activeTag, locale])
 
   return (
     <div className="page blog-page">

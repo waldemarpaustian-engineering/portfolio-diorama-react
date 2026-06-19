@@ -35,8 +35,8 @@
   </g>
 
   <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33" text-anchor="middle">
-    <text x="600" y="430" font-size="60" font-weight="700" letter-spacing="-2">Reaktivität im Vergleich</text>
+    <text x="600" y="430" font-size="60" font-weight="700" letter-spacing="-2">Reactivity Compared</text>
     <text x="600" y="490" font-size="30" font-weight="600" fill="#4a7fd4">React · Angular · Vue</text>
-    <text x="600" y="538" font-size="24" font-weight="500" fill="#7a7782">Re-Render, Signals &amp; Proxy — bis Juni 2026</text>
+    <text x="600" y="538" font-size="24" font-weight="500" fill="#7a7782">Re-Render, Signals &amp; Proxy — through June 2026</text>
   </g>
 </svg>

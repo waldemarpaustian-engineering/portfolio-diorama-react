@@ -1,0 +1,144 @@
+---
+title: "Angular 20 vs. 19 — les Signals arrivent à maturité"
+date: 2025-06-16
+excerpt: "Angular 19 a apporté les Signals en preview, Angular 20 les rend prêts pour la production : effect et linkedSignal deviennent stables, les API Resource/httpResource arrivent, l'Incremental Hydration devient stable et zoneless se rapproche. Les changements les plus importants, avec du code."
+tags: ["angular", "frontend", "upgrade"]
+cover: /blog/angular-20-vs-19/cover.svg
+---
+
+Angular **20** est sorti le **28 mai 2025**. Là où Angular 19 montrait l'avenir
+réactif en *preview*, Angular 20 le rend **utilisable au quotidien** :
+de nombreuses API Signal deviennent stables, les nouvelles API Resource
+simplifient les données asynchrones, et le cap vers zoneless est fixé.
+
+![API Signal : de la preview (v19) au stable (v20)](/blog/angular-20-vs-19/signals.svg)
+
+## Les changements en un coup d'œil
+
+| Domaine | Angular 19 | Angular 20 |
+|---|---|---|
+| `effect`, `linkedSignal` | Developer Preview | **stable** |
+| `toSignal` / `toObservable` | Preview | **stable** |
+| API Resource (`resource`, `httpResource`) | — | **nouveau (expérimental)** |
+| Incremental Hydration | Preview | **stable** |
+| Zoneless Change Detection | expérimental | **Developer Preview** |
+| Syntaxe des templates | Control Flow | **+ Template Literals et opérateurs** |
+| Node / TypeScript | plus ancien | **Node 20.11+/22.11+, TS 5.8** |
+
+> **Un conseil d'emblée :** v20 est avant tout une *release de stabilisation*.
+> Si vous travaillez déjà avec les Signals, vous pouvez retirer les
+> avertissements de preview et utiliser les API sans crainte en production.
+> `ng update` se charge de la plupart des ajustements.
+
+## 1. Les API Signal deviennent stables
+
+La pièce maîtresse : plusieurs briques Signal quittent le statut de preview.
+`effect()` pour les effets de bord, `linkedSignal()` pour des Signals dérivées
+*modifiables*, et les passerelles `toSignal()` / `toObservable()` sont désormais
+stables.
+
+```typescript
+const count = signal(0);
+
+// Signal dérivée, mais modifiable
+const doubled = linkedSignal(() => count() * 2);
+
+// effet de bord à chaque changement
+effect(() => {
+  console.log('count vaut maintenant', count());
+});
+```
+
+De plus, les render hooks `afterEveryRender()` et `afterNextRender()`
+(auparavant sous `afterRender`) ont été ajoutés.
+
+## 2. API Resource : des données asynchrones en tant que Signal
+
+Nouvelles — bien qu'encore expérimentales — sont `resource()`, `rxResource()` et
+`httpResource()`. Elles récupèrent des données asynchrones et exposent l'état
+(`idle`, `loading`, `error`, `resolved`) directement en tant que Signal.
+`httpResource` utilise sous le capot le `HttpClient` (interceptors compris) :
+
+```typescript
+const userId = signal(1);
+
+const user = httpResource<User>(
+  () => `/api/users/${userId()}`,
+);
+
+// dans le template : user.value(), user.isLoading(), user.error()
+```
+
+> **Astuce :** En v20, ces API sont **expérimentales** — idéales pour de
+> nouvelles fonctionnalités, mais des changements d'API restent possibles. Elles
+> ne deviennent stables qu'avec Angular 22.
+
+## 3. L'Incremental Hydration devient stable
+
+Important pour les apps SSR : l'**Incremental Hydration** est désormais stable.
+Au lieu d'hydrater toute la page d'un coup, les zones ne deviennent actives que
+lorsqu'elles sont nécessaires — ce qui améliore sensiblement la performance
+perçue. L'API `PendingTasks` pour le SSR est elle aussi stable.
+
+## 4. Zoneless se rapproche
+
+La Change Detection sans `zone.js` passe d'*expérimental* à **Developer
+Preview**. Ce n'est **pas** encore la valeur par défaut ici — cela n'arrivera
+qu'avec Angular 21 — mais vous pouvez l'activer et la tester volontairement.
+
+> **Remarque :** Si vous essayez zoneless, vous avez besoin d'un usage cohérent
+> d'`OnPush` et des Signals. C'est la préparation idéale pour la v21, où zoneless
+> devient la valeur par défaut.
+
+## 5. Syntaxe des templates : plus de JavaScript dans le template
+
+Les templates apprennent quelques expressions supplémentaires :
+
+- **Template Literals** directement dans le template (au lieu de la concaténation de chaînes)
+- **Opérateur d'exponentiation** (`**`) sans pipe dédié
+- **Opérateur `in`** pour vérifier les propriétés d'un objet
+- **Opérateur `void`** pour ignorer les valeurs de retour dans les event bindings
+
+```html
+<p>{{ `Bonjour ${user.name}, niveau ${2 ** level}` }}</p>
+<span>{{ 'admin' in roles ? 'Admin' : 'User' }}</span>
+```
+
+## 6. Router et composants dynamiques
+
+- Les fonctions de redirection asynchrones prennent désormais en charge les **Promises et les Observables**.
+- `Router.getCurrentNavigation()?.abort()` interrompt une navigation en cours.
+- Bindings dynamiques pour `NgComponentOutlet` via `inputBinding`,
+  `twoWayBinding` et `outputBinding`.
+
+## 7. Plus de sûreté à la compilation
+
+Le compilateur devient plus strict et plus utile :
+
+- **Type-checking pour les host bindings**
+- Avertissement en cas de **fonctions `track` non appelées** dans `@for`
+- Diagnostic en cas de nullish coalescing invalide et d'imports manquants pour
+  vos propres directives structurelles
+
+## 8. Breaking Changes
+
+- **Node** `^20.11.1 || ^22.11.0 || ^24.0.0`, **TypeScript** `>=5.8 <5.9`.
+- `InjectFlags` supprimé (migration disponible).
+- Attributs `ng-reflect-*` supprimés en mode dev.
+- Support officiel de **HammerJS** déprécié.
+
+## Conclusion
+
+Angular 19 a tracé la direction réactive, **Angular 20 la rend prête pour la
+production**. Le plus grand gain au quotidien : des API Signal stables et les
+nouveaux helpers Resource — les deux réduisent nettement le boilerplate RxJS. Et
+avec zoneless en Developer Preview, la scène est prête pour Angular 21.
+
+La suite est traitée dans l'article suivant :
+[Angular 21 vs. 20 — la release de nettoyage](/blog/angular-21-vs-20).
+
+---
+
+*Sources : [Angular 20 — Angular.love](https://angular.love/angular-20-whats-new),
+[Angular 20 New Features — Kellton](https://www.kellton.com/kellton-tech-blog/angular-20-new-features-guide),
+[Getting started with httpResource — Telerik](https://www.telerik.com/blogs/getting-started-httpresource-api-angular).*

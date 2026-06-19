@@ -1,0 +1,215 @@
+---
+title: "Angular 22 vs. 21 — qué hay realmente de nuevo"
+date: 2026-06-16
+excerpt: "Angular 22 no es una ruptura, sino una actualización de madurez: Signal Forms y la Resource API se vuelven estables, OnPush y Fetch pasan a ser los valores por defecto, y Vitest reemplaza a Karma. Los cambios más importantes con código y consejos de migración."
+tags: ["angular", "frontend", "upgrade"]
+cover: /blog/angular-22-vs-21/cover.svg
+---
+
+Angular **22** se publicó el **3 de junio de 2026**. Quien venga de **21** no
+vivirá ninguna ruptura — más bien todo lo contrario: muchas cosas que en v21 aún
+eran *experimentales* u *opt-in* ahora son **estables y el valor por defecto**. Es
+una actualización de madurez, no una reconstrucción.
+
+![De experimental (v21) a estable (v22)](/blog/angular-22-vs-21/maturity.svg)
+
+## Los cambios de un vistazo
+
+| Área | Angular 21 | Angular 22 |
+|---|---|---|
+| Signal Forms | experimental | **estable** |
+| Resource API (`resource`, `httpResource`) | experimental | **estable** |
+| Change Detection | por defecto (eager) | **OnPush por defecto** |
+| HttpClient | XHR | **Fetch por defecto** |
+| Test runner | Karma/Jasmine | **Vitest por defecto** |
+| Incremental Hydration | opt-in | **por defecto** |
+| TypeScript / Node | TS 5.9 / Node 20 | **TS 6 / Node 22 obligatorios** |
+
+> **Consejo más importante de entrada:** casi todo se migra automáticamente
+> mediante `ng update`. Angular incluye schematics para la mayoría de los breaking
+> changes que conservan tu comportamiento. Aun así, deberías revisar cada
+> migración por separado en el diff en lugar de hacer commit a ciegas.
+
+## 1. OnPush es el nuevo valor por defecto
+
+El mayor cambio conceptual: un componente sin estrategia explícita ahora usa
+**`OnPush`** en lugar de la anterior estrategia eager. Esto significa que Angular
+solo comprueba un componente cuando cambia un signal, un input o un evento
+vinculado — ya no en cada tick de todo el árbol.
+
+![Change Detection: por defecto vs. OnPush](/blog/angular-22-vs-21/change-detection.svg)
+
+Para proyectos **existentes** esto es inofensivo: la migración añade explícitamente
+la estrategia antigua a tus componentes para que nada cambie de comportamiento:
+
+```typescript
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager, // añadido por la migración
+})
+export class LegacyComponent {}
+```
+
+> **Consejo:** lo mejor es dejar los componentes nuevos con el valor por defecto
+> OnPush y trabajar de forma consecuente con Signals. Quien ya construye
+> "signal-first" no notará en absoluto el cambio — salvo por un mejor rendimiento.
+
+## 2. Signal Forms son estables
+
+Todavía experimentales en v21, ahora listas para producción. Signal Forms aportan
+un esquema declarativo, lógica de envío integrada y trabajan de forma nativa con
+Signals.
+
+```typescript
+protected readonly flightForm = form(this.flight, flightSchema, {
+  submission: {
+    action: async (form) => this.save(form),
+    ignoreValidators: 'none',
+  },
+});
+```
+
+Entre las novedades se incluyen los validadores `minDate()`/`maxDate()`, debounce
+en `blur`, `reloadValidation()` y la validación contra **esquemas estándar** (Zod,
+Valibot) mediante `validateStandardSchema`.
+
+> **Consejo:** para formularios nuevos, el cambio merece la pena. Los formularios
+> reactive y template-driven existentes siguen funcionando — `FormValueControl`
+> ahora es compatible con ambos, así que puedes migrar de forma gradual.
+
+## 3. La Resource API y httpResource son estables
+
+`resource()`, `rxResource()` y `httpResource()` también han dejado el estado
+experimental. `httpResource` es la forma cómoda de vincular consultas HTTP
+reactivas directamente a Signals:
+
+```typescript
+protected readonly flightsResource = httpResource<Flight[]>(
+  () => ({
+    url: 'https://api.example.com/flight',
+    params: { from: this.filter().from, to: this.filter().to },
+  }),
+  { defaultValue: [] },
+);
+```
+
+El estado lo lees mediante Signals: `value`, `error`, `isLoading`, `status`. Entre
+las novedades está `chain()` para encadenar recursos de forma más sencilla.
+
+## 4. HttpClient usa Fetch de forma predeterminada
+
+`HttpClient` ahora se apoya internamente en la **Fetch API** en lugar de
+`XMLHttpRequest`. `withFetch()` es el valor por defecto (y por tanto está
+deprecado). Si necesitas XHR — por ejemplo, para un progreso de subida
+detallado — la migración añade `withXhr()`.
+
+```typescript
+// antes necesario, ahora por defecto:
+provideHttpClient(withFetch());
+```
+
+> **Atención:** `reportProgress` está deprecado y se ha dividido en
+> `reportUploadProgress` y `reportDownloadProgress`. Si tienes indicadores de
+> progreso para subidas, conviene revisarlo brevemente.
+
+## 5. Menos boilerplate: @Service & injectAsync
+
+El nuevo decorador **`@Service()`** es la forma abreviada de
+`@Injectable({ providedIn: 'root' })`:
+
+```typescript
+@Service()
+export class UserService {
+  private http = inject(HttpClient);
+}
+```
+
+Y `injectAsync()` carga servicios de forma lazy bajo demanda — incluyendo una
+estrategia de prefetch:
+
+```typescript
+private readonly upgrade = injectAsync(
+  () => import('./upgrade-service').then((m) => m.UpgradeService),
+  { prefetch: onIdle },
+);
+```
+
+## 6. Router: la herencia de parámetros cambia
+
+Un cambio que es fácil pasar por alto: `paramsInheritanceStrategy` ahora tiene por
+defecto **`'always'`** — una ruta hija hereda los parámetros de **todas** las
+rutas padre. Para esto **no** hay migración automática.
+
+> **Atención:** si tu código depende de que los parámetros solo se hereden de
+> padres con ruta vacía, establece la estrategia antigua explícitamente:
+> ```typescript
+> provideRouter(routes, withRouterConfig({
+>   paramsInheritanceStrategy: 'emptyOnly',
+> }));
+> ```
+
+Además: `RouterLink` recibe un input `browserUrl` (URL mostrada distinta de la
+real), e `isActive` ahora está disponible como **Signal**.
+
+## 7. El compilador de plantillas se vuelve más estricto e inteligente
+
+- `strictTemplates` es el **valor por defecto**.
+- El optional chaining se comporta como en TypeScript: `project?.author` ahora
+  devuelve `undefined` en lugar de `null` (la migración envuelve los puntos
+  afectados automáticamente).
+- Novedades en las plantillas: spread de objetos/arrays, arrow functions con
+  return implícito, comprobaciones `instanceof` y verificación exhaustiva de
+  uniones mediante `@default never(...)`.
+
+## 8. Testing: Vitest por defecto
+
+Karma es historia. Los proyectos nuevos usan **Vitest** como test runner —
+considerablemente más rápido en suites grandes. Para el cambio hay schematics:
+
+```bash
+ng generate @angular/core:migrate-karma-to-vitest
+```
+
+`fakeAsync`, `flush` y `waitForAsync` funcionan con Vitest si añades
+`"zone.js/plugins/vitest-patch"` a los polyfills.
+
+## 9. Seguridad y SSR
+
+Angular 22 es también un **security release** que afecta sobre todo a los
+despliegues SSR. `platform-server` ahora protege contra Server-Side Request
+Forgery (SSRF) y path hijacking, rechaza URLs sospechosas y relativas al
+protocolo, y la sanitización es más estricta en los bindings dinámicos
+`href`/`xlink:href`. Además, **Incremental Hydration** pasa a ser el valor por
+defecto — `withIncrementalHydration()` está deprecado.
+
+## 10. Tooling de IA
+
+La novedad es el paso hacia el desarrollo asistido por agentes: **Angular Skills**
+(`npx skills add`) incorporan guías amigables para agentes al proyecto, y mediante
+herramientas **WebMCP** experimentales (`declareExperimentalWebMcpTool()`) se
+pueden hacer accesibles partes de la app para los agentes. La integración con
+Chrome DevTools puede exponer el grafo de signals y de DI.
+
+## Checklist de actualización
+
+1. Asegúrate de tener **Node 22 + TypeScript 6** — las versiones más antiguas ya
+   no son compatibles.
+2. Ejecuta `ng update @angular/core @angular/cli`.
+3. Revisa los diffs de migración **uno a uno** — especialmente los parámetros del
+   router (sin auto-migración) y el progreso de subida.
+4. ¿Tests en verde? Entonces, opcionalmente, migra Karma → Vitest.
+5. Introduce las funciones nuevas de forma gradual: Signal Forms y `httpResource`
+   primero en módulos nuevos, no como un rewrite big-bang.
+
+## Conclusión
+
+Angular 21 dio comienzo a la era de los signals, **Angular 22 la convierte en el
+estándar**. Quien ya trabaja signal-first obtiene sobre todo APIs estables y
+mejores valores por defecto casi de regalo. El mayor obstáculo en el día a día no
+es una función nueva, sino la herencia de parámetros del router que ha cambiado —
+es lo primero que conviene mirar.
+
+---
+
+*Fuentes: [Angular v22 Release (angular.dev)](https://angular.dev/events/v22),
+["What's new in Angular 22.0" — Ninja Squad](https://blog.ninja-squad.com/2026/06/03/what-is-new-angular-22.0),
+["Angular 22 at a glance" — ANGULARarchitects](https://www.angulararchitects.io/en/blog/angular-22-the-most-important-new-features-at-a-glance/).*

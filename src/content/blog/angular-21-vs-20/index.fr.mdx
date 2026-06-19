@@ -1,0 +1,162 @@
+---
+title: "Angular 21 vs. 20 — la version de nettoyage"
+date: 2025-12-08
+excerpt: "Si Angular 20 a stabilisé les Signals, alors Angular 21 balaie les anciens patterns : zoneless devient le réglage par défaut, les Signal Forms arrivent (encore expérimentales) et Vitest remplace Karma. Les changements les plus importants avec du code et des conseils de migration."
+tags: ["angular", "frontend", "upgrade"]
+cover: /blog/angular-21-vs-20/cover.svg
+---
+
+Angular **21** est sorti le **20 novembre 2025**. Le résumé le plus
+parlant du passage depuis la **20** : *La version 20 a stabilisé les Signals,
+la version 21 supprime les anciens patterns.* zone.js est optionnel, Karma appartient au passé,
+et RxJS est peu à peu relégué à la marge.
+
+## Les changements en un coup d'œil
+
+| Domaine | Angular 20 | Angular 21 |
+|---|---|---|
+| Change Detection | zone.js | **zoneless par défaut** (nouveaux projets) |
+| Formulaires | Reactive / Template-driven | **+ Signal Forms** (expérimental) |
+| Test runner | Karma/Jasmine | **Vitest par défaut** |
+| Accessibilité | — | **`@angular/aria`** (Preview) |
+| Outillage IA | serveur MCP (de base) | **serveur MCP étendu** |
+| Héritage technique | déprécié depuis la v19 | **supprimé** |
+
+> **Conseil préalable :** L'essentiel est migré via `ng update` et les
+> schematics fournis. zoneless et Vitest sont prêts pour la production — seuls les Signal
+> Forms sont encore **expérimentaux** en v21, donc à utiliser de façon
+> réfléchie et ciblée.
+
+## 1. Zoneless est le nouveau réglage par défaut
+
+Le changement le plus fondamental : les nouveaux projets démarrent **sans zone.js**. Jusqu'à présent,
+zone.js « monkey-patchait » chaque événement du navigateur (chaque `setTimeout`, chaque
+`Promise`, chaque event listener) afin de vérifier ensuite l'ensemble de l'arbre des
+composants à la recherche de changements. Zoneless remplace cela : **les Signals signalent eux-mêmes leurs
+changements**, et Angular ne vérifie plus que de façon ciblée.
+
+![Avec zone.js vs. zoneless](/blog/angular-21-vs-20/zoneless.svg)
+
+Les projets existants continuent de fonctionner — tu peux explicitement revenir à zone.js :
+
+```typescript
+bootstrapApplication(AppComponent, {
+  providers: [provideZoneChangeDetection()],
+});
+```
+
+> **Attention :** Zoneless présuppose un travail propre — `OnPush` et
+> des structures de données immuables. Quiconque mute encore des valeurs directement et se fie au
+> comportement « vérifie partout » de zone.js devrait refactoriser avant de basculer.
+
+## 2. Signal Forms (expérimental)
+
+Angular 21 introduit une API de formulaires entièrement repensée, bâtie nativement sur les
+Signals — fini l'abonnement à `valueChanges` et fini `takeUntil(this.destroy$)`.
+La fonction `form()` transforme un signal en un `FieldTree` :
+
+```typescript
+filter = signal({
+  from: 'Graz',
+  to: 'Hamburg',
+  details: { maxLayovers: 0, maxPrice: 200 },
+  layovers: [{ airport: '', minDuration: 0 }],
+});
+
+filterForm = form(this.filter, (path) => {
+  required(path.from);
+  minLength(path.from, 3);
+});
+```
+
+Des validateurs intégrés comme `required` et `minLength` sont fournis ; tes
+propres règles s'écrivent via `validate`. Les groupes composés et répétés (autrefois
+FormGroup / FormArray) deviennent nettement plus simples.
+
+> **Conseil :** En v21, les Signal Forms sont **expérimentales** — parfaites pour expérimenter dans
+> des fonctionnalités nouvelles et circonscrites, mais pas encore pour des formulaires critiques pour l'activité.
+> Elles ne deviennent stables qu'avec Angular 22.
+
+## 3. Vitest remplace Karma
+
+Les nouveaux projets utilisent **Vitest** au lieu de Karma/Jasmine — selon l'équipe Angular, des exécutions de tests jusqu'à
+**10× plus rapides**. Pour les specs existants, il y a un schematic :
+
+```bash
+ng g @schematics/angular:refactor-jasmine-vitest
+```
+
+Dans le code de test, c'est surtout la syntaxe des spies qui change :
+
+```typescript
+// avant (Jasmine):  spyOn(flightService, 'find')
+const spy = vi.spyOn(flightService, 'find').mockImplementation(() => of([]));
+
+vi.useFakeTimers();
+await vi.runAllTimersAsync();
+```
+
+Le mode navigateur avec intégration de Playwright est également possible.
+
+## 4. @angular/aria — des briques accessibles
+
+Nouveauté : le paquet **`@angular/aria`** (Developer Preview) : des directives headless et accessibles
+qui mettent en œuvre les patterns WAI-ARIA — par ex. pour les grids :
+
+```html
+<table ngGrid class="data-table">
+  <thead>
+    <tr ngGridRow>
+      <th ngGridCell>Von</th>
+    </tr>
+  </thead>
+</table>
+```
+
+Tu obtiens des rôles corrects, la navigation au clavier et la gestion du focus sans
+les construire toi-même — le style reste entièrement à ta charge.
+
+## 5. Serveur MCP étendu (outillage IA)
+
+Le **serveur MCP** intégré à la CLI reçoit davantage d'outils pour
+le développement assisté par IA :
+
+```bash
+ng mcp        # démarrer le serveur MCP
+ng mcp -E     # activer les outils expérimentaux
+```
+
+Parmi eux figurent notamment `find_examples`, `get_best_practices`,
+`search_documentation`, `onpush_zoneless_migration`, un `ai_tutor` et le
+(expérimental) `modernize`.
+
+## 6. Héritage technique supprimé
+
+Angular 21 fait définitivement le ménage parmi plusieurs **API marquées comme dépréciées depuis la v19**.
+Si ton projet utilise encore d'anciens appels, `ng update` te montrera les
+emplacements concernés — ici, il vaut la peine de regarder de près le diff de migration.
+
+## Checklist de mise à niveau
+
+1. Exécuter `ng update @angular/core @angular/cli`.
+2. Garder **zoneless** actif au début uniquement dans les nouveaux projets ; amener d'abord les applications existantes
+   à `OnPush` + immutabilité, puis basculer.
+3. Garder les tests au vert — éventuellement migrer Karma → Vitest.
+4. Traiter les API supprimées listées dans le rapport de migration.
+5. Tester les Signal Forms uniquement dans des fonctionnalités nouvelles et circonscrites.
+
+## Conclusion
+
+Angular 20 a consolidé la base des signals, **Angular 21 en tire les
+conséquences** : sans zone.js, sans Karma, avec une API de formulaires
+signal-native à l'horizon. Le plus grand pas pratique, c'est zoneless — et c'est précisément
+celui qui rapporte le plus si tu construis de toute façon déjà en signal-first.
+
+La suite est expliquée dans l'article de continuation :
+[Angular 22 vs. 21 — ce qui est vraiment nouveau](/blog/angular-22-vs-21).
+
+---
+
+*Sources : [« What's new in Angular 21 » — ANGULARarchitects](https://www.angulararchitects.io/blog/whats-new-in-angular-21-signal-forms-zone-less-vitest-angular-aria-cli-with-mcp-server/),
+[Angular 21 Release — InfoQ](https://www.infoq.com/news/2025/11/angular-21-released),
+[Angular 21 — Angular.love](https://angular.love/angular-21-whats-new).*
