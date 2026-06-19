@@ -570,6 +570,7 @@ function applyParallax(
   nearLayer,
   meadowLayer,
   frontLayer,
+  meadowFgLayer,
   animators,
   immediate = false,
 ) {
@@ -586,6 +587,7 @@ function applyParallax(
     if (farLayer) gsap.set(farLayer, { xPercent: values.far })
     if (nearLayer) gsap.set(nearLayer, { xPercent: values.near })
     if (meadowLayer) gsap.set(meadowLayer, { xPercent: values.front })
+    if (meadowFgLayer) gsap.set(meadowFgLayer, { xPercent: values.front })
     if (frontLayer) gsap.set(frontLayer, { xPercent: values.front })
     return
   }
@@ -594,6 +596,7 @@ function applyParallax(
   if (animators.farTo) animators.farTo(values.far)
   if (animators.nearTo) animators.nearTo(values.near)
   if (animators.meadowTo) animators.meadowTo(values.front)
+  if (animators.meadowFgTo) animators.meadowFgTo(values.front)
   if (animators.frontTo) animators.frontTo(values.front)
 }
 
@@ -604,6 +607,7 @@ export function useJourneyParallax(
   nearLayerRef,
   meadowLayerRef,
   frontLayerRef,
+  meadowFgLayerRef,
   stageRef,
 ) {
   useEffect(() => {
@@ -614,6 +618,7 @@ export function useJourneyParallax(
     const nearLayer = nearLayerRef?.current
     const meadowLayer = meadowLayerRef?.current
     const frontLayer = frontLayerRef?.current
+    const meadowFgLayer = meadowFgLayerRef?.current
     if (!track || !layer) return undefined
 
     const animators = {
@@ -633,6 +638,10 @@ export function useJourneyParallax(
         duration: 0.25,
         ease: 'power2.out',
       }) : null,
+      meadowFgTo: meadowFgLayer ? gsap.quickTo(meadowFgLayer, 'xPercent', {
+        duration: 0.25,
+        ease: 'power2.out',
+      }) : null,
       frontTo: frontLayer ? gsap.quickTo(frontLayer, 'xPercent', {
         duration: 0.25,
         ease: 'power2.out',
@@ -640,7 +649,7 @@ export function useJourneyParallax(
     }
 
     const sync = (immediate = false) => {
-      applyParallax(track, layer, farLayer, nearLayer, meadowLayer, frontLayer, animators, immediate)
+      applyParallax(track, layer, farLayer, nearLayer, meadowLayer, frontLayer, meadowFgLayer, animators, immediate)
     }
 
     sync(true)
@@ -663,9 +672,10 @@ export function useJourneyParallax(
       if (farLayer) gsap.set(farLayer, { clearProps: 'transform' })
       if (nearLayer) gsap.set(nearLayer, { clearProps: 'transform' })
       if (meadowLayer) gsap.set(meadowLayer, { clearProps: 'transform' })
+      if (meadowFgLayer) gsap.set(meadowFgLayer, { clearProps: 'transform' })
       if (frontLayer) gsap.set(frontLayer, { clearProps: 'transform' })
     }
-  }, [trackRef, layerRef, farLayerRef, nearLayerRef, meadowLayerRef, frontLayerRef, stageRef])
+  }, [trackRef, layerRef, farLayerRef, nearLayerRef, meadowLayerRef, frontLayerRef, meadowFgLayerRef, stageRef])
 }
 
 function getMobileScrollSpan(track) {
@@ -1057,6 +1067,32 @@ export function useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalR
     const stage = stageRef.current
     if (!track || !stage) return undefined
 
+    const mobileMq = window.matchMedia('(max-width: 899px)')
+
+    function getMeadowBottomPx() {
+      const raw = getComputedStyle(stage).getPropertyValue('--journey-meadow-bottom').trim()
+      const value = parseFloat(raw)
+      return Number.isFinite(value) ? value : 40
+    }
+
+    function syncPortalMount(portal, anchorRect, stageRect) {
+      const props = {
+        left: anchorRect.left - stageRect.left,
+        width: anchorRect.width,
+        height: anchorRect.height,
+      }
+
+      if (mobileMq.matches) {
+        props.top = 'auto'
+        props.bottom = getMeadowBottomPx() + 11
+      } else {
+        props.top = anchorRect.top - stageRect.top
+        props.bottom = 'auto'
+      }
+
+      gsap.set(portal, props)
+    }
+
     const sync = () => {
       const startPortal = startPortalRef.current
       const endPortal = endPortalRef.current
@@ -1068,18 +1104,8 @@ export function useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalR
       const startRect = startAnchor.getBoundingClientRect()
       const endRect = endAnchor.getBoundingClientRect()
 
-      gsap.set(startPortal, {
-        left: startRect.left - stageRect.left,
-        top: startRect.top - stageRect.top,
-        width: startRect.width,
-        height: startRect.height,
-      })
-      gsap.set(endPortal, {
-        left: endRect.left - stageRect.left,
-        top: endRect.top - stageRect.top,
-        width: endRect.width,
-        height: endRect.height,
-      })
+      syncPortalMount(startPortal, startRect, stageRect)
+      syncPortalMount(endPortal, endRect, stageRect)
     }
 
     refreshJourneyMetrics(track)
@@ -1089,6 +1115,7 @@ export function useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalR
 
     track.addEventListener('scroll', sync, { passive: true })
     window.addEventListener('resize', sync)
+    mobileMq.addEventListener('change', sync)
     gsap.ticker.add(sync)
 
     const resizeObserver = typeof ResizeObserver !== 'undefined'
@@ -1101,6 +1128,7 @@ export function useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalR
       cancelAnimationFrame(rafId)
       track.removeEventListener('scroll', sync)
       window.removeEventListener('resize', sync)
+      mobileMq.removeEventListener('change', sync)
       gsap.ticker.remove(sync)
       resizeObserver?.disconnect()
     }

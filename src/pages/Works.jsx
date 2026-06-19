@@ -30,6 +30,7 @@ export default function Works() {
   const layerRainRef = useRef(null)
   const layerNearRef = useRef(null)
   const layerMeadowRef = useRef(null)
+  const layerMeadowFgRef = useRef(null)
   const layerFrontRef = useRef(null)
   const startPortalRef = useRef(null)
   const endPortalRef = useRef(null)
@@ -42,7 +43,7 @@ export default function Works() {
   useJourneyWalker(trackRef, walkerRef)
   useJourneyRockDepth(trackRef, walkerRef)
   useJourneyWheel(pageRef, trackRef, stageRef)
-  useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef, layerMeadowRef, layerFrontRef, stageRef)
+  useJourneyParallax(trackRef, layerRef, layerFarRef, layerNearRef, layerMeadowRef, layerFrontRef, layerMeadowFgRef, stageRef)
   useJourneyMobileScroll(stageRef, trackRef, pageRef)
   useJourneySkyGlow(stageRef, theme)
   useJourneyRain(stageRef, layerRainRef, theme)
@@ -159,6 +160,10 @@ export default function Works() {
 
           <div className="journey-track__spacer" aria-hidden />
           <div className="journey-track__loop-buffer" aria-hidden />
+        </div>
+
+        <div className="journey-layer journey-layer--meadow-fg" ref={layerMeadowFgRef} aria-hidden>
+          <div className="journey-meadow-strip journey-meadow-strip--foreground" aria-hidden />
         </div>
 
         <div className="journey-dots" aria-hidden>
