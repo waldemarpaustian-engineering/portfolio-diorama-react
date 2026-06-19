@@ -1228,7 +1228,7 @@ html[data-theme="dark"] .journey-walker__frame {
     display: none;
   }
   .journey-chapter {
-    flex: 0 0 clamp(268px, 80vw, 372px);
+    flex: 0 0 388px;
     width: auto;
     max-width: none;
     display: flex;
@@ -1242,10 +1242,23 @@ html[data-theme="dark"] .journey-walker__frame {
     scroll-snap-align: none;
     translate: 0 2px;
   }
-  .journey-chapter--slot-1,
+  .journey-chapter--slot-1 {
+    flex: 0 0 420px;
+  }
   .journey-chapter--slot-2,
   .journey-chapter--slot-5 {
-    flex: 0 0 clamp(284px, 86vw, 400px);
+    flex: 0 0 436px;
+  }
+  .journey-chapter--slot-1 .journey-note {
+    max-width: 420px;
+  }
+  .journey-chapter--slot-2 .journey-note,
+  .journey-chapter--slot-5 .journey-note {
+    max-width: 436px;
+  }
+  .journey-chapter--slot-2 .journey-note__body,
+  .journey-chapter--slot-5 .journey-note__body {
+    padding-bottom: 21%;
   }
   .journey-chapter__scene {
     display: none;
@@ -1259,15 +1272,14 @@ html[data-theme="dark"] .journey-walker__frame {
   }
   .journey-note {
     align-self: center;
-    width: auto;
-    max-width: 100%;
-    max-height: min(46vh, 360px);
-    height: auto;
+    width: 100%;
+    max-width: 388px;
     aspect-ratio: 1024 / 768;
+    height: auto;
   }
   .journey-note .journey-chapter__text {
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 0.9375rem;
+    line-height: 1.45;
   }
   .journey-portal-anchor,
   .journey-portal-mount {
