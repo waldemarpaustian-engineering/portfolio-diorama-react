@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" width="1000" height="440" role="img" aria-label="Empfohlener Startup-Stack 2026">
+  <rect width="1000" height="440" rx="18" fill="#eef6fc"/>
+  <text x="500" y="46" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">The recommended startup stack — 2026</text>
+
+  <g font-family="-apple-system, sans-serif">
+    <!-- rows -->
+    <g>
+      <rect x="120" y="76" width="760" height="48" rx="10" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+      <text x="150" y="106" font-size="15" font-weight="700" fill="#7a7782">Frontend</text>
+      <text x="420" y="106" font-size="16" font-weight="600" fill="#2b2a33">React + Next.js (App Router)</text>
+    </g>
+    <g>
+      <rect x="120" y="134" width="760" height="48" rx="10" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+      <text x="150" y="164" font-size="15" font-weight="700" fill="#7a7782">UI / Design</text>
+      <text x="420" y="164" font-size="16" font-weight="600" fill="#2b2a33">Tailwind + shadcn/ui</text>
+    </g>
+    <g>
+      <rect x="120" y="192" width="760" height="48" rx="10" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+      <text x="150" y="222" font-size="15" font-weight="700" fill="#7a7782">Backend</text>
+      <text x="420" y="222" font-size="16" font-weight="600" fill="#2b2a33">Node.js  —  or Python/FastAPI for ML</text>
+    </g>
+    <g>
+      <rect x="120" y="250" width="760" height="48" rx="10" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+      <text x="150" y="280" font-size="15" font-weight="700" fill="#7a7782">Database</text>
+      <text x="420" y="280" font-size="16" font-weight="600" fill="#2b2a33">PostgreSQL  (+ Prisma / Drizzle)</text>
+    </g>
+    <g>
+      <rect x="120" y="308" width="760" height="48" rx="10" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+      <text x="150" y="338" font-size="15" font-weight="700" fill="#7a7782">Deploy</text>
+      <text x="420" y="338" font-size="16" font-weight="600" fill="#2b2a33">Vercel  ·  Railway / Fly / Render</text>
+    </g>
+    <g>
+      <rect x="120" y="366" width="760" height="48" rx="10" fill="#eaf3fb" stroke="#4a7fd4" stroke-width="2"/>
+      <text x="150" y="396" font-size="15" font-weight="700" fill="#4a7fd4">AI Dev</text>
+      <text x="420" y="396" font-size="16" font-weight="700" fill="#2b6cb0">Cursor / Claude Code + Copilot</text>
+    </g>
+  </g>
+</svg>
