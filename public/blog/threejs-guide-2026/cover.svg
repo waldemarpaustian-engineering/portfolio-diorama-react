@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Three.js Leitfaden 2026">
+  <defs>
+    <linearGradient id="skyT" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d4f5"/>
+      <stop offset="0.6" stop-color="#cbe5f7"/>
+      <stop offset="1" stop-color="#eef6fc"/>
+    </linearGradient>
+    <radialGradient id="sphere" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#9fd0f5"/>
+      <stop offset="1" stop-color="#3d6fc0"/>
+    </radialGradient>
+    <linearGradient id="cubeTT" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7eb8e8"/>
+      <stop offset="1" stop-color="#4a7fd4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#skyT)"/>
+
+  <!-- light source -->
+  <circle cx="1010" cy="120" r="34" fill="#ffe9b8"/>
+  <g stroke="#ffd27a" stroke-width="4" stroke-linecap="round" opacity="0.7">
+    <line x1="1010" y1="60" x2="1010" y2="78"/>
+    <line x1="1010" y1="162" x2="1010" y2="180"/>
+    <line x1="950" y1="120" x2="968" y2="120"/>
+    <line x1="1052" y1="120" x2="1070" y2="120"/>
+  </g>
+
+  <!-- sphere -->
+  <circle cx="800" cy="380" r="90" fill="url(#sphere)"/>
+  <ellipse cx="800" cy="490" rx="80" ry="16" fill="#7aa8d8" opacity="0.35"/>
+
+  <!-- cube -->
+  <g transform="translate(1000 360)">
+    <path d="M0 -85 L74 -42 L74 42 L0 85 L-74 42 L-74 -42 Z" fill="none" stroke="#bcd6ee" stroke-width="3"/>
+    <path d="M0 -85 L74 -42 L0 0 L-74 -42 Z" fill="url(#cubeTT)"/>
+    <path d="M0 0 L74 -42 L74 42 L0 85 Z" fill="#5d9fe4"/>
+    <path d="M0 0 L-74 -42 L-74 42 L0 85 Z" fill="#3d6fc0"/>
+  </g>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33">
+    <text x="110" y="250" font-size="92" font-weight="800" letter-spacing="-3">Three.js</text>
+    <text x="112" y="318" font-size="36" font-weight="600" fill="#4a7fd4">3D im Browser — der große Leitfaden</text>
+    <text x="116" y="372" font-size="24" font-weight="500" fill="#7a7782">Scene · Camera · Renderer · WebGPU · R3F — 2026</text>
+  </g>
+</svg>

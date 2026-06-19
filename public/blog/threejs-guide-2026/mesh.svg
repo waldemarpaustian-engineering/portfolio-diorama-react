@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320" width="1000" height="320" role="img" aria-label="Geometry plus Material ergibt Mesh">
+  <rect width="1000" height="320" rx="18" fill="#eef6fc"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Geometry + Material = Mesh</text>
+
+  <g font-family="-apple-system, sans-serif">
+    <!-- geometry -->
+    <rect x="50" y="90" width="200" height="150" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+    <text x="150" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#3d6fc0">Geometry</text>
+    <path d="M150 150 L200 175 L200 215 L150 240 L100 215 L100 175 Z" fill="none" stroke="#5d9fe4" stroke-width="2"/>
+    <path d="M150 150 L200 175 L150 200 L100 175 Z" fill="none" stroke="#5d9fe4" stroke-width="2"/>
+    <text x="150" y="270" text-anchor="middle" font-size="12" fill="#7a7782">shape: vertices &amp; faces</text>
+
+    <text x="285" y="175" text-anchor="middle" font-size="34" font-weight="700" fill="#7a7782">+</text>
+
+    <!-- material -->
+    <rect x="320" y="90" width="200" height="150" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+    <text x="420" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#35a06b">Material</text>
+    <circle cx="420" cy="185" r="42" fill="#9fd0f5"/>
+    <circle cx="405" cy="170" r="12" fill="#fff" opacity="0.6"/>
+    <text x="420" y="270" text-anchor="middle" font-size="12" fill="#7a7782">surface: color, light, texture</text>
+
+    <text x="555" y="175" text-anchor="middle" font-size="34" font-weight="700" fill="#7a7782">=</text>
+
+    <!-- mesh -->
+    <rect x="590" y="90" width="200" height="150" rx="14" fill="#eaf3fb" stroke="#4a7fd4" stroke-width="2"/>
+    <text x="690" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#4a7fd4">Mesh</text>
+    <g transform="translate(690 185)">
+      <path d="M0 -38 L33 -19 L33 19 L0 38 L-33 19 L-33 -19 Z" fill="#5d9fe4"/>
+      <path d="M0 -38 L33 -19 L0 0 L-33 -19 Z" fill="#7eb8e8"/>
+      <path d="M0 0 L33 -19 L33 19 L0 38 Z" fill="#3d6fc0"/>
+    </g>
+    <text x="690" y="270" text-anchor="middle" font-size="12" fill="#7a7782">a renderable object</text>
+
+    <!-- arrow to scene -->
+    <path d="M810 165 l30 0 l0 -8 l18 13 l-18 13 l0 -8 l-30 0 z" fill="#4a7fd4"/>
+    <text x="900" y="170" text-anchor="middle" font-size="15" font-weight="700" fill="#3d6fc0">scene.add(mesh)</text>
+  </g>
+</svg>

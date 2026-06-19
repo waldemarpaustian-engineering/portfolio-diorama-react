@@ -1,0 +1,918 @@
+---
+title: "Three.js — the big guide to 3D in the browser (2026)"
+date: 2026-06-19
+excerpt: "3D on the web grew up in 2026: WebGPU is production-ready, the ecosystem is huge, demand is rising. This in-depth guide takes you from your first scene through geometries, materials, lights, textures, model loading, shadows, raycasting and performance all the way to WebGPU/TSL and React Three Fiber. With plenty of examples and a detailed cheat sheet to download."
+tags: ["threejs", "3d", "webgl", "frontend"]
+cover: /blog/threejs-guide-2026/cover.svg
+---
+
+3D in the browser long carried a whiff of "demo" — impressive, but rarely
+suited for everyday use. That has changed. **Three.js** is in 2026 the
+undisputed standard library for 3D on the web (with roughly 270× more downloads
+than the next alternative), demand for WebGL/3D skills is growing noticeably,
+and with **WebGPU** a new, considerably more performant rendering foundation
+has become production-ready. In short: there has never been a better time to
+learn Three.js.
+
+This guide is deliberately thorough. It takes you by the hand from the very
+first scene and walks you step by step through all the important building blocks
+— with plenty of code examples, rules of thumb and notes from real-world
+practice. By the end you'll understand not only the *how*, but also the *why*.
+(A small piece of proof on the side: the interactive island on this blog's home
+page itself runs on Three.js.)
+
+Why 3D on the web at all? Because it makes things possible that flat surfaces
+can't: viewing products from every angle, making complex data spatially
+graspable, creating immersive brand experiences, building configurators where
+you repaint a car live. From the online furniture store to the architecture
+studio to the game prototype — wherever spatiality, interaction or that certain
+"wow" matters, 3D has become a realistic tool rather than an expensive gimmick.
+And Three.js is the bridge that gets you there: it takes the raw complexity of
+WebGL/WebGPU off your hands and gives you an understandable, well-documented API.
+
+<a className="blog-download" href="/downloads/threejs-cheatsheet.pdf" download>⬇&nbsp; Three.js Cheat-Sheet (PDF)</a>
+
+## The mental model: Scene, Camera, Renderer
+
+Before we write code, the most important picture to hold in your head. Every
+Three.js application — no matter how complex — consists at its core of **three**
+things:
+
+![The three core building blocks: Scene, Camera, Renderer](/blog/threejs-guide-2026/trinity.svg)
+
+- The **Scene** is your 3D world — a container into which you place everything
+  that should be visible: objects, lights, helper lines.
+- The **Camera** is your viewpoint. It determines *from where* and *how* (narrow
+  or wide-angle) you look into the scene.
+- The **Renderer** takes the Scene and the Camera and draws the result onto an
+  HTML `<canvas>` — either via WebGL or, newly, via WebGPU.
+
+The magic happens in a single line that you call again and again:
+`renderer.render(scene, camera)`. Once you've internalized this trio, the rest
+is detail work. Everything we're about to discuss — geometries, materials,
+lights — are just things that you *place into the Scene*.
+
+## Installation & project setup
+
+In practice, you're best off starting a Three.js project with a modern bundler
+like **Vite** — it gives you instant hot-reloading and takes care of the
+modules. Three commands, and you're ready to go:
+
+```bash
+npm create vite@latest my-3d-app
+cd my-3d-app
+npm install three
+```
+
+Then you import Three.js directly from the package. The **addons** (loaders,
+controls, post-processing — everything that isn't in the core) live under
+`three/addons/`:
+
+```js
+import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+```
+
+It's important to understand this split: the **core** of Three.js is
+deliberately lean, everything else you pull in deliberately as an addon. That
+keeps your bundle small. For React projects you install `@react-three/fiber` and
+`@react-three/drei` instead — more on that below.
+
+## The first scene
+
+Enough theory. Here is a complete, minimal Three.js application that shows a
+rotating cube:
+
+```js
+import * as THREE from 'three'
+
+// 1. Scene
+const scene = new THREE.Scene()
+
+// 2. Camera (field of view 75°, aspect ratio, near, far)
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+camera.position.z = 5
+
+// 3. Renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true })
+renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+document.body.appendChild(renderer.domElement)
+
+// A cube: geometry + material = mesh
+const cube = new THREE.Mesh(
+  new THREE.BoxGeometry(1, 1, 1),
+  new THREE.MeshStandardMaterial({ color: 0x4a7fd4 }),
+)
+scene.add(cube)
+
+// Light (StandardMaterial needs light — otherwise everything stays black)
+scene.add(new THREE.AmbientLight(0xffffff, 0.6))
+const dir = new THREE.DirectionalLight(0xffffff, 1)
+dir.position.set(5, 5, 5)
+scene.add(dir)
+
+// Render loop
+function animate() {
+  requestAnimationFrame(animate)
+  cube.rotation.x += 0.01
+  cube.rotation.y += 0.01
+  renderer.render(scene, camera)
+}
+animate()
+```
+
+That's the fundamentals in 30 lines. Note the most common beginner mistake,
+which is already addressed here: a `MeshStandardMaterial` reacts to light —
+**without a light source your object stays black**. Anyone whose first bug is
+"I see nothing" has almost always forgotten the light.
+
+Walk through the code calmly once, because it contains the whole pattern in
+miniature: we create the **three pillars** (Scene, Camera, Renderer), place the
+camera a bit back (otherwise we're stuck *inside* the cube), hang the
+renderer's `<canvas>` into the page, build a mesh from geometry and material and
+place it together with two lights into the Scene. The `animate` loop finally
+changes the rotation each frame and calls `render`. Two details deserve
+attention: `setPixelRatio` with an upper limit of 2 prevents Retina displays
+from overloading the GPU with triple the pixel grid, and `antialias: true`
+smooths the edges. This structure — setup, then loop — you'll find again in
+*every* Three.js app; only what happens in between gets bigger.
+
+## The render loop
+
+The `animate` loop above is the beating heart of every Three.js app.
+`requestAnimationFrame` calls the function before each frame (usually 60 times
+per second), you update positions, rotations or animations, and right at the end
+you call `renderer.render()` to draw the new state.
+
+An important pro tip: animations should **not** be coupled to the frame rate,
+but to the **elapsed time** — otherwise your animation runs twice as fast on a
+120 Hz monitor. That's what the `Clock` is for:
+
+```js
+const clock = new THREE.Clock()
+
+function animate() {
+  requestAnimationFrame(animate)
+  const delta = clock.getDelta() // seconds since the last frame
+  cube.rotation.y += delta * 1.0  // exactly 1 radian per second, always
+  renderer.render(scene, camera)
+}
+```
+
+> **Rule of thumb:** Multiply every movement by `delta`. That way your scene
+> looks equally fast on every device — from the 30 Hz phone to the 144 Hz
+> monitor.
+
+## Window size & responsive
+
+A detail that must not be missing from any real project and that beginners
+nevertheless like to forget: when the window size changes, you have to update
+both the renderer and the camera — otherwise your scene is displayed distorted
+or cut off. The camera needs a newly computed **aspect ratio**, and after every
+change to camera parameters an `updateProjectionMatrix()` is due:
+
+```js
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix() // needed after every camera change
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+```
+
+This small piece of code is the difference between a scene that only looks good
+on your screen and one that works everywhere. Remember the rule: **if you change
+anything about the camera projection, call `updateProjectionMatrix()`.**
+
+## Geometries: the shape
+
+A **geometry** describes the *shape* of an object — its vertices and faces.
+Three.js ships with a whole library of ready-made primitives:
+
+```js
+new THREE.BoxGeometry(1, 1, 1)              // cube/box
+new THREE.SphereGeometry(1, 32, 32)         // sphere (radius, segments)
+new THREE.PlaneGeometry(10, 10)             // plane (often the floor)
+new THREE.CylinderGeometry(1, 1, 2, 32)     // cylinder
+new THREE.TorusGeometry(1, 0.4, 16, 100)    // donut
+new THREE.ConeGeometry(1, 2, 32)            // cone
+```
+
+The segment counts determine the smoothness: a sphere with 8 segments looks
+angular, with 64 nicely round — but costs more computing power. Here you make
+one of your first **performance decisions**: as smooth as necessary, not as
+smooth as possible. For complex shapes you'll later load finished models anyway,
+rather than assembling them from primitives.
+
+## Materials: the surface
+
+If the geometry is the shape, the **material** is the surface — color, shine,
+how it reacts to light. The choice of material decisively determines the look.
+The most important ones:
+
+```js
+// Does NOT react to light — always equally bright, the fastest
+new THREE.MeshBasicMaterial({ color: 0xff0000 })
+
+// Physically plausible (PBR) — the standard for realistic scenes
+new THREE.MeshStandardMaterial({ color: 0x4a7fd4, roughness: 0.4, metalness: 0.1 })
+
+// Like Standard, but with extras: clearcoat, transmission (glass), …
+new THREE.MeshPhysicalMaterial({ transmission: 1, thickness: 0.5 })
+
+// Cheap light effect without PBR — for stylized looks
+new THREE.MeshLambertMaterial({ color: 0x00ff00 })
+```
+
+Rule of thumb for 2026: **`MeshStandardMaterial` is the default.** It uses
+Physically Based Rendering (PBR), looks good in realistic lighting situations
+and is supported by almost all workflows. `MeshBasicMaterial` you take for
+UI-like elements or helper geometry that needs no light;
+`MeshPhysicalMaterial` for glass, lacquer and refined surfaces.
+
+![Geometry + material = mesh](/blog/threejs-guide-2026/mesh.svg)
+
+The **mesh** connects both: `new THREE.Mesh(geometry, material)`. Only the mesh
+is a visible object that you place into the world with `scene.add(mesh)`.
+
+## Colors & tone mapping
+
+A topic that massively influences the look of a scene and is nevertheless often
+overlooked: **color management**. Modern Three.js works internally in a linear
+color space and outputs in sRGB at the end — that's the correct default since
+the newer versions. What you have to watch out for: color textures need
+`colorSpace = THREE.SRGBColorSpace`, technical maps (normal, roughness) on the
+other hand *don't* (they contain data, not colors).
+
+The biggest visual difference comes from **tone mapping** — the way bright and
+dark areas are mapped to the screen. Instead of glaringly burning out, a
+filmic tone mapping produces a soft, "photographic" look:
+
+```js
+renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.toneMappingExposure = 1.0 // fine-tune the brightness
+```
+
+These two lines alone lift many scenes from "flat and digital" to "rich and
+realistic." In combination with an HDRI environment, that's often the
+difference between an amateur and a professional result.
+
+## Lights
+
+Light is almost more important in the 3D world than the objects themselves — it
+decides mood, depth and realism. The most important light types:
+
+```js
+// Base brightness from everywhere, without direction and without shadow
+scene.add(new THREE.AmbientLight(0xffffff, 0.4))
+
+// Parallel light from one direction — like the sun (casts shadows)
+const sun = new THREE.DirectionalLight(0xffffff, 1)
+sun.position.set(5, 10, 7)
+scene.add(sun)
+
+// Point light — radiates in all directions, like a light bulb
+scene.add(new THREE.PointLight(0xffaa00, 1, 20))
+
+// Spotlight — directed cone, like a stage spotlight
+scene.add(new THREE.SpotLight(0xffffff, 1))
+
+// Sky light above, ground light below — very natural for outdoor scenes
+scene.add(new THREE.HemisphereLight(0x87ceeb, 0x444422, 0.8))
+```
+
+The classic lighting for a good scene is a combination: a bit of **ambient** as
+base brightness so that nothing is pitch black, plus a **directional light** as
+the key light for form and shadow. This "key-plus-fill" combination brings 80%
+of the result. For especially realistic looks one later often replaces the
+manual lights with an **environment map** (more on that below).
+
+A common beginner reflex is to simply add *more* light until it's bright enough
+— and in the end the scene looks flat and overexposed. Better: a few,
+deliberately placed lights with clear roles. A strong key light from one
+direction creates form and shadow, a weak fill light from the opposite side
+takes the hardness out of the shadows, and a bit of ambient lifts the black
+level. Think like a photographer, not like a floodlight operator — contrast and
+direction make the depth, not sheer brightness. Note also that light intensities
+(`intensity`) have realistic orders of magnitude since Three.js's physically
+correct defaults — a little experimenting with lil-gui helps to get a feel for
+it.
+
+## Transformations, groups & the scene graph
+
+Every object in Three.js — meshes, lights, cameras, even the Scene itself — has
+three fundamental properties with which you position it in space:
+
+```js
+mesh.position.set(2, 0, -3) // x, y, z
+mesh.rotation.y = Math.PI / 4 // rotation in radians (not degrees!)
+mesh.scale.set(2, 2, 2) // double the size
+```
+
+Important: rotations are in **radians**, not degrees. `Math.PI` corresponds to
+180°. Anyone coming from the CSS world likes to stumble here.
+
+You bundle multiple objects in a **group** — and everything you do with the
+group affects its children:
+
+```js
+const robot = new THREE.Group()
+robot.add(head, body, leftArm, rightArm)
+scene.add(robot)
+robot.rotation.y = 0.5 // turns the whole robot, arms and all
+```
+
+That's the **scene graph**: a hierarchy in which the transformation of a parent
+carries the children along — exactly like nested `<div>`s in the DOM. This
+concept is powerful: a solar system, for example, you build by placing planets
+into a group rotating around the sun, and moons in turn into a group rotating
+around the planet.
+
+## Camera & controls
+
+The `PerspectiveCamera` is by far the most common — it mimics the human eye
+(distant things appear smaller). Its most important parameter is the **field of
+view** (FOV): small values (35°) look like a telephoto lens, large ones (75°+)
+wide-angle and more "distorted." Alongside it there's the `OrthographicCamera`
+without perspective — ideal for isometric looks, technical views or 2D-in-3D.
+
+So that the user can rotate the scene with the mouse, one almost always takes
+the **OrbitControls** (an official addon):
+
+```js
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true // gentle, lazy trailing
+
+function animate() {
+  requestAnimationFrame(animate)
+  controls.update() // needed each frame when damping is on
+  renderer.render(scene, camera)
+}
+```
+
+`enableDamping` gives the camera that pleasantly lazy feel — almost always leave
+it switched on. Alongside it there are specialized controls (`FlyControls`,
+`PointerLockControls` for first-person), but OrbitControls covers 90% of cases.
+
+## Coordinates & a bit of math
+
+You won't quite get by in Three.js without a little 3D math — but don't worry,
+the most important part is manageable. The **coordinate system** is "Y-up": the
+X axis points to the right, **Y up**, Z out of the screen toward you. Anyone
+coming from 2D canvas or the DOM has to get used above all to the upward-pointing
+Y and the third dimension.
+
+The most important data type is the **`Vector3`** — three numbers for a
+position, direction or scale. It appears everywhere and brings useful methods
+along:
+
+```js
+const a = new THREE.Vector3(1, 2, 3)
+a.add(new THREE.Vector3(0, 1, 0)) // translate
+a.length()                        // distance to the origin
+a.distanceTo(other)               // distance between two points
+a.normalize()                     // bring to length 1 (pure direction)
+```
+
+For rotations Three.js internally uses **quaternions** (to avoid the notorious
+"gimbal lock"), but in everyday use the simpler `rotation` with Euler angles in
+radians usually suffices. Handy too is `object.lookAt(x, y, z)`, which
+automatically orients an object toward a point — for instance a camera toward
+the center of the scene. These few tools — `Vector3`, `rotation`, `lookAt` —
+cover a large part of daily 3D math.
+
+## Helpers & debugging
+
+Debugging 3D is tough without aids — you can't see *where* the camera is or
+*where* a light points. Three.js ships visual **helpers** for that, which you
+temporarily place into the scene:
+
+```js
+scene.add(new THREE.AxesHelper(5))            // show X/Y/Z axes
+scene.add(new THREE.GridHelper(20, 20))       // floor grid
+scene.add(new THREE.DirectionalLightHelper(sun)) // shows light direction
+scene.add(new THREE.CameraHelper(camera))     // viewing frustum of the camera
+```
+
+Indispensable too is **lil-gui** (the successor of dat.GUI): a tiny control
+panel with which you can change values at runtime via sliders — light intensity,
+colors, positions. Instead of reloading after every change, you turn the
+sliders live until it fits:
+
+```js
+import GUI from 'lil-gui'
+const gui = new GUI()
+gui.add(sun, 'intensity', 0, 5)
+gui.add(cube.position, 'y', -5, 5)
+gui.addColor(material, 'color')
+```
+
+Together with **`stats.js`** (which shows the frames per second), these are the
+two tools that speed up your Three.js everyday work the most. Get used to them
+from the start.
+
+## Textures
+
+A single-color surface is rarely enough — real materials have structure.
+**Textures** are images that you lay over a geometry. They're loaded with the
+`TextureLoader`:
+
+```js
+const loader = new THREE.TextureLoader()
+const colorMap = loader.load('/textures/brick_color.jpg')
+colorMap.colorSpace = THREE.SRGBColorSpace // important for correct colors!
+
+const material = new THREE.MeshStandardMaterial({
+  map: colorMap,                                   // color/albedo
+  normalMap: loader.load('/textures/brick_normal.jpg'),    // surface details
+  roughnessMap: loader.load('/textures/brick_rough.jpg'),  // shine variation
+})
+```
+
+A realistic PBR material rarely consists of *one* texture, but of several
+"maps," each of which controls one aspect: `map` (color), `normalMap` (fakes
+fine bumps without real geometry), `roughnessMap`, `metalnessMap`, `aoMap`
+(ambient occlusion). Together they produce astonishing realism from a flat
+plane. Be sure to watch the correct **color space** (`SRGBColorSpace` for color
+textures) — otherwise the colors look washed out.
+
+How a texture lies on the surface is determined by the **UV coordinates** of the
+geometry — a kind of "unwrapping" that maps each point of the 3D surface to a
+spot in the 2D image. With the primitives that's already built in; with your own
+models the UV map comes from the 3D program. Practically important above all is
+**tiling**: if a small texture is to fill a large surface (say tiles on a
+floor), you set repetition instead of stretching the image:
+
+```js
+colorMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping
+colorMap.repeat.set(8, 8) // 8×8 tiles instead of stretched once
+```
+
+With many assets a **LoadingManager** is worthwhile, which reports the overall
+progress to you (perfect for a loading bar):
+
+```js
+const manager = new THREE.LoadingManager()
+manager.onProgress = (url, loaded, total) => {
+  console.log(`${loaded}/${total} loaded`)
+}
+const texLoader = new THREE.TextureLoader(manager)
+```
+
+## Loading 3D models: GLTF
+
+Cubes and spheres are nice, but real projects need real models — characters,
+furniture, vehicles. The standard format on the web is **glTF** (often packed as
+`.glb`); it's compact, loads fast and carries geometry, materials, textures and
+even animations in a single file:
+
+```js
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+
+const loader = new GLTFLoader()
+loader.load('/models/robot.glb', (gltf) => {
+  scene.add(gltf.scene)
+
+  // If the model brings animations along:
+  const mixer = new THREE.AnimationMixer(gltf.scene)
+  mixer.clipAction(gltf.animations[0]).play()
+  // then call mixer.update(delta) in the render loop
+})
+```
+
+For large models, **Draco** or **Meshopt** compression is worthwhile, which
+drastically lowers the file size (the `GLTFLoader` supports both via additional
+decoders). Where do you get models? From platforms like Sketchfab, Poly Haven
+(free, CC0) or from Blender, the de-facto standard tool that exports glTF
+directly.
+
+## Playing animations
+
+Many glTF models bring ready-made animations along — a walking figure, an
+opening door, a circling drone. You play these via the **`AnimationMixer`**,
+which manages the individual animation clips. Important: the mixer must be
+updated with the time delta in **every frame**, otherwise nothing moves:
+
+```js
+let mixer
+loader.load('/models/character.glb', (gltf) => {
+  scene.add(gltf.scene)
+  mixer = new THREE.AnimationMixer(gltf.scene)
+
+  // you find all bundled clips in gltf.animations
+  const walk = mixer.clipAction(gltf.animations.find((c) => c.name === 'Walk'))
+  walk.play()
+})
+
+function animate() {
+  requestAnimationFrame(animate)
+  if (mixer) mixer.update(clock.getDelta()) // advance the animation
+  renderer.render(scene, camera)
+}
+```
+
+Multiple clips can be cross-faded (`crossFadeTo`) — so "Idle" softly becomes
+"Walk" without a hard cut. For your own, code-driven animations (a camera move,
+a fading-in object) you combine Three.js incidentally superbly with **GSAP**:
+GSAP simply animates the `position` or `rotation` values of your objects while
+Three.js renders. More on that in the [GSAP guide](/blog/gsap-guide-2026).
+
+## Shadows
+
+Shadows anchor objects in space and immediately produce depth — but cost
+computing power and have to be activated in **three** places, which is a classic
+stumbling trap:
+
+```js
+renderer.shadowMap.enabled = true        // 1. on the renderer
+sun.castShadow = true                    // 2. the light casts shadows
+mesh.castShadow = true                   // 3a. object casts shadow
+floor.receiveShadow = true               // 3b. floor receives shadow
+```
+
+If you forget one of these places, the shadow stays off. Only `DirectionalLight`,
+`PointLight` and `SpotLight` can cast shadows at all — `AmbientLight` and
+`HemisphereLight` can't (they have no direction, after all). For nicer edges you
+raise the shadow resolution via `sun.shadow.mapSize`, and you should lay the
+shadow camera (`sun.shadow.camera`) tightly around your scene — that improves
+quality noticeably.
+
+Two typical shadow problems you should know: **shadow acne** (a streaky moiré
+pattern on lit surfaces) you fix with a small `sun.shadow.bias` (around
+`-0.0001`). And **hard, pixelated edges** are softened by a softer shadow type
+like `renderer.shadowMap.type = THREE.PCFSoftShadowMap`. Keep in mind that
+shadows are expensive: the larger the `mapSize` and the more shadow-casting
+lights, the higher the load. In practice you get astonishingly far with *one*
+shadow-casting key light and an honestly sized shadow map — more is rarely
+needed.
+
+## Environment: fog, background & environment maps
+
+Three tools lift a scene from "floats in nothing" to "real place":
+
+```js
+// Fog — objects fade in the distance, produces depth and atmosphere
+scene.fog = new THREE.Fog(0xcccccc, 10, 50)
+
+// Background color instead of black
+scene.background = new THREE.Color(0x87ceeb)
+```
+
+The biggest quality jump, however, comes from an **environment map** — a 360°
+image (usually an HDRI) that simulates the surroundings. It lights the scene
+realistically *and* reflects in metallic/shiny surfaces:
+
+```js
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+
+new RGBELoader().load('/env/sky.hdr', (hdr) => {
+  hdr.mapping = THREE.EquirectangularReflectionMapping
+  scene.environment = hdr   // lights all PBR materials
+  scene.background = hdr     // optional: also as background
+})
+```
+
+A good HDRI often replaces half the lighting setup — especially for product
+visuals and realistic scenes it's the single most effective tool. Free HDRIs are
+available at Poly Haven.
+
+## Interaction: raycasting
+
+How do you find out which 3D object the user clicked? A click gives you 2D
+screen coordinates, but your objects live in 3D space. The bridge is the
+**Raycaster**: it shoots a ray from the camera through the mouse cursor into the
+scene and reports which objects it hits:
+
+```js
+const raycaster = new THREE.Raycaster()
+const mouse = new THREE.Vector2()
+
+window.addEventListener('click', (event) => {
+  // convert the mouse position into the range -1..+1
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+
+  raycaster.setFromCamera(mouse, camera)
+  const hits = raycaster.intersectObjects(scene.children, true)
+
+  if (hits.length > 0) {
+    hits[0].object.material.color.set(0xff0000) // color the first hit object
+  }
+})
+```
+
+Raycasting is the foundation for every click, hover and drag interaction in 3D —
+from "click on the product for details" to complete 3D configurators.
+
+## Particles: stars, dust & magic
+
+Effects like a starry sky, snow, sparks or flying dust consist of hundreds or
+thousands of tiny points. You draw these not as individual meshes (far too
+expensive), but as **`Points`** — a single geometry made of many vertices,
+rendered in one go:
+
+```js
+const count = 2000
+const positions = new Float32Array(count * 3) // 3 values (x,y,z) per point
+for (let i = 0; i < positions.length; i++) {
+  positions[i] = (Math.random() - 0.5) * 50
+}
+
+const geometry = new THREE.BufferGeometry()
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+const stars = new THREE.Points(
+  geometry,
+  new THREE.PointsMaterial({ size: 0.1, color: 0xffffff }),
+)
+scene.add(stars)
+```
+
+Here you encounter the **`BufferGeometry`** directly for the first time — the
+low-level form with which you build geometry from raw number arrays. This is
+exactly how all primitives work internally too. With a small texture as `map` in
+the `PointsMaterial`, the squares become soft points of light or snowflakes.
+
+## 2D in 3D space: sprites & HTML labels
+
+Often you want to show flat things in the 3D scene that *always face the camera*
+— labels, icons, health bars. A **`Sprite`** is exactly that: a plane that
+automatically turns toward the camera (this is called "billboarding"):
+
+```js
+const label = new THREE.Sprite(
+  new THREE.SpriteMaterial({ map: iconTexture }),
+)
+label.position.set(0, 2, 0)
+scene.add(label)
+```
+
+For real **HTML content** in 3D space (clickable tooltips, buttons, formatted
+text) one uses the `CSS2DRenderer` or `CSS3DRenderer` — they position normal DOM
+elements at 3D coordinates. In React Three Fiber the elegant `<Html>` component
+from Drei handles that. This way you combine the sharpness of HTML text with the
+spatiality of the 3D scene.
+
+## Performance: the be-all and end-all
+
+3D is computation-intensive, and the difference between "smooth" and "stuttering"
+often lies in a few decisions. The most important levers:
+
+**Reduce draw calls through instancing.** If you have hundreds of identical
+objects (trees, grass, particles), don't draw them individually, but as **one**
+instanced mesh — the biggest single win:
+
+```js
+const mesh = new THREE.InstancedMesh(geometry, material, 1000)
+const dummy = new THREE.Object3D()
+for (let i = 0; i < 1000; i++) {
+  dummy.position.set(Math.random() * 100, 0, Math.random() * 100)
+  dummy.updateMatrix()
+  mesh.setMatrixAt(i, dummy.matrix)
+}
+scene.add(mesh) // 1000 objects, 1 draw call
+```
+
+**Further levers:**
+
+- **Limit the pixel ratio:** `renderer.setPixelRatio(Math.min(devicePixelRatio, 2))` —
+  the full Retina grid (3×) costs enormously and brings barely visible gains.
+- **LOD (Level of Detail):** Three.js's `THREE.LOD` shows differently detailed
+  versions of a model depending on distance.
+- **On-demand rendering:** if nothing moves, you don't have to render 60 times
+  per second — render only on changes.
+- **Clean up:** Three.js doesn't clean up automatically. When you remove objects,
+  call `geometry.dispose()` and `material.dispose()`, otherwise GPU memory leaks.
+- **Measure instead of guess:** tools like `stats.js` (FPS display) and the
+  Spector.js debugger show you where it's stuck.
+
+**Textures are often the secret memory hog.** A 4K texture occupies around 64 MB
+in GPU memory — a few of those, and mobile devices buckle. Scale textures down
+to the actually needed size, use compressed formats (KTX2/Basis) for large
+projects, and remember that multiple small objects with the *same* texture and
+the *same* material are cheap, because Three.js can efficiently batch them.
+
+One last, often underestimated lever is the **geometry complexity**: a model
+loaded from the web quickly has hundreds of thousands of polygons, half of which
+are never seen. Tools like the Blender decimate modifier or gltf-transform reduce
+that before the asset even lands in the browser — the best optimization step
+often happens *before* Three.js.
+
+> **Rule of thumb:** Never optimize into the blue. First measure with `stats.js`,
+> find the biggest bottleneck (usually draw calls or texture size), then tackle
+> it specifically.
+
+## WebGPU & TSL — the future, now
+
+The biggest news of 2026: **WebGPU** is production-ready. Since Three.js r171 the
+`WebGPURenderer` can be imported without configuration, and with WebGPU support
+in Safari 26 the browser coverage is practically universal. WebGPU is the modern
+graphics API that replaces WebGL — with better performance, access to **compute
+shaders** (computations on the GPU) and a cleaner foundation:
+
+```js
+import * as THREE from 'three/webgpu'
+
+const renderer = new THREE.WebGPURenderer({ antialias: true })
+await renderer.init() // WebGPU initializes asynchronously
+```
+
+The recommendation for new projects: **WebGPU with WebGL fallback** — the
+`WebGPURenderer` automatically falls back to WebGL when WebGPU is missing. One
+caveat: custom shaders (`ShaderMaterial`/`RawShaderMaterial`) **no longer** work
+directly in the WebGPURenderer — they have to be ported to **TSL** (the *Three.js
+Shading Language*) and the new node-material system. TSL is JavaScript-based and
+works for *both* renderers, which eases the transition. Anyone starting fresh
+today is best off learning the node/TSL model right away.
+
+What does WebGPU concretely bring? Firstly **performance**: less overhead per draw
+call, which keeps more complex scenes smooth. Secondly — and this is the real
+door-opener — **compute shaders**: computations directly on the GPU, independent
+of rendering. This makes particle systems with millions of particles, physics
+simulations or even AI inference in the browser realistic. For the daily "rotate
+a cube and show a model" you barely notice the difference; for what becomes
+*newly possible* in the coming years, WebGPU is the foundation. My advice: use the
+`WebGPURenderer` today (with fallback), but don't get hung up on TSL yet as long
+as you're not writing your own shaders — the standard materials run identically
+on both renderers.
+
+## Post-processing
+
+Effects like bloom (glow), depth of field, vignette or glitch arise in
+**post-processing** — after the scene has been rendered, you lay effect layers
+over it. Classically via the `EffectComposer`:
+
+```js
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(scene, camera))
+composer.addPass(new UnrealBloomPass(/* ... */))
+// in the loop: composer.render() instead of renderer.render()
+```
+
+Bloom on bright spots is the fastest way to an "expensive" look — use sparingly,
+otherwise the scene overdrives.
+
+## React Three Fiber: Three.js for React
+
+If your app runs in React, you don't want to operate Three.js imperatively
+alongside it. **React Three Fiber (R3F)** wraps Three.js in a declarative,
+component-based API — the same scene as at the very top looks like this:
+
+```jsx
+import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
+import { useRef } from 'react'
+
+function Cube() {
+  const ref = useRef()
+  useFrame((_, delta) => (ref.current.rotation.y += delta))
+  return (
+    <mesh ref={ref}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="#4a7fd4" />
+    </mesh>
+  )
+}
+
+export default function Scene() {
+  return (
+    <Canvas camera={{ position: [0, 0, 5] }}>
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[5, 5, 5]} />
+      <Cube />
+      <OrbitControls enableDamping />
+    </Canvas>
+  )
+}
+```
+
+The appeal: you get React's component model, state and reusability — and a huge
+ecosystem on top. **Drei** supplies hundreds of ready-made helpers (cameras,
+loaders, materials, text), **Rapier** physics, **R3F-Postprocessing** effects.
+For React projects R3F is in 2026 clearly the recommended path, because it
+elegantly closes the gap between React's declarative model and Three.js's
+imperative nature. (Exactly this combination powers the island scene of this
+blog.)
+
+## Common beginner mistakes
+
+Almost every Three.js start runs into the same traps. Anyone who knows them
+saves themselves many frustrating hours:
+
+- **"I only see black."** Mostly the **light** is missing (with
+  `MeshStandardMaterial`) or the **camera looks in the wrong direction** or is
+  stuck inside the object. Try inserting a `MeshBasicMaterial` (needs no light)
+  and an `AxesHelper` to orient yourself.
+- **Rotation in degrees instead of radians.** `mesh.rotation.y = 90` does *not*
+  turn by 90° — 90 radians are over 14 full revolutions. Use
+  `THREE.MathUtils.degToRad(90)` or compute with `Math.PI`.
+- **Resize forgotten.** The scene looks good on load, but is distorted after
+  enlarging the window. The resize handler from above is missing.
+- **Animation coupled to the frame rate.** Without `delta` everything runs too
+  fast on fast monitors. Always multiply with `clock.getDelta()`.
+- **Wrong color space.** Textures look washed out because
+  `texture.colorSpace = THREE.SRGBColorSpace` is missing.
+- **Memory leaks.** Simply removing objects from the scene isn't enough — without
+  `geometry.dispose()` and `material.dispose()` GPU memory stays occupied. In
+  long-lived apps (especially with React) this leads to creeping performance
+  loss.
+- **Optimizing too early.** A sphere with 256 segments where 32 suffice; 4K
+  textures for a thumbnail-sized object. First measure, then optimize.
+
+This list covers a felt 80% of all "why doesn't this work?" moments. When
+something doesn't work, go through it once from the top.
+
+## A complete mini walkthrough
+
+Let's mentally assemble the building blocks into a small, realistic scene — a
+plain product viewer, as often appears on e-commerce or portfolio pages. The
+setup would be:
+
+1. **Build the scaffolding** — Scene, PerspectiveCamera at `[0, 1, 4]`,
+   WebGLRenderer with limited pixel ratio and resize handler.
+2. **Set the lighting** — a discreet `AmbientLight` plus an HDRI as
+   `scene.environment` for realistic reflections on the product.
+3. **Load the model** — the product as `.glb` via the `GLTFLoader`, meanwhile a
+   loading bar via the `LoadingManager`.
+4. **Floor & shadows** — a `PlaneGeometry` as floor with `receiveShadow`, the
+   key light with `castShadow`, the renderer with activated `shadowMap`.
+5. **Controls** — `OrbitControls` with `enableDamping` so that the user can
+   rotate the product, plus sensibly limited zoom distances.
+6. **Interaction** — a `Raycaster` that recognizes a click on certain parts and,
+   e.g., shows info.
+7. **Polish** — a touch of bloom in post-processing, a gentle auto-rotation while
+   idle, perhaps a small GSAP camera move on load.
+
+What stands out here: there's **not a single new building block** that we haven't
+already discussed. That's exactly the point — sophisticated Three.js scenes are
+rarely *complicated*, they are *composed*. If you master the individual parts,
+you master the whole.
+
+## Three.js or an alternative?
+
+Three.js is not the only tool, but for most the right default. Briefly placed:
+**Babylon.js** is the enterprise alternative with built-in physics, XR support
+and a visual editor — strong when you want a complete "engine." **Spline** is
+no-code 3D in the browser: faster to results, but less control, ideal for
+marketing 3D without deep WebGL knowledge. **PixiJS** is the specialist for fast
+**2D** rendering. For maximum flexibility, the largest ecosystem and the best AI
+support (thanks to training data), Three.js remains the safest choice.
+
+## Cheat sheet to download
+
+All the important classes, methods and patterns from this guide — setup,
+geometries, materials, lights, textures, loading, shadows, raycasting,
+performance, WebGPU and R3F — I've summarized on a multi-page cheat sheet:
+
+<a className="blog-download" href="/downloads/threejs-cheatsheet.pdf" download>⬇&nbsp; Download the Three.js Cheat-Sheet (PDF)</a>
+<span className="blog-download__hint">Multi-page quick reference — the entire API landscape at a glance.</span>
+
+## Conclusion & next steps
+
+Three.js seems intimidating at first, but the foundation is small: **Scene,
+Camera, Renderer**, plus meshes from geometry and material, some light, and the
+render loop. With these building blocks you already build astonishingly much.
+From there you extend as needed — textures for realism, GLTF for real models,
+raycasting for interaction, instancing for performance.
+
+My advice for learning: build something **small, concrete** (a product viewer,
+an animated scene, a 3D portfolio element) instead of only reading tutorials.
+You learn Three.js by rotating, lighting and experimenting.
+
+### Learning resources
+
+If you want to dive deeper, these are the best places to go:
+
+- **The official docs** (threejs.org) with over 300 live-editable examples — by
+  far the most valuable resource. Find an example that comes close to your goal
+  and read its source code.
+- **Three.js Journey** by Bruno Simon — the best-known, very thorough course if
+  you want to learn structured from zero.
+- **The Three.js forum** and the **pmndrs/R3F Discord** — a helpful community,
+  especially for the tricky WebGL and performance questions.
+- **Codrops** and **Awwwards** for inspiration and advanced techniques.
+- **Poly Haven** (HDRIs, textures, models, all CC0) and **Sketchfab** for
+  assets.
+
+One last tip: read other people's Three.js code. Almost every impressive 3D site
+has its logic viewable in the browser — and nothing teaches faster than seeing
+how others have solved a problem.
+
+How 3D fits into the larger UI landscape is covered in the overview
+[The best UI web technologies 2026](/blog/ui-web-tech-2026); for animation the
+[GSAP guide](/blog/gsap-guide-2026) is a good match.
+
+---
+
+*Sources: [Three.js Docs & Manual](https://threejs.org/docs/),
+[What's New in Three.js 2026 (WebGPU) — Utsubo](https://www.utsubo.com/blog/threejs-2026-what-changed),
+[Three.js r184 Release](https://github.com/mrdoob/three.js/releases),
+[React Three Fiber Docs](https://r3f.docs.pmnd.rs/).*
