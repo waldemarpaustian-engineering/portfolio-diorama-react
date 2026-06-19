@@ -42,7 +42,9 @@ export function useScrollReveal(selector = '[data-reveal]', deps = []) {
             io.unobserve(entry.target)
           })
       },
-      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+      // threshold 0 (not a ratio) so elements taller than the viewport — e.g. a
+      // long article's whole prose block — still trigger; rootMargin handles timing.
+      { threshold: 0, rootMargin: '0px 0px -8% 0px' },
     )
 
     items.forEach((el) => io.observe(el))

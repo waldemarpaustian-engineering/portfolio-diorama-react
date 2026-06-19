@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="1000" height="520" role="img" aria-label="Der UI-Werkzeugkasten 2026 nach Kategorie">
+  <rect width="1000" height="520" rx="18" fill="#eef6fc"/>
+  <text x="500" y="46" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">The 2026 UI toolkit, by category</text>
+
+  <g font-family="-apple-system, sans-serif">
+    <!-- card template: title + picks -->
+    <!-- Animation -->
+    <rect x="40" y="80" width="295" height="190" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+    <text x="60" y="112" font-size="17" font-weight="700" fill="#4a7fd4">Animation</text>
+    <text x="60" y="142" font-size="14.5" fill="#2b2a33">Motion — React default</text>
+    <text x="60" y="170" font-size="14.5" fill="#2b2a33">GSAP — complex timelines (free!)</text>
+    <text x="60" y="198" font-size="14.5" fill="#2b2a33">anime.js v4 — lightweight</text>
+    <text x="60" y="226" font-size="14.5" fill="#2b2a33">Lottie — vector / After Effects</text>
+    <text x="60" y="254" font-size="13.5" fill="#7a7782">WAAPI — native baseline</text>
+
+    <!-- Scroll -->
+    <rect x="352" y="80" width="295" height="190" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+    <text x="372" y="112" font-size="17" font-weight="700" fill="#35a06b">Scroll</text>
+    <text x="372" y="142" font-size="14.5" fill="#2b2a33">Lenis — smooth scroll (3 KB)</text>
+    <text x="372" y="170" font-size="14.5" fill="#2b2a33">GSAP ScrollTrigger</text>
+    <text x="372" y="198" font-size="14.5" fill="#2b2a33">CSS scroll-driven — native</text>
+    <text x="372" y="226" font-size="13.5" fill="#7a7782">for reveals &amp; progress bars</text>
+
+    <!-- 3D / WebGL -->
+    <rect x="664" y="80" width="296" height="190" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+    <text x="684" y="112" font-size="17" font-weight="700" fill="#3d6fc0">3D / WebGL</text>
+    <text x="684" y="142" font-size="14.5" fill="#2b2a33">Three.js — the default</text>
+    <text x="684" y="170" font-size="14.5" fill="#2b2a33">React Three Fiber + Drei</text>
+    <text x="684" y="198" font-size="14.5" fill="#2b2a33">Babylon.js — enterprise / XR</text>
+    <text x="684" y="226" font-size="14.5" fill="#2b2a33">Spline — no-code 3D</text>
+    <text x="684" y="254" font-size="13.5" fill="#7a7782">WebGPU now mainstream</text>
+
+    <!-- Modern CSS -->
+    <rect x="40" y="290" width="450" height="200" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+    <text x="60" y="322" font-size="17" font-weight="700" fill="#e07a3a">Modern CSS (native, no JS)</text>
+    <text x="60" y="352" font-size="14.5" fill="#2b2a33">View Transitions — app-like page changes</text>
+    <text x="60" y="380" font-size="14.5" fill="#2b2a33">Scroll-driven animations — off main thread</text>
+    <text x="60" y="408" font-size="14.5" fill="#2b2a33">Container Queries — component-level responsive</text>
+    <text x="60" y="436" font-size="14.5" fill="#2b2a33">:has() — the parent selector</text>
+    <text x="60" y="468" font-size="13.5" fill="#7a7782">replaces heavy JS for the easy 80%</text>
+
+    <!-- Styling / Components -->
+    <rect x="507" y="290" width="453" height="200" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+    <text x="527" y="322" font-size="17" font-weight="700" fill="#7a5cd0">Styling &amp; Components</text>
+    <text x="527" y="352" font-size="14.5" fill="#2b2a33">Tailwind — utility-first CSS</text>
+    <text x="527" y="380" font-size="14.5" fill="#2b2a33">shadcn/ui — copy-paste, you own the code</text>
+    <text x="527" y="408" font-size="14.5" fill="#2b2a33">Radix — accessible primitives</text>
+    <text x="527" y="436" font-size="14.5" fill="#2b2a33">Material UI / Ant — enterprise systems</text>
+    <text x="527" y="468" font-size="13.5" fill="#7a7782">the startup default: Tailwind + shadcn/ui</text>
+  </g>
+</svg>
