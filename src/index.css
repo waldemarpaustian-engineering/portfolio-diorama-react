@@ -1672,6 +1672,26 @@ html[data-theme="dark"][data-theme-transition="dawn"] .stage-backdrop {
   color: var(--muted);
   font-style: italic;
 }
+.blog-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+  padding: 14px 22px;
+  border-radius: 12px;
+  background: var(--surface-active-bg);
+  color: var(--surface-active-fg);
+  font-weight: 700;
+  font-size: 15.5px;
+  text-decoration: none;
+  border: 1px solid var(--surface-active-bg);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.blog-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -16px rgba(74, 127, 212, 0.7);
+}
+.blog-download__hint { display: block; margin-top: 6px; font-size: 13px; color: var(--muted); }
 .blog-prose code {
   font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: .88em;

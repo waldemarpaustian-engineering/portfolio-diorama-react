@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="1000" height="420" role="img" aria-label="ScrollTrigger: start, end, scrub und pin erklärt">
+  <rect width="1000" height="420" rx="18" fill="#eef6fc"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">ScrollTrigger anatomy</text>
+
+  <!-- viewport box -->
+  <rect x="120" y="80" width="320" height="300" rx="14" fill="#fff" stroke="#bcd6ee" stroke-width="2"/>
+  <text x="280" y="104" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="13" fill="#7a7782">viewport</text>
+
+  <!-- start line -->
+  <line x1="120" y1="150" x2="440" y2="150" stroke="#88CE02" stroke-width="3" stroke-dasharray="6 5"/>
+  <text x="450" y="155" font-family="ui-monospace, monospace" font-size="13" fill="#5fa30a">start: "top 80%"</text>
+
+  <!-- end line -->
+  <line x1="120" y1="320" x2="440" y2="320" stroke="#e0935a" stroke-width="3" stroke-dasharray="6 5"/>
+  <text x="450" y="325" font-family="ui-monospace, monospace" font-size="13" fill="#c46a2b">end: "bottom 20%"</text>
+
+  <!-- element -->
+  <rect x="200" y="190" width="160" height="90" rx="10" fill="#5d9fe4"/>
+  <text x="280" y="242" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#fff">.element</text>
+
+  <!-- progress arrow -->
+  <g transform="translate(620 110)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="15" font-weight="700" fill="#2b2a33">As you scroll between start &amp; end:</text>
+    <text x="0" y="44" font-family="ui-monospace, monospace" font-size="14" fill="#2b2a33">scrub: true</text>
+    <text x="0" y="66" font-family="-apple-system, sans-serif" font-size="13.5" fill="#7a7782">→ animation tied to scroll position</text>
+    <text x="0" y="108" font-family="ui-monospace, monospace" font-size="14" fill="#2b2a33">pin: true</text>
+    <text x="0" y="130" font-family="-apple-system, sans-serif" font-size="13.5" fill="#7a7782">→ element stays fixed while scrolling</text>
+    <text x="0" y="172" font-family="ui-monospace, monospace" font-size="14" fill="#2b2a33">toggleActions</text>
+    <text x="0" y="194" font-family="-apple-system, sans-serif" font-size="13.5" fill="#7a7782">→ play / reverse on enter &amp; leave</text>
+    <text x="0" y="236" font-family="ui-monospace, monospace" font-size="14" fill="#2b2a33">markers: true</text>
+    <text x="0" y="258" font-family="-apple-system, sans-serif" font-size="13.5" fill="#7a7782">→ debug start/end visually</text>
+  </g>
+</svg>

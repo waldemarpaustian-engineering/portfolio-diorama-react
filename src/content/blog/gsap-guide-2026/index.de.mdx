@@ -1,0 +1,491 @@
+---
+title: "GSAP 2026: Der praktische Leitfaden mit vielen Beispielen"
+date: 2026-06-19
+excerpt: "GSAP ist seit 2025 komplett kostenlos — inklusive aller früher kostenpflichtigen Plugins. Höchste Zeit für einen ausführlichen Einstieg: von der ersten Tween über Timelines, Eases und Stagger bis zu ScrollTrigger, SplitText und der React-Integration. Mit vielen Code-Beispielen und einem Cheat-Sheet zum Download."
+tags: ["gsap", "animation", "frontend", "tutorial"]
+cover: /blog/gsap-guide-2026/cover.svg
+---
+
+GSAP — die **GreenSock Animation Platform** — ist die wohl mächtigste
+Animations-Bibliothek im Web. Sie ist framework-agnostisch, extrem performant und
+beherrscht alles von der simplen Einblendung bis zur komplexen
+Scroll-Choreografie. Und die große Neuigkeit: Seit April 2025 (nach der Übernahme
+durch Webflow) ist GSAP **zu 100 % kostenlos** — inklusive **aller** Plugins, die
+früher nur zahlende Club-Mitglieder hatten, und auch für kommerzielle Projekte.
+
+Warum ist das „kostenlos" so eine große Sache? Jahrelang war GSAP zwar im Kern
+frei, aber die spektakulärsten Plugins — SplitText für Text-Effekte, MorphSVG fürs
+Form-Morphing — steckten hinter einer kostenpflichtigen „Club GreenSock"-
+Mitgliedschaft. Für viele kleine Teams und Soloentwickler war das eine echte
+Hürde. Mit der Übernahme durch Webflow (Oktober 2024) und der Freigabe im April
+2025 ist diese Mauer über Nacht gefallen: Das **komplette** Arsenal steht jetzt
+jedem offen, ohne Lizenzkosten, auch in kommerziellen Projekten. Für die gesamte
+Web-Animations-Szene ist das eine der wichtigsten Nachrichten der letzten Jahre.
+
+Dieser Leitfaden bringt dich von null auf produktiv: die Grundlagen, Timelines,
+die unterschätzten Eases, Stagger, das Killer-Plugin ScrollTrigger,
+Text-Animationen mit SplitText, SVG, und die saubere Integration in React. Viele
+Beispiele, eine Faustregel pro Abschnitt — und am Ende ein Cheat-Sheet zum
+Mitnehmen.
+
+<a className="blog-download" href="/downloads/gsap-cheatsheet.pdf" download>⬇&nbsp; GSAP Cheat-Sheet (PDF)</a>
+
+## Das mentale Modell
+
+Bevor wir in den Code springen, lohnt sich ein Satz zum Grundprinzip, denn er
+macht alles Weitere leichter. GSAP denkt in **Tweens**: Eine Tween ist eine
+Animation eines oder mehrerer Werte über eine Zeitspanne. Du sagst GSAP *was* sich
+ändern soll (`x`, `opacity`, `scale` …), *wie lange* es dauert (`duration`) und
+*mit welcher Kurve* (`ease`) — den Rest, also das 60-fps-Interpolieren Frame für
+Frame, erledigt die Engine. Mehrere Tweens fasst du in einer **Timeline**
+zusammen, und mit **Plugins** wie ScrollTrigger erweiterst du, *wann* und *wodurch*
+Animationen ausgelöst werden. Das ist im Grunde schon die ganze Architektur:
+Tweens, Timelines, Plugins. Wenn du diese drei Bausteine verinnerlicht hast,
+ergibt sich der Rest fast von selbst.
+
+Ein wichtiger Vorteil gegenüber CSS-Animationen: GSAP animiert **fast alles** —
+nicht nur CSS-Eigenschaften, sondern auch SVG-Attribute, Canvas-Werte,
+JavaScript-Objekte oder Zahlen, die du selbst weiterverarbeitest. Diese
+Universalität ist der Grund, warum GSAP auch 2026 das Werkzeug der Wahl für
+anspruchsvolle Bewegung bleibt.
+
+## Setup
+
+GSAP installierst du per npm oder bindest es per CDN ein. Plugins werden einmal
+registriert:
+
+```js
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+```
+
+Das war's. Kein Lizenzschlüssel mehr nötig — alle Plugins sind frei verfügbar.
+
+## Die Basis: gsap.to, from, fromTo & set
+
+Das Herz von GSAP ist die **Tween** — eine Animation von A nach B. Es gibt vier
+Grundformen, und mit ihnen kommst du schon erstaunlich weit.
+
+**`gsap.to()`** animiert von den *aktuellen* Werten zu den angegebenen:
+
+```js
+gsap.to('.box', { x: 300, rotation: 360, duration: 1 })
+```
+
+**`gsap.from()`** macht das Gegenteil — die Werte sind der *Start*, animiert wird
+zum aktuellen Zustand. Perfekt für Einblendungen:
+
+```js
+// Element fliegt von unten herein und wird sichtbar
+gsap.from('.card', { y: 60, opacity: 0, duration: 0.8 })
+```
+
+**`gsap.fromTo()`** gibt dir beide Enden explizit in die Hand:
+
+```js
+gsap.fromTo('.bar',
+  { scaleX: 0 },
+  { scaleX: 1, transformOrigin: 'left', duration: 0.6 },
+)
+```
+
+**`gsap.set()`** setzt Werte sofort, ohne Animation (nützlich für Startzustände):
+
+```js
+gsap.set('.modal', { autoAlpha: 0, y: 20 })
+```
+
+> **Tipp:** `autoAlpha` ist `opacity` plus `visibility` in einem — bei 0 wird das
+> Element auch wirklich aus dem Tab-Fluss genommen. Und: Animiere bevorzugt
+> `x`/`y`/`scale`/`rotation` (laufen auf der GPU) statt `left`/`top`/`width`.
+
+## Eases: die heimliche Geheimzutat
+
+Der Unterschied zwischen „billig" und „teuer" wirkender Bewegung sind selten die
+Werte — es ist das **Easing**, also die Beschleunigungskurve. GSAP bringt ein
+reichhaltiges Set mit:
+
+```js
+gsap.to('.x', { x: 300, ease: 'power2.out' })   // schneller Start, weiches Ende
+gsap.to('.y', { y: 200, ease: 'back.out(1.7)' }) // schießt leicht übers Ziel
+gsap.to('.z', { scale: 1, ease: 'elastic.out(1, 0.3)' }) // federt
+```
+
+Faustregel: **`power2.out` für UI** (Buttons, Karten, Menüs) — es fühlt sich
+reaktionsschnell an. `back` und `elastic` für verspielte Akzente. Lineares Easing
+(`none`) nur für Endlos-Loops oder scroll-gebundene Animationen.
+
+Warum ist Easing so entscheidend? Weil unser Gehirn Bewegung aus der echten Welt
+gewohnt ist — nichts beschleunigt oder stoppt dort schlagartig. Ein `*.out`-Ease
+(schneller Start, weiches Ausrollen) wirkt deshalb reaktionsschnell und natürlich,
+während `*.in` (langsamer Start) träge wirkt und sich eher für Dinge eignet, die
+*verschwinden*. Die `*.inOut`-Varianten sind die symmetrische Wahl für längere,
+„erzählende" Bewegungen. GSAP bringt unter `gsap.com/ease` einen interaktiven
+Visualizer mit, in dem du jede Kurve ausprobieren kannst — sehr zu empfehlen, um
+ein Gefühl dafür zu entwickeln. Wer ein einziges Easing lernt, lernt
+`power2.out`; wer zwei lernt, nimmt noch `back.out` dazu.
+
+## Timelines: Sequenzen ohne Verschachtelungs-Hölle
+
+Sobald mehrere Dinge nacheinander oder überlappend passieren sollen, willst du
+keine `setTimeout`-Kaskaden — du willst eine **Timeline**. Sie reiht Tweens auf
+und gibt dir volle Kontrolle über das Timing:
+
+```js
+const tl = gsap.timeline({ defaults: { duration: 0.5, ease: 'power2.out' } })
+
+tl.from('.logo', { y: -40, opacity: 0 })
+  .from('.headline', { x: -60, opacity: 0 })
+  .from('.cta', { scale: 0.8, opacity: 0 })
+```
+
+Der **Position-Parameter** ist das, was Timelines so stark macht. Er bestimmt,
+*wann* eine Tween startet:
+
+```js
+tl.from('.a', { opacity: 0 })
+  .from('.b', { opacity: 0 }, '<')      // zeitgleich mit der vorigen
+  .from('.c', { opacity: 0 }, '-=0.3')  // 0,3s vor dem Ende der vorigen
+  .from('.d', { opacity: 0 }, '+=0.2')  // 0,2s Pause danach
+  .from('.e', { opacity: 0 }, 'myLabel') // an einem Label
+```
+
+Eine Timeline lässt sich außerdem als Ganzes steuern — `tl.pause()`,
+`tl.play()`, `tl.reverse()`, `tl.timeScale(2)` (doppelte Geschwindigkeit). Das
+ist Gold wert für interaktive Sequenzen.
+
+Genau diese Steuerbarkeit ist ein unterschätzter Vorteil gegenüber
+CSS-Animationen. Ein typisches Muster: Du baust eine Timeline **pausiert** auf und
+spielst sie bei einer Interaktion ab — etwa beim Hover über eine Karte:
+
+```js
+const hover = gsap.timeline({ paused: true })
+hover.to('.card__img', { scale: 1.08, duration: 0.4 })
+     .to('.card__label', { y: 0, opacity: 1 }, 0)
+
+card.addEventListener('mouseenter', () => hover.play())
+card.addEventListener('mouseleave', () => hover.reverse())
+```
+
+Eine einzige Timeline, vorwärts beim Betreten, rückwärts beim Verlassen — sauber,
+performant und ohne doppelte CSS-Zustände. So etwas in reinem CSS konsistent
+hinzubekommen, ist überraschend fummelig.
+
+## Stagger: viele Elemente, ein Befehl
+
+Sollen viele Elemente *versetzt* animieren (Listen, Grids, Galerien), brauchst du
+keine Schleife — `stagger` erledigt das:
+
+```js
+gsap.from('.grid-item', {
+  opacity: 0,
+  y: 40,
+  duration: 0.5,
+  stagger: 0.08, // 0,08s Versatz zwischen den Elementen
+})
+```
+
+Stagger kann auch aus der Mitte oder vom Raster ausgehen:
+
+```js
+gsap.from('.cell', {
+  scale: 0,
+  stagger: { each: 0.05, from: 'center', grid: 'auto' },
+})
+```
+
+## ScrollTrigger: das Killer-Plugin
+
+Wenn ein einziges Plugin GSAP zum Standard für aufwändige Websites gemacht hat,
+dann **ScrollTrigger**. Es koppelt Animationen an die Scroll-Position — Reveals,
+Parallax, Pinning, Scrollytelling.
+
+![ScrollTrigger: start, end, scrub und pin](/blog/gsap-guide-2026/scrolltrigger.svg)
+
+Der einfachste Fall — etwas einblenden, wenn es in den Viewport scrollt:
+
+```js
+gsap.from('.section', {
+  opacity: 0,
+  y: 80,
+  scrollTrigger: {
+    trigger: '.section',
+    start: 'top 80%', // wenn die Oberkante 80% runter im Viewport ist
+    toggleActions: 'play none none reverse',
+  },
+})
+```
+
+**`scrub`** bindet den Fortschritt der Animation *direkt* an das Scrollen — die
+Animation läuft vor und zurück, wie du scrollst:
+
+```js
+gsap.to('.parallax', {
+  y: -200,
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: true, // oder eine Zahl für sanftes „Nachziehen", z.B. scrub: 1
+  },
+})
+```
+
+**`pin`** heftet ein Element fest, während man weiterscrollt — die Grundlage für
+fast jede „die Sektion bleibt stehen, während sich der Inhalt ändert"-Animation:
+
+```js
+ScrollTrigger.create({
+  trigger: '.panel',
+  start: 'top top',
+  end: '+=1000', // 1000px lang gepinnt
+  pin: true,
+})
+```
+
+Und ein Timeline-Beispiel mit Scrub — eine ganze Choreografie, an den Scroll
+gekoppelt:
+
+```js
+gsap.timeline({
+  scrollTrigger: { trigger: '.stage', start: 'top top', end: '+=1500', scrub: true, pin: true },
+})
+  .to('.layer-back', { x: -100 })
+  .to('.layer-mid', { x: -300 }, 0)
+  .to('.layer-front', { x: -600 }, 0)
+```
+
+> **Tipp:** Setze beim Entwickeln `markers: true` in den ScrollTrigger — dann
+> siehst du start und end als Linien im Browser. Spart enorm viel Rätselraten.
+
+### start und end richtig lesen
+
+Die `start`- und `end`-Syntax verwirrt am Anfang fast jeden, dabei ist sie simpel,
+wenn man das Schema kennt: Der **erste Wert** bezieht sich auf das *Trigger-
+Element*, der **zweite** auf den *Viewport*. `start: 'top 80%'` heißt also: „Wenn
+die **Oberkante** des Elements die **80-%-Linie** des Viewports erreicht" (also
+ziemlich weit unten am Bildschirm). `start: 'center center'` wäre „Element-Mitte
+trifft Viewport-Mitte". Für das Ende gilt dasselbe — und `end: '+=500'` ist eine
+praktische Abkürzung für „500 Pixel nach dem Start". Sobald dieses
+Element-zuerst-Viewport-danach-Schema sitzt, wird ScrollTrigger plötzlich
+berechenbar.
+
+Ein weiterer Punkt, der oft Zeit kostet: Lädt dein Inhalt **dynamisch** nach
+(Bilder, Schriften, asynchrone Daten), verschieben sich die Positionen — und
+ScrollTrigger rechnet mit veralteten Werten. Die Lösung ist ein Aufruf von
+`ScrollTrigger.refresh()`, nachdem sich das Layout stabilisiert hat. Viele
+„meine Animation startet an der falschen Stelle"-Probleme lösen sich damit in
+Luft auf.
+
+## Text animieren: SplitText
+
+Das früher kostenpflichtige **SplitText** (jetzt frei und um 50 % verkleinert)
+zerlegt Text in Zeichen, Wörter oder Zeilen — perfekt für Headline-Animationen:
+
+```js
+import { SplitText } from 'gsap/SplitText'
+gsap.registerPlugin(SplitText)
+
+const split = new SplitText('.headline', { type: 'chars' })
+
+gsap.from(split.chars, {
+  y: 40,
+  opacity: 0,
+  stagger: 0.03,
+  ease: 'back.out(2)',
+})
+```
+
+So entsteht der bekannte „Buchstaben fliegen einzeln herein"-Effekt mit zwei
+Zeilen Code.
+
+## SVG: DrawSVG, MorphSVG & MotionPath
+
+GSAP glänzt bei SVG-Animation. Drei freie Plugins lohnen sich besonders:
+
+- **DrawSVG** — lässt Linien/Pfade wie von Hand „gezeichnet" erscheinen:
+  ```js
+  gsap.from('.path', { drawSVG: '0%', duration: 2, ease: 'power1.inOut' })
+  ```
+- **MorphSVG** — verwandelt eine Form flüssig in eine andere:
+  ```js
+  gsap.to('#start', { morphSVG: '#end', duration: 1 })
+  ```
+- **MotionPathPlugin** — schickt ein Element entlang eines Pfades:
+  ```js
+  gsap.to('.rocket', { motionPath: { path: '#route', align: '#route', autoRotate: true }, duration: 4 })
+  ```
+
+## Flip: Layout-Animationen, die „unmöglich" wirken
+
+Das **Flip**-Plugin animiert Übergänge zwischen zwei Layout-Zuständen — etwa wenn
+ein Element die Position im DOM wechselt oder ein Grid sich umsortiert. Du nimmst
+den Zustand auf, änderst das DOM, und Flip animiert die Differenz:
+
+```js
+import { Flip } from 'gsap/Flip'
+gsap.registerPlugin(Flip)
+
+const state = Flip.getState('.item')   // 1. Zustand merken
+container.appendChild(item)            // 2. DOM ändern (Position springt)
+Flip.from(state, { duration: 0.6, ease: 'power2.inOut' }) // 3. Differenz animieren
+```
+
+Das ist die saubere Lösung für „shared element"-Übergänge und sortierbare Listen.
+
+## Die Plugin-Familie auf einen Blick
+
+Seit alle Plugins kostenlos sind, lohnt sich ein Überblick, was im Werkzeugkasten
+liegt — du musst nicht alles auf einmal lernen, aber es hilft zu wissen, dass es
+da ist:
+
+- **ScrollTrigger** — Animationen an die Scroll-Position koppeln (das wichtigste).
+- **ScrollSmoother** — sanftes, träges Scrollen, baut auf ScrollTrigger auf.
+- **SplitText** — Text in Zeichen/Wörter/Zeilen zerlegen, jetzt 50 % kleiner.
+- **DrawSVG / MorphSVG / MotionPath** — die drei großen SVG-Plugins.
+- **Flip** — Layout-Übergänge zwischen zwei Zuständen.
+- **Observer** — einheitliche Erkennung von Scroll-, Touch- und Pointer-Gesten.
+- **Draggable / Inertia** — Elemente ziehbar machen, mit physikalischem Ausrollen.
+
+Das Schöne: Sie folgen alle derselben API-Logik. Wer Tweens und Timelines
+verstanden hat, liest jedes dieser Plugins in Minuten. Du musst also nicht „GSAP
+plus zehn Bibliotheken" lernen, sondern **ein** zusammenhängendes System.
+
+## GSAP in React: useGSAP
+
+In React willst du Animationen sauber an den Komponenten-Lebenszyklus binden und
+beim Unmounten wieder aufräumen. Dafür gibt es den offiziellen **useGSAP**-Hook:
+
+```jsx
+import { useGSAP } from '@gsap/react'
+import { gsap } from 'gsap'
+
+function Hero() {
+  const container = useRef(null)
+
+  useGSAP(() => {
+    // alle hier erstellten Tweens werden automatisch beim Unmount aufgeräumt
+    gsap.from('.title', { y: 50, opacity: 0, duration: 0.8 })
+  }, { scope: container })
+
+  return <div ref={container}><h1 className="title">Hallo</h1></div>
+}
+```
+
+`scope` begrenzt die Selektoren auf den Container, und das automatische Cleanup
+verhindert Memory-Leaks und doppelte Animationen — gerade im StrictMode wichtig.
+
+## Performance & Barrierefreiheit
+
+Ein paar Regeln, die den Unterschied machen:
+
+- **Animiere `transform` und `opacity`** (laufen auf dem Compositor), nicht
+  Layout-Eigenschaften wie `width` oder `top`.
+- **Räum auf.** In React via `useGSAP`/`gsap.context`; sonst `tween.kill()` bzw.
+  `ScrollTrigger.kill()` beim Entfernen.
+- **Respektiere `prefers-reduced-motion`** — biete eine ruhige Variante an:
+  ```js
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!reduce) gsap.from('.x', { y: 40, opacity: 0 })
+  ```
+- **Nutze `gsap.matchMedia()`** für responsive Animationen, die bei
+  Breakpoint-Wechsel sauber zurückgesetzt werden.
+
+## Häufige Stolperfallen
+
+Ein paar Fehler tauchen bei fast jedem GSAP-Einstieg auf — wer sie kennt, spart
+sich Stunden.
+
+**Das Aufblitzen vor `from`-Animationen (FOUC).** Wenn du mit `gsap.from()` etwas
+einblendest, ist das Element für einen kurzen Moment vor dem Start in seinem
+Endzustand sichtbar — es „blitzt" auf. Die saubere Lösung: das Element initial per
+CSS oder `gsap.set()` unsichtbar machen (`autoAlpha: 0`) und GSAP es dann
+einblenden lassen. Oder du nutzt konsequent `fromTo()`, das den Startzustand
+sofort setzt.
+
+**Animationen, die sich doppeln.** Gerade in React (StrictMode) oder bei
+Hot-Reloading laufen Effekte mehrfach. Ohne Cleanup stapeln sich Tweens und
+ScrollTrigger übereinander. Genau dafür gibt es `useGSAP` bzw. `gsap.context()` —
+nutze sie konsequent, dann räumt GSAP automatisch auf.
+
+**Layout-Eigenschaften animieren.** `width`, `height`, `top`, `margin` lösen bei
+jedem Frame ein teures Re-Layout aus und ruckeln. Nimm `scale`, `x`, `y` — die
+laufen auf der GPU. Willst du tatsächlich Größe animieren, ist oft `scale` plus ein
+Korrektur-Transform die flüssigere Wahl.
+
+**Werte hartkodieren.** Statt fixer Pixel lohnt sich oft Relatives (`'+=200'`)
+oder `gsap.utils`-Helfer wie `gsap.utils.random(-20, 20)` für natürliche
+Variation. Das macht Animationen robuster gegenüber unterschiedlichen
+Bildschirmgrößen.
+
+## Ein durchgehendes Beispiel: die Hero-Animation
+
+Zum Abschluss alles zusammen — eine typische Hero-Inszenierung, wie sie auf
+Landingpages immer wieder vorkommt: Die Überschrift baut sich Buchstabe für
+Buchstabe auf, Unterzeile und Button folgen versetzt, das Ganze als eine
+kontrollierbare Timeline und respektvoll gegenüber `prefers-reduced-motion`:
+
+```js
+import { gsap } from 'gsap'
+import { SplitText } from 'gsap/SplitText'
+gsap.registerPlugin(SplitText)
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+const split = new SplitText('.hero h1', { type: 'chars' })
+
+const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.6 } })
+
+if (!reduce) {
+  tl.from(split.chars, { y: 50, opacity: 0, stagger: 0.025 })
+    .from('.hero p', { y: 20, opacity: 0 }, '-=0.2')
+    .from('.hero .cta', { scale: 0.85, opacity: 0, ease: 'back.out(1.7)' }, '-=0.3')
+    .from('.hero img', { scale: 1.1, opacity: 0, duration: 1 }, 0) // parallel zum Rest
+}
+```
+
+Sechs Zeilen Choreografie — und das Ergebnis fühlt sich an wie aus einem
+Award-Showcase. Genau hier zeigt sich GSAPs Stärke: Die Komplexität bleibt
+beherrschbar, weil Timeline und Position-Parameter die Orchestrierung übernehmen.
+
+## Wann GSAP — und wann nicht?
+
+GSAP ist die richtige Wahl für **komplexe, getimte Choreografie**, Scrollytelling,
+SVG- und Text-Effekte und alles „Award-würdige". Für simple Reveals und
+Seitenübergänge reicht 2026 oft natives CSS; für reine React-UI-Animationen ist
+Motion deklarativer. Mehr dazu im Überblick
+[Die besten UI-Web-Technologien 2026](/blog/ui-web-tech-2026).
+
+Eine ehrliche Einordnung: GSAP ist kein „nimm-ich-für-alles"-Werkzeug. Wenn deine
+ganze Bewegung aus ein paar Hover-Effekten und Einblendungen besteht, lädst du mit
+GSAP mehr Code, als du brauchst — da gewinnt natives CSS. Der Wendepunkt kommt,
+sobald Bewegung **getimt, verkettet oder scroll-gesteuert** wird, sobald du Text
+zerlegen, SVG morphen oder Sequenzen interaktiv steuern willst. Genau dann spielt
+GSAP seine Stärken aus, und der Unterschied zu „von Hand mit `setTimeout` und
+CSS-Klassen" ist gewaltig — sowohl in der Entwicklungszeit als auch im Ergebnis.
+Anders gesagt: GSAP ist nicht das Werkzeug für *jede* Animation, aber für die
+*anspruchsvollen* ist es konkurrenzlos.
+
+## Cheat-Sheet zum Download
+
+Alle wichtigen Methoden, Eases, ScrollTrigger-Optionen und Plugin-Snippets aus
+diesem Artikel habe ich auf einem mehrseitigen Spickzettel zusammengefasst:
+
+<a className="blog-download" href="/downloads/gsap-cheatsheet.pdf" download>⬇&nbsp; GSAP Cheat-Sheet herunterladen (PDF)</a>
+<span className="blog-download__hint">Mehrseitige Schnellreferenz — Grundlagen, Timeline, ScrollTrigger, Plugins, React.</span>
+
+## Fazit
+
+GSAP war schon immer mächtig — jetzt ist es auch noch komplett kostenlos. Wer
+Bewegung im Web ernst nimmt, kommt 2026 kaum daran vorbei. Fang mit `gsap.to` und
+Timelines an, lerne die Eases lieben, und sobald du ScrollTrigger verstanden hast,
+öffnet sich die ganze Welt der scroll-gesteuerten Erlebnisse. Übrigens: Genau
+dieser Blog nutzt GSAP für seine Bewegungen — der beste Beweis, dass die
+Lernkurve sich lohnt.
+
+---
+
+*Quellen: [Webflow makes GSAP 100% free](https://webflow.com/blog/gsap-becomes-free),
+[GSAP Docs](https://gsap.com/docs/v3/),
+[From SplitText to MorphSVG — Codrops](https://tympanus.net/codrops/2025/05/14/from-splittext-to-morphsvg-5-creative-demos-using-free-gsap-plugins/).*
