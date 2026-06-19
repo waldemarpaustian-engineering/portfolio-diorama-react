@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { WALKER_BOY_FRAMES } from '../components/journey/JourneyArt.jsx'
@@ -134,12 +134,28 @@ function getWalkerEndFeetStageX(track, metrics, noteEl) {
   return (trackRect.left - stageRect.left) + noteRightContent - scrollEnd
 }
 
-function initJourneyTrackScroll(track) {
+function remeasureJourneyScroll(track) {
+  const priorMetrics = journeyMetricsCache.get(track)
+  const progress = priorMetrics ? getJourneyProgress(track, priorMetrics) : 0
   const metrics = refreshJourneyMetrics(track)
   if (!metrics) return
-  if (track.scrollLeft < metrics.loopStart - 0.5) {
+
+  if (progress < 0.02 || track.scrollLeft < metrics.loopStart - 0.5) {
     track.scrollLeft = metrics.loopStart
+    return
   }
+
+  const scrollEnd = getJourneyScrollEnd(track, metrics)
+  const span = Math.max(1, scrollEnd - metrics.loopStart)
+  track.scrollLeft = normalizeJourneyScrollLeft(
+    track,
+    metrics.loopStart + progress * span,
+    metrics,
+  )
+}
+
+function initJourneyTrackScroll(track) {
+  remeasureJourneyScroll(track)
 }
 
 function getWalkerViewportX() {
@@ -356,6 +372,7 @@ export function useJourneyWalker(trackRef, walkerRef) {
     function onLayoutChange() {
       clearTimeout(layoutTimer)
       layoutTimer = window.setTimeout(() => {
+        remeasureJourneyScroll(track)
         measureWalkerFeet()
         syncWalker()
       }, 120)
@@ -447,8 +464,7 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
         wheelTweenRef.current.kill()
         wheelTweenRef.current = null
       }
-      refreshJourneyMetrics(track)
-      initJourneyTrackScroll(track)
+      remeasureJourneyScroll(track)
       ScrollTrigger.refresh()
     }
 
@@ -520,8 +536,7 @@ export function useJourneyWheel(containerRef, trackRef, stageRef) {
     }
 
     const initScroll = () => {
-      refreshJourneyMetrics(track)
-      initJourneyTrackScroll(track)
+      remeasureJourneyScroll(track)
     }
     initScroll()
     const bootRaf = requestAnimationFrame(() => {
@@ -1133,4 +1148,99 @@ export function useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalR
       resizeObserver?.disconnect()
     }
   }, [trackRef, stageRef, startPortalRef, endPortalRef])
+}
+
+function getActiveChapterIndex(track, chapters) {
+  const metrics = getJourneyMetrics(track)
+  if (!metrics || !chapters[0]) return 0
+
+  const scrollPos = normalizeJourneyScrollLeft(track, track.scrollLeft, metrics)
+  const firstLeft = chapters[0].offsetLeft
+  let activeIndex = 0
+
+  chapters.forEach((chapter, index) => {
+    if (!chapter) return
+    const chapterStart = metrics.loopStart + (chapter.offsetLeft - firstLeft)
+    if (scrollPos >= chapterStart - 40) {
+      activeIndex = index
+    }
+  })
+
+  return activeIndex
+}
+
+function scrollTrackToChapter(track, chapters, index, stage) {
+  const metrics = getJourneyMetrics(track)
+  const chapter = chapters[index]
+  const first = chapters[0]
+  if (!metrics || !chapter || !first) return
+
+  const targetScroll = metrics.loopStart + (chapter.offsetLeft - first.offsetLeft)
+  const normalized = normalizeJourneyScrollLeft(track, targetScroll, metrics)
+  const scrollEnd = getJourneyScrollEnd(track, metrics)
+  const span = Math.max(1, scrollEnd - metrics.loopStart)
+  const journeyProgress = (normalized - metrics.loopStart) / span
+
+  const mobileMq = window.matchMedia('(max-width: 899px)')
+  const reducedMq = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+  if (mobileMq.matches && stage && !reducedMq.matches) {
+    setJourneyScrollProgress(track, journeyProgress)
+    const pinTrigger = ScrollTrigger.getAll().find((trigger) => trigger.trigger === stage && trigger.pin)
+    if (pinTrigger) {
+      const pinProgress = journeyProgress / JOURNEY_LOOP_PIN_MULTIPLIER
+      const y = pinTrigger.start + (pinTrigger.end - pinTrigger.start) * pinProgress
+      window.scrollTo({ top: y, behavior: 'smooth' })
+      return
+    }
+  }
+
+  track.scrollTo({
+    left: normalized,
+    behavior: reducedMq.matches ? 'auto' : 'smooth',
+  })
+}
+
+export function useJourneyDots(trackRef, chaptersRef, stageRef) {
+  const [activeChapter, setActiveChapter] = useState(0)
+
+  const goToChapter = useCallback((index) => {
+    const track = trackRef.current
+    const chapters = chaptersRef.current?.filter(Boolean)
+    const stage = stageRef?.current
+    if (!track || !chapters?.length || index < 0 || index >= chapters.length) return
+    scrollTrackToChapter(track, chapters, index, stage)
+  }, [trackRef, chaptersRef, stageRef])
+
+  useEffect(() => {
+    const track = trackRef.current
+    const chapters = chaptersRef.current?.filter(Boolean)
+    if (!track || !chapters?.length) return undefined
+
+    const updateActive = () => {
+      const next = getActiveChapterIndex(track, chapters)
+      setActiveChapter((prev) => (prev === next ? prev : next))
+    }
+
+    updateActive()
+    track.addEventListener('scroll', updateActive, { passive: true })
+    window.addEventListener('scroll', updateActive, { passive: true })
+    window.addEventListener('resize', updateActive)
+    gsap.ticker.add(updateActive)
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(updateActive)
+      : null
+    resizeObserver?.observe(track)
+
+    return () => {
+      track.removeEventListener('scroll', updateActive)
+      window.removeEventListener('scroll', updateActive)
+      window.removeEventListener('resize', updateActive)
+      gsap.ticker.remove(updateActive)
+      resizeObserver?.disconnect()
+    }
+  }, [trackRef, chaptersRef])
+
+  return { activeChapter, goToChapter }
 }

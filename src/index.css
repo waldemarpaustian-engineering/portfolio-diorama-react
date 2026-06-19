@@ -1178,9 +1178,25 @@ html[data-theme="dark"] .journey-walker__frame {
 .journey-dots__dot {
   width: 8px;
   height: 8px;
+  padding: 0;
   border-radius: 50%;
   background: var(--line);
   border: 1px solid var(--muted);
+  cursor: pointer;
+  appearance: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.journey-dots__dot:hover {
+  transform: scale(1.12);
+}
+.journey-dots__dot--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.2);
+}
+.journey-dots__dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

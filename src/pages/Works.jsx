@@ -15,6 +15,7 @@ import {
   useJourneySkyGlow,
   useJourneyRain,
   useJourneyPortals,
+  useJourneyDots,
 } from '../hooks/useJourneyAnimations.js'
 
 export default function Works() {
@@ -48,6 +49,7 @@ export default function Works() {
   useJourneySkyGlow(stageRef, theme)
   useJourneyRain(stageRef, layerRainRef, theme)
   useJourneyPortals(trackRef, stageRef, startPortalRef, endPortalRef)
+  const { activeChapter, goToChapter } = useJourneyDots(trackRef, chaptersRef, stageRef)
 
   return (
     <div className="page journey-page" ref={pageRef}>
@@ -166,11 +168,18 @@ export default function Works() {
           <div className="journey-meadow-strip journey-meadow-strip--foreground" aria-hidden />
         </div>
 
-        <div className="journey-dots" aria-hidden>
-          {JOURNEY_CHAPTERS.map((c) => (
-            <span key={c.id} className="journey-dots__dot" />
+        <nav className="journey-dots" aria-label={t('work.ariaDots')}>
+          {JOURNEY_CHAPTERS.map((chapter, i) => (
+            <button
+              key={chapter.id}
+              type="button"
+              className={`journey-dots__dot${i === activeChapter ? ' journey-dots__dot--active' : ''}`}
+              aria-label={t('work.dotLabel', { number: i + 1 })}
+              aria-current={i === activeChapter ? 'step' : undefined}
+              onClick={() => goToChapter(i)}
+            />
           ))}
-        </div>
+        </nav>
       </div>
     </div>
   )

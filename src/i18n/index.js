@@ -48,6 +48,8 @@ const resources = {
         lead: 'From early web projects through modular UI systems to design systems, platform architectures and AI-assisted development. Freelance since 2012.',
         hint: 'Scroll to explore the stations →',
         ariaTrack: 'Journey chapters',
+        ariaDots: 'Journey stations',
+        dotLabel: 'Go to station {{number}}',
         chapters: [
           {
             title: '1. Early Frontend & Web Craft (2000–2007)',
@@ -150,6 +152,8 @@ const resources = {
         lead: 'Von den ersten Webprojekten über modulare UI-Systeme bis zu Design Systems, Plattformarchitekturen und KI-gestützter Entwicklung. Freiberufler seit 2012.',
         hint: 'Scrollen für die Stationen →',
         ariaTrack: 'Zeitreise-Kapitel',
+        ariaDots: 'Stationen der Zeitreise',
+        dotLabel: 'Zu Station {{number}}',
         chapters: [
           {
             title: '1. Frühe Frontend-Entwicklung & Web-Handwerk (2000–2007)',
@@ -252,6 +256,8 @@ const resources = {
         lead: 'Desde los primeros proyectos web, pasando por sistemas UI modulares, hasta design systems, arquitecturas de plataforma y desarrollo asistido por IA. Freelance desde 2012.',
         hint: 'Desplázate para descubrir las estaciones →',
         ariaTrack: 'Capítulos del viaje en el tiempo',
+        ariaDots: 'Estaciones del viaje',
+        dotLabel: 'Ir a la estación {{number}}',
         chapters: [
           {
             title: '1. Primeras experiencias en frontend y desarrollo web (2000–2007)',
@@ -354,6 +360,8 @@ const resources = {
         lead: 'Des premiers projets web aux systèmes UI modulaires, puis aux design systems, architectures de plateforme et développement assisté par l’IA. Freelance depuis 2012.',
         hint: 'Fais défiler pour découvrir les stations →',
         ariaTrack: 'Chapitres du voyage dans le temps',
+        ariaDots: 'Stations du voyage',
+        dotLabel: 'Aller à la station {{number}}',
         chapters: [
           {
             title: '1. Premiers pas en frontend & développement web (2000–2007)',
