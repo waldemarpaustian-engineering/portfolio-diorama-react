@@ -5,6 +5,7 @@ import Scene from './components/Scene.jsx'
 import About from './pages/About.jsx'
 import Works from './pages/Works.jsx'
 import Blog from './pages/Blog.jsx'
+import BlogPost from './pages/BlogPost.jsx'
 import Contact from './pages/Contact.jsx'
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/journey" element={<Navigate to="/work" replace />} />
       <Route path="/works" element={<Navigate to="/work" replace />} />
       <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/contact" element={<Contact />} />
       </Routes>
     </>

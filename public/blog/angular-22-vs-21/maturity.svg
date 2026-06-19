@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="1000" height="360" role="img" aria-label="Von experimentell (v21) zu stabil (v22)">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#eef6fc"/>
+      <stop offset="1" stop-color="#dceef9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="360" rx="18" fill="url(#bg2)"/>
+  <!-- v21 column -->
+  <g transform="translate(70 60)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="26" font-weight="700" fill="#2b2a33">Angular 21</text>
+    <text x="0" y="30" font-family="-apple-system, sans-serif" font-size="15" fill="#7a7782">experimentell / Preview</text>
+    <g font-family="-apple-system, sans-serif" font-size="17" fill="#2b2a33">
+      <rect x="0" y="55"  width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="80">Signal Forms (experimental)</text>
+      <rect x="0" y="105" width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="130">Resource API (experimental)</text>
+      <rect x="0" y="155" width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="180">Incremental Hydration (opt-in)</text>
+      <rect x="0" y="205" width="300" height="40" rx="9" fill="#fff" stroke="#d6e4f0"/>
+      <text x="16" y="230">@angular/aria (preview)</text>
+    </g>
+  </g>
+  <!-- arrow -->
+  <g transform="translate(500 175)">
+    <line x1="-20" y1="0" x2="60" y2="0" stroke="#4a7fd4" stroke-width="4"/>
+    <path d="M55 -12 L80 0 L55 12 Z" fill="#4a7fd4"/>
+  </g>
+  <!-- v22 column -->
+  <g transform="translate(610 60)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="26" font-weight="700" fill="#4a7fd4">Angular 22</text>
+    <text x="0" y="30" font-family="-apple-system, sans-serif" font-size="15" fill="#7a7782">stabil / Default</text>
+    <g font-family="-apple-system, sans-serif" font-size="17" fill="#2b2a33">
+      <rect x="0" y="55"  width="320" height="40" rx="9" fill="#fff" stroke="#4a7fd4"/>
+      <text x="16" y="80">Signal Forms ✓ stabil</text>
+      <rect x="0" y="105" width="320" height="40" rx="9" fill="#fff" stroke="#4a7fd4"/>
+      <text x="16" y="130">Resource API ✓ stabil</text>
+      <rect x="0" y="155" width="320" height="40" rx="9" fill="#fff" stroke="#4a7fd4"/>
+      <text x="16" y="180">Incremental Hydration ✓ default</text>
+      <rect x="0" y="205" width="320" height="40" rx="9" fill="#fff" stroke="#4a7fd4"/>
+      <text x="16" y="230">@angular/aria ✓ production</text>
+    </g>
+  </g>
+</svg>

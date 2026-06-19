@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Hello MDX">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d4f5"/>
+      <stop offset="0.55" stop-color="#cbe5f7"/>
+      <stop offset="1" stop-color="#eef6fc"/>
+    </linearGradient>
+    <radialGradient id="g2" cx="0.8" cy="0.15" r="0.9">
+      <stop offset="0" stop-color="#ffeccb" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#ffeccb" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <rect width="1200" height="630" fill="url(#g2)"/>
+  <g fill="none" stroke="#4a7fd4" stroke-width="3" opacity="0.55" stroke-linecap="round">
+    <path d="M120 470 L300 470 M120 510 L420 510"/>
+  </g>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33">
+    <text x="120" y="300" font-size="120" font-weight="700" letter-spacing="-4">&lt;MDX /&gt;</text>
+    <text x="124" y="380" font-size="34" font-weight="600" fill="#4a7fd4" letter-spacing="6">WRITING IN REACT</text>
+  </g>
+  <g transform="translate(880 360)" opacity="0.9">
+    <rect x="-30" y="-30" width="220" height="160" rx="18" fill="#fff" stroke="#d6e4f0" stroke-width="3"/>
+    <rect x="0" y="0" width="120" height="14" rx="7" fill="#b8ddf5"/>
+    <rect x="0" y="34" width="160" height="12" rx="6" fill="#dceef9"/>
+    <rect x="0" y="64" width="100" height="12" rx="6" fill="#dceef9"/>
+    <circle cx="150" cy="100" r="14" fill="#4a7fd4"/>
+  </g>
+</svg>
