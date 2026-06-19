@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 380" width="1000" height="380" role="img" aria-label="Formulare: manuell (React 18) vs. Actions (React 19)">
+  <rect width="1000" height="380" rx="18" fill="#eef6fc"/>
+  <text x="500" y="44" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="22" font-weight="700" fill="#2b2a33">Async-Formular: manuell vs. Actions</text>
+
+  <!-- React 18 -->
+  <g transform="translate(60 78)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#7a7782">React 18 · von Hand</text>
+    <rect x="0" y="18" width="400" height="250" rx="12" fill="#fff" stroke="#d6e4f0"/>
+    <g font-family="ui-monospace, monospace" font-size="14.5" fill="#2b2a33">
+      <text x="18" y="52">const [pending, setPending] = useState()</text>
+      <text x="18" y="80">const [error, setError] = useState()</text>
+      <text x="18" y="108">setPending(true)</text>
+      <text x="18" y="136">try { await save() }</text>
+      <text x="18" y="164">catch (e) { setError(e) }</text>
+      <text x="18" y="192">finally { setPending(false) }</text>
+    </g>
+    <text x="18" y="234" font-family="-apple-system, sans-serif" font-size="14" fill="#c46a2b">viel Boilerplate, leicht fehleranfällig</text>
+  </g>
+
+  <!-- arrow -->
+  <g transform="translate(495 195)">
+    <line x1="-15" y1="0" x2="55" y2="0" stroke="#3a8fbf" stroke-width="4"/>
+    <path d="M50 -12 L75 0 L50 12 Z" fill="#3a8fbf"/>
+  </g>
+
+  <!-- React 19 -->
+  <g transform="translate(585 78)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="#3a8fbf">React 19 · Actions</text>
+    <rect x="0" y="18" width="355" height="250" rx="12" fill="#fff" stroke="#3a8fbf"/>
+    <g font-family="ui-monospace, monospace" font-size="14.5" fill="#2b2a33">
+      <text x="18" y="52">const [error, submit, pending]</text>
+      <text x="18" y="78">  = useActionState(action, null)</text>
+      <text x="18" y="118">&lt;form action={'{submit}'}&gt;</text>
+      <text x="18" y="146">  …</text>
+      <text x="18" y="174">&lt;/form&gt;</text>
+    </g>
+    <text x="18" y="222" font-family="-apple-system, sans-serif" font-size="14" fill="#2e9e6b">pending &amp; error automatisch</text>
+  </g>
+</svg>

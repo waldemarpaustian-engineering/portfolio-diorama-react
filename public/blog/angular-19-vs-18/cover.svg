@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Angular 19">
+  <defs>
+    <linearGradient id="sky19" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#cbe2f4"/>
+      <stop offset="0.6" stop-color="#e1eef9"/>
+      <stop offset="1" stop-color="#f3f9fd"/>
+    </linearGradient>
+    <linearGradient id="shield19" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8ab8e2"/>
+      <stop offset="1" stop-color="#5a86c4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sky19)"/>
+  <g transform="translate(820 315)">
+    <path d="M0 -190 L168 -130 L142 118 L0 200 L-142 118 L-168 -130 Z" fill="url(#shield19)"/>
+    <path d="M0 -190 L168 -130 L142 118 L0 200 Z" fill="#46719f" opacity="0.6"/>
+    <path d="M0 -120 L78 95 L48 95 L32 52 L-32 52 L-48 95 L-78 95 Z" fill="#fff"/>
+    <path d="M-20 22 L20 22 L0 -28 Z" fill="#fff"/>
+    <text x="0" y="160" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" font-size="46" font-weight="700" fill="#fff" text-anchor="middle">v19</text>
+  </g>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33">
+    <text x="110" y="250" font-size="84" font-weight="700" letter-spacing="-3">Angular 19</text>
+    <text x="110" y="335" font-size="40" font-weight="600" fill="#5a86c4">Was ist neu gegenüber 18?</text>
+    <text x="114" y="395" font-size="26" font-weight="500" fill="#7a7782">Standalone-Default · linkedSignal · @let</text>
+  </g>
+</svg>
