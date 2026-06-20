@@ -1,0 +1,25 @@
+# Waldemar Paustian
+
+> Frontend developer with 25+ years of experience. A blog on React, Angular, Vue, reactivity, animation (GSAP) and 3D for the web (Three.js).
+
+## Blog
+
+- [GSAP 2026: The Practical Guide with Lots of Examples](https://waldemarpaustian.dev/blog/gsap-guide-2026): GSAP has been completely free since 2025 — including every plugin that used to cost money. High time for a thorough deep dive: from your first tween through timelines, eases and stagger all the way to ScrollTrigger, SplitText and the React integration. With plenty of code examples and a cheat sheet to download.
+- [Hello MDX — how this blog works](https://waldemarpaustian.dev/blog/hello-mdx): Every article is an MDX file in the git repo. Here you'll see how frontmatter, images, and code work together — and how to create a new post.
+- [Which Stack for Your Startup? React, Angular, Vue & Svelte in the AI Era](https://waldemarpaustian.dev/blog/startup-tech-stack-2026): Your choice of frontend will dictate your costs, your hiring, and your velocity for the next two years. I dug into adoption, AI-friendliness, and design frameworks — and I'll tell you what I'd pick today and why.
+- [Three.js — the big guide to 3D in the browser (2026)](https://waldemarpaustian.dev/blog/threejs-guide-2026): 3D on the web grew up in 2026: WebGPU is production-ready, the ecosystem is huge, demand is rising. This in-depth guide takes you from your first scene through geometries, materials, lights, textures, model loading, shadows, raycasting and performance all the way to WebGPU/TSL and React Three Fiber. With plenty of examples and a detailed cheat sheet to download.
+- [The Best UI Web Technologies of 2026 — A Field Guide](https://waldemarpaustian.dev/blog/ui-web-tech-2026): Animation, 3D, scroll and modern CSS: in 2026, much of what once required libraries has landed natively in the browser — and for the rest, the tools are stronger than ever. An in-depth tour of GSAP, Three.js, Motion, Lenis & Co. — what's best, what's most popular, and when to reach for which.
+- [Reactivity: React, Angular & Vue — a history through June 2026](https://waldemarpaustian.dev/blog/reactivity-react-vs-angular): Three frameworks, three answers to the same question: How does a data change make it onto the screen? React stuck with re-rendering and optimizes via a compiler, Angular switched to Signals, and Vue was fine-grained reactive from the start — and is now removing the Virtual DOM with Vapor Mode. History, models, and code compared.
+- [Angular 22 vs. 21 — what's really new](https://waldemarpaustian.dev/blog/angular-22-vs-21): Angular 22 isn't a break, it's a maturity upgrade: Signal Forms and the Resource API become stable, OnPush and Fetch are now the default, and Vitest replaces Karma. The most important changes with code and migration tips.
+- [React 19 vs. 18 — Actions, use() & Server Components](https://waldemarpaustian.dev/blog/react-19-vs-18): React versions differently than Angular: no fixed semi-annual majors, but Semver as needed. React 19 is the first major since 18 (2.5 years) and brings Actions, new form Hooks, the use() API, and Server Components. Plus: what the minors 19.1 & 19.2 added.
+- [React Three Fiber: optimizing the diorama scene](https://waldemarpaustian.dev/blog/render-performance): How I got the 3D island on the home page running smoothly — from instanced meshes through on-demand rendering to sensible LODs.
+- [Angular 21 vs. 20 — the cleanup release](https://waldemarpaustian.dev/blog/angular-21-vs-20): If Angular 20 stabilized Signals, then Angular 21 sweeps away the old patterns: zoneless becomes the default, Signal Forms arrive (still experimental), and Vitest replaces Karma. The most important changes with code and migration tips.
+- [Angular 20 vs. 19 — Signals Come of Age](https://waldemarpaustian.dev/blog/angular-20-vs-19): Angular 19 introduced Signals as a preview, Angular 20 makes them production-ready: effect and linkedSignal become stable, the Resource/httpResource APIs arrive, Incremental Hydration becomes stable, and zoneless moves closer. The most important changes, with code.
+- [Angular 19 vs. 18 — Standalone Becomes the Standard](https://waldemarpaustian.dev/blog/angular-19-vs-18): Angular 19 makes standalone components the default, the signal-based inputs/outputs/queries become stable, and with linkedSignal, resource() and @let new reactive building blocks arrive. The most important changes with code and migration tips.
+
+## Pages
+
+- [Home](https://waldemarpaustian.dev/): Portfolio of Waldemar Paustian, frontend developer.
+- [About](https://waldemarpaustian.dev/about): Background and experience.
+- [Work](https://waldemarpaustian.dev/work): Selected projects and journey.
+- [Contact](https://waldemarpaustian.dev/contact): Get in touch.

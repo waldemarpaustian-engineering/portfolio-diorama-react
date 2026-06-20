@@ -3,12 +3,22 @@ import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 import RetroComputer from '../components/RetroComputer.jsx'
 import { useTheme } from '../hooks/useTheme.js'
+import { useSeo } from '../lib/seo.js'
+import { absoluteUrl } from '../lib/site.js'
 
 export default function About() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const theme = useTheme()
   const blocks = t('about.blocks', { returnObjects: true })
   const portrait = theme === 'dark' ? '/monitor-portrait.png' : '/monitor-portrait-light.png'
+
+  useSeo({
+    title: t('about.title').replace(/\n/g, ' '),
+    description: t('about.intro'),
+    url: absoluteUrl('/about'),
+    locale: (i18n.language || 'en').split('-')[0],
+    image: absoluteUrl('/monitor-portrait.png'),
+  })
 
   return (
     <div className="page">

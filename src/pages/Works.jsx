@@ -5,6 +5,8 @@ import { JOURNEY_CHAPTERS } from '../data/journey.js'
 import { JOURNEY_NEAR_DECOR, JOURNEY_FRONT_DECOR, JOURNEY_MEADOW_DECOR, JOURNEY_CHAPTER_SIGNS, getJourneyFarDecor } from '../data/journeyDecor.js'
 import { JourneyArt, JourneyCutout, JourneyPortal, JourneyWalker } from '../components/journey/JourneyArt.jsx'
 import { useTheme } from '../hooks/useTheme.js'
+import { useSeo } from '../lib/seo.js'
+import { absoluteUrl } from '../lib/site.js'
 import {
   useJourneyAnimations,
   useJourneyWalker,
@@ -19,8 +21,16 @@ import {
 } from '../hooks/useJourneyAnimations.js'
 
 export default function Works() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const theme = useTheme()
+
+  useSeo({
+    title: t('work.title').replace(/\n/g, ' '),
+    description: t('work.hint'),
+    url: absoluteUrl('/work'),
+    locale: (i18n.language || 'en').split('-')[0],
+  })
+
   const farDecor = getJourneyFarDecor(theme)
   const pageRef = useRef(null)
   const stageRef = useRef(null)

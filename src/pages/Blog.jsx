@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
 import { getPosts, getAllTags, formatDate } from '../lib/posts.js'
 import { useScrollReveal } from '../hooks/useBlogAnimations.js'
+import { useSeo } from '../lib/seo.js'
+import { absoluteUrl, SITE_NAME } from '../lib/site.js'
 
 function Tag({ children }) {
   return <span className="blog-tag">{children}</span>
@@ -52,6 +54,28 @@ export default function Blog() {
 
   const [featured, ...rest] = filtered
   const revealRef = useScrollReveal('[data-reveal]', [activeTag, locale])
+
+  const blogUrl = absoluteUrl('/blog')
+  useSeo({
+    title: `${t('blog.title')} — Blog`,
+    description: t('blog.lead'),
+    url: blogUrl,
+    locale,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Blog',
+      name: `${SITE_NAME} — Blog`,
+      description: t('blog.lead'),
+      url: blogUrl,
+      inLanguage: locale,
+      blogPost: posts.slice(0, 20).map((p) => ({
+        '@type': 'BlogPosting',
+        headline: p.title,
+        url: absoluteUrl(`/blog/${p.slug}`),
+        datePublished: p.date,
+      })),
+    },
+  })
 
   return (
     <div className="page blog-page">

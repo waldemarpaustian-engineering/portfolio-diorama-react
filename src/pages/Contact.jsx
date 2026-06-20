@@ -5,10 +5,19 @@ import SocialLink from '../components/SocialLink.jsx'
 import { CONTACT } from '../data/contact.js'
 import { linkedinIcon, xingIcon } from '../data/socialIcons.js'
 import { useContactAnimations } from '../hooks/useContactAnimations.js'
+import { useSeo } from '../lib/seo.js'
+import { absoluteUrl } from '../lib/site.js'
 
 export default function Contact() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { mainRef, emailRef } = useContactAnimations()
+
+  useSeo({
+    title: t('contact.title').replace(/\n/g, ' '),
+    description: t('contact.lead'),
+    url: absoluteUrl('/contact'),
+    locale: (i18n.language || 'en').split('-')[0],
+  })
 
   return (
     <div className="page">

@@ -5,6 +5,8 @@ import PageNav from './PageNav.jsx'
 import { useMemo } from 'react'
 import { getPosts, getPost, formatDate } from '../lib/posts.js'
 import { useReadingProgress, useScrollReveal } from '../hooks/useBlogAnimations.js'
+import { useSeo } from '../lib/seo.js'
+import { absoluteUrl, AUTHOR, SITE_URL } from '../lib/site.js'
 
 // Styling overrides for elements rendered from the MDX content.
 const mdxComponents = {
@@ -27,6 +29,30 @@ export default function BlogPost() {
   const posts = useMemo(() => getPosts(locale), [locale])
   const progress = useReadingProgress()
   const revealRef = useScrollReveal('[data-reveal]', [slug, locale])
+
+  const canonical = absoluteUrl(`/blog/${slug}`)
+  useSeo({
+    title: post?.title,
+    description: post?.excerpt,
+    url: canonical,
+    image: post?.cover ? absoluteUrl(post.cover) : undefined,
+    type: 'article',
+    locale,
+    jsonLd: post && {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.excerpt,
+      image: post.cover ? absoluteUrl(post.cover) : undefined,
+      datePublished: post.date,
+      dateModified: post.date,
+      inLanguage: locale,
+      keywords: (post.tags || []).join(', '),
+      author: { '@type': 'Person', name: AUTHOR, url: SITE_URL },
+      publisher: { '@type': 'Person', name: AUTHOR, url: SITE_URL },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+    },
+  })
 
   useEffect(() => {
     window.scrollTo(0, 0)
