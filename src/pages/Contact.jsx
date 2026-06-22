@@ -13,10 +13,11 @@ export default function Contact() {
   const { mainRef, emailRef } = useContactAnimations()
 
   useSeo({
+    path: '/contact',
     title: t('contact.title').replace(/\n/g, ' '),
     description: t('contact.lead'),
-    url: absoluteUrl('/contact'),
     locale: (i18n.language || 'en').split('-')[0],
+    image: absoluteUrl('/og-default.png'),
   })
 
   return (

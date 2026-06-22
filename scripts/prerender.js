@@ -8,7 +8,6 @@ import { readFileSync, readdirSync, mkdirSync, writeFileSync, existsSync, statSy
 import { join, dirname, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import puppeteer from 'puppeteer'
-import { DEFAULT_LOCALE } from '../src/lib/site.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
@@ -24,14 +23,21 @@ if (!existsSync(join(dist, 'index.html'))) {
 const slugs = readdirSync(blogDir, { withFileTypes: true })
   .filter((d) => d.isDirectory())
   .map((d) => d.name)
-const routes = [
+const enRoutes = [
   { path: '/', wait: '.intro, .stage, #root > *' },
   { path: '/about', wait: '.about-page, main' },
   { path: '/work', wait: '.journey-page, main' },
   { path: '/blog', wait: '.blog-feed, .blog-card' },
   { path: '/contact', wait: '.contact-page, main' },
   ...slugs.map((s) => ({ path: `/blog/${s}`, wait: '.blog-article .blog-prose' })),
-]
+].map((r) => ({ ...r, lang: 'en' }))
+// Mirror every route under /de, forcing German.
+const deRoutes = enRoutes.map((r) => ({
+  ...r,
+  lang: 'de',
+  path: r.path === '/' ? '/de' : `/de${r.path}`,
+}))
+const routes = [...enRoutes, ...deRoutes]
 
 // --- tiny static server with SPA fallback ---
 const MIME = {
@@ -56,13 +62,13 @@ let ok = 0
 try {
   for (const route of routes) {
     const page = await browser.newPage()
-    // canonical language + a stable theme, set before any app script runs
+    // route language + a stable theme, set before any app script runs
     await page.evaluateOnNewDocument((lng) => {
       try {
         localStorage.setItem('i18nextLng', lng)
         localStorage.setItem('portfolio-theme', 'light')
       } catch (e) {}
-    }, DEFAULT_LOCALE)
+    }, route.lang)
 
     await page.goto(base + route.path, { waitUntil: 'networkidle0', timeout: 30000 })
     try {

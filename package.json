@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "seo": "node scripts/build-seo.js",
+    "og": "node scripts/build-og.js",
     "build": "node scripts/build-seo.js && vite build",
     "prerender": "node scripts/prerender.js",
     "build:static": "npm run build && npm run prerender",

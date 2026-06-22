@@ -55,11 +55,12 @@ export default function Blog() {
   const [featured, ...rest] = filtered
   const revealRef = useScrollReveal('[data-reveal]', [activeTag, locale])
 
-  const blogUrl = absoluteUrl('/blog')
+  const blogUrl = absoluteUrl(`${locale === 'de' ? '/de' : ''}/blog`)
   useSeo({
+    path: '/blog',
     title: `${t('blog.title')} — Blog`,
     description: t('blog.lead'),
-    url: blogUrl,
+    image: absoluteUrl('/og-default.png'),
     locale,
     jsonLd: {
       '@context': 'https://schema.org',

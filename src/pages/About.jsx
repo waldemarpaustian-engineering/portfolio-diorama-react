@@ -13,11 +13,11 @@ export default function About() {
   const portrait = theme === 'dark' ? '/monitor-portrait.png' : '/monitor-portrait-light.png'
 
   useSeo({
+    path: '/about',
     title: t('about.title').replace(/\n/g, ' '),
     description: t('about.intro'),
-    url: absoluteUrl('/about'),
     locale: (i18n.language || 'en').split('-')[0],
-    image: absoluteUrl('/monitor-portrait.png'),
+    image: absoluteUrl('/og-default.png'),
   })
 
   return (

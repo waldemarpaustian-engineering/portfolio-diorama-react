@@ -30,12 +30,15 @@ export default function BlogPost() {
   const progress = useReadingProgress()
   const revealRef = useScrollReveal('[data-reveal]', [slug, locale])
 
-  const canonical = absoluteUrl(`/blog/${slug}`)
+  const slugPath = `/blog/${slug}`
+  const pageUrl = absoluteUrl(`${locale === 'de' ? '/de' : ''}${slugPath}`)
+  // Social cards need a raster image — covers are rendered to PNG by build-og.js.
+  const ogImage = post?.cover ? absoluteUrl(post.cover.replace(/\.svg$/, '.png')) : undefined
   useSeo({
+    path: slugPath,
     title: post?.title,
     description: post?.excerpt,
-    url: canonical,
-    image: post?.cover ? absoluteUrl(post.cover) : undefined,
+    image: ogImage,
     type: 'article',
     locale,
     jsonLd: post && {
@@ -43,14 +46,14 @@ export default function BlogPost() {
       '@type': 'BlogPosting',
       headline: post.title,
       description: post.excerpt,
-      image: post.cover ? absoluteUrl(post.cover) : undefined,
+      image: ogImage,
       datePublished: post.date,
       dateModified: post.date,
       inLanguage: locale,
       keywords: (post.tags || []).join(', '),
       author: { '@type': 'Person', name: AUTHOR, url: SITE_URL },
       publisher: { '@type': 'Person', name: AUTHOR, url: SITE_URL },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
     },
   })
 

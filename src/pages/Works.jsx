@@ -25,10 +25,11 @@ export default function Works() {
   const theme = useTheme()
 
   useSeo({
+    path: '/work',
     title: t('work.title').replace(/\n/g, ' '),
     description: t('work.hint'),
-    url: absoluteUrl('/work'),
     locale: (i18n.language || 'en').split('-')[0],
+    image: absoluteUrl('/og-default.png'),
   })
 
   const farDecor = getJourneyFarDecor(theme)

@@ -16,6 +16,8 @@ import SceneLoader from './SceneLoader.jsx'
 import MeteorShower from './MeteorShower.jsx'
 import SkyClouds from './SkyClouds.jsx'
 import { useTheme } from '../hooks/useTheme.js'
+import { useSeo } from '../lib/seo.js'
+import { absoluteUrl, DEFAULT_DESCRIPTION } from '../lib/site.js'
 import { SIGNS, LANTERNS, SWARMS, SCREEN, BOARDS, MODEL_SCALE, VIEW } from '../data/signs.js'
 import { TECH } from '../data/tech.js'
 
@@ -260,8 +262,16 @@ export default function Scene() {
   const [portal, setPortal] = useState(0)
   const [introDone, setIntroDone] = useState(false)
   const { active: loading } = useProgress()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const theme = useTheme()
+
+  useSeo({
+    path: '/',
+    description: t('intro.tagline', DEFAULT_DESCRIPTION),
+    locale: (i18n.language || 'en').split('-')[0],
+    image: absoluteUrl('/og-default.png'),
+  })
+
   const uiFade = Math.max(0, 1 - portal * 1.6)
   const blur = portal * 18
 

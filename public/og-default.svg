@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Waldemar Paustian">
+  <defs>
+    <linearGradient id="skyD" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a8d4f5"/>
+      <stop offset="0.6" stop-color="#cbe5f7"/>
+      <stop offset="1" stop-color="#eef6fc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#skyD)"/>
+  <circle cx="150" cy="150" r="13" fill="#2b2a33"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif" fill="#2b2a33">
+    <text x="110" y="300" font-size="78" font-weight="800" letter-spacing="-3">Waldemar Paustian</text>
+    <text x="112" y="370" font-size="36" font-weight="600" fill="#4a7fd4">Frontend Developer · Blog</text>
+    <text x="116" y="430" font-size="26" font-weight="500" fill="#7a7782">React · Angular · Vue · GSAP · Three.js</text>
+  </g>
+</svg>

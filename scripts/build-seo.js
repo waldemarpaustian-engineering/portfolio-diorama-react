@@ -50,14 +50,31 @@ const staticRoutes = [
 ]
 
 // --- sitemap.xml ---
-const urls = [
-  ...staticRoutes.map((r) => ({ loc: SITE_URL + r.path, lastmod: today, priority: r.priority })),
-  ...posts.map((p) => ({ loc: `${SITE_URL}/blog/${p.slug}`, lastmod: p.date, priority: '0.8' })),
+// English is canonical (un-prefixed); German lives under /de. Each logical page
+// emits an <url> for both, each declaring the hreflang alternates.
+const pages = [
+  ...staticRoutes.map((r) => ({ path: r.path, lastmod: today, priority: r.priority })),
+  ...posts.map((p) => ({ path: `/blog/${p.slug}`, lastmod: p.date, priority: '0.8' })),
 ]
+function urlEntry(loc, en, de, lastmod, priority) {
+  return `  <url>
+    <loc>${loc}</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="${en}"/>
+    <xhtml:link rel="alternate" hreflang="de" href="${de}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${en}"/>
+    <lastmod>${lastmod}</lastmod>
+    <priority>${priority}</priority>
+  </url>`
+}
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map((u) => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <priority>${u.priority}</priority>\n  </url>`)
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${pages
+  .flatMap((p) => {
+    const tail = p.path === '/' ? '' : p.path
+    const en = `${SITE_URL}${tail}` || SITE_URL
+    const de = `${SITE_URL}/de${tail}`
+    return [urlEntry(en, en, de, p.lastmod, p.priority), urlEntry(de, en, de, p.lastmod, p.priority)]
+  })
   .join('\n')}
 </urlset>
 `
