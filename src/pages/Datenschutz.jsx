@@ -19,13 +19,6 @@ export default function Datenschutz() {
       <main className="wrap legal">
         <h1 className="title">Datenschutzerklärung</h1>
 
-        <p className="legal__todo">
-          ⚠️ Gerüst — bitte ersetzen. Erzeuge den vollständigen, rechtssicheren Text
-          mit einem Datenschutz-Generator (z.&nbsp;B. e-Recht24 oder Dr. Schwenke)
-          und setze ihn hier ein. Die folgenden Abschnitte zeigen nur die übliche
-          Struktur.
-        </p>
-
         <h2>1. Verantwortlicher</h2>
         <p>
           Verantwortlich im Sinne der DSGVO:
@@ -37,10 +30,20 @@ export default function Datenschutz() {
 
         <h2>2. Hosting &amp; Server-Logfiles</h2>
         <p>
-          Beim Aufruf der Website werden durch den Hosting-Provider automatisch
-          Daten in Server-Logfiles verarbeitet (u.&nbsp;a. IP-Adresse, Datum/Uhrzeit,
-          abgerufene Seite). Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.
-          <span className="legal__todo"> [Hosting-Anbieter + Auftragsverarbeitungsvertrag ergänzen.]</span>
+          Diese Website wird bei <strong>Vercel Inc.</strong> (USA) gehostet; die
+          Domain wird über die <strong>STRATO AG</strong> (Berlin, Deutschland)
+          verwaltet. Beim Aufruf der Website werden automatisch Daten in
+          Server-Logfiles verarbeitet (u.&nbsp;a. IP-Adresse, Datum und Uhrzeit,
+          abgerufene Seite, übertragene Datenmenge, Browser-Typ). Rechtsgrundlage
+          ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren,
+          stabilen Betrieb). Mit den Anbietern besteht jeweils ein
+          Auftragsverarbeitungsvertrag nach Art. 28 DSGVO.
+        </p>
+        <p>
+          Da Vercel ein US-Anbieter ist, kann es zu einer Übermittlung
+          personenbezogener Daten in die USA kommen. Diese wird auf die
+          EU-Standardvertragsklauseln bzw. das EU-US Data Privacy Framework
+          gestützt (Art. 44&nbsp;ff. DSGVO).
         </p>
 
         <h2>3. Schriftarten (Fonts)</h2>
@@ -63,7 +66,6 @@ export default function Datenschutz() {
           Die Website verlinkt auf externe Dienste (z.&nbsp;B. LinkedIn, Xing,
           Google Maps). Beim Anklicken gelten die Datenschutzbestimmungen der
           jeweiligen Anbieter.
-          <span className="legal__todo"> [Falls Karten/Profile eingebettet statt nur verlinkt werden: gesondert beschreiben + ggf. Einwilligung.]</span>
         </p>
 
         <h2>6. Ihre Rechte</h2>
@@ -73,10 +75,7 @@ export default function Datenschutz() {
           Beschwerderecht bei einer Aufsichtsbehörde (Art. 15–21 DSGVO).
         </p>
 
-        <p className="legal__note">
-          Stand: bitte beim Veröffentlichen aktualisieren. Diese Seite ersetzt keine
-          Rechtsberatung.
-        </p>
+        <p className="legal__note">Stand: Juni 2026</p>
       </main>
       <Footer />
     </div>
