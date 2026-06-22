@@ -81,6 +81,38 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://waldemarpaustian.dev/impressum</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waldemarpaustian.dev/impressum"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://waldemarpaustian.dev/de/impressum"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waldemarpaustian.dev/impressum"/>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://waldemarpaustian.dev/de/impressum</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waldemarpaustian.dev/impressum"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://waldemarpaustian.dev/de/impressum"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waldemarpaustian.dev/impressum"/>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://waldemarpaustian.dev/datenschutz</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waldemarpaustian.dev/datenschutz"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://waldemarpaustian.dev/de/datenschutz"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waldemarpaustian.dev/datenschutz"/>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://waldemarpaustian.dev/de/datenschutz</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://waldemarpaustian.dev/datenschutz"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://waldemarpaustian.dev/de/datenschutz"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waldemarpaustian.dev/datenschutz"/>
+    <lastmod>2026-06-22</lastmod>
+    <priority>0.2</priority>
+  </url>
+  <url>
     <loc>https://waldemarpaustian.dev/blog/gsap-guide-2026</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://waldemarpaustian.dev/blog/gsap-guide-2026"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://waldemarpaustian.dev/de/blog/gsap-guide-2026"/>

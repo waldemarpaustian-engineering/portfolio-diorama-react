@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
+import Footer from '../components/Footer.jsx'
 import { useMemo } from 'react'
 import { getPosts, getPost, formatDate } from '../lib/posts.js'
 import { useReadingProgress, useScrollReveal } from '../hooks/useBlogAnimations.js'
@@ -129,6 +130,7 @@ export default function BlogPost() {
           </nav>
         )}
       </main>
+      <Footer />
     </div>
   )
 }

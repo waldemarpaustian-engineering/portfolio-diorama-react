@@ -29,6 +29,8 @@ const enRoutes = [
   { path: '/work', wait: '.journey-page, main' },
   { path: '/blog', wait: '.blog-feed, .blog-card' },
   { path: '/contact', wait: '.contact-page, main' },
+  { path: '/impressum', wait: '.legal' },
+  { path: '/datenschutz', wait: '.legal' },
   ...slugs.map((s) => ({ path: `/blog/${s}`, wait: '.blog-article .blog-prose' })),
 ].map((r) => ({ ...r, lang: 'en' }))
 // Mirror every route under /de, forcing German.

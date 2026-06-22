@@ -1780,3 +1780,71 @@ html[data-theme="dark"] .hljs-title { color: #b0a4ff; }
   .blog-card:hover { transform: none; }
   .blog-card:hover .blog-card__thumb img { transform: none; }
 }
+
+/* ======================================================================
+   Legal pages (Impressum / Datenschutz) + footer
+   ====================================================================== */
+.legal { max-width: 720px; }
+.legal__intro { margin-top: 14px; color: var(--muted); }
+.legal h2 {
+  margin-top: 34px;
+  font-size: 20px;
+  letter-spacing: -.01em;
+}
+.legal p { margin-top: 12px; line-height: 1.7; color: var(--ink); }
+.legal a { color: var(--accent); text-underline-offset: 3px; }
+.legal__todo {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, #e0935a 22%, transparent);
+  color: var(--ink);
+  font-size: 14px;
+}
+.legal__note {
+  margin-top: 30px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.site-footer {
+  max-width: 1080px;
+  margin: 60px auto 0;
+  padding: 22px 26px 40px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.site-footer__nav { display: flex; gap: 18px; }
+.site-footer__nav a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .15s ease;
+}
+.site-footer__nav a:hover { color: var(--accent); }
+
+/* Compact legal links overlaid on the 3D home scene */
+.home-legal {
+  position: absolute;
+  z-index: 5;
+  right: 22px;
+  bottom: 20px;
+  display: flex;
+  gap: 14px;
+  font-size: 12.5px;
+}
+.home-legal a {
+  color: var(--muted);
+  text-decoration: none;
+  opacity: 0.85;
+  transition: color .15s ease, opacity .15s ease;
+}
+.home-legal a:hover { color: var(--ink); opacity: 1; }

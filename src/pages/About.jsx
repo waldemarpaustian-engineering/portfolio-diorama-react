@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
+import Footer from '../components/Footer.jsx'
 import RetroComputer from '../components/RetroComputer.jsx'
 import { useTheme } from '../hooks/useTheme.js'
 import { useSeo } from '../lib/seo.js'
@@ -51,6 +52,7 @@ export default function About() {
 
         <RetroComputer />
       </main>
+      <Footer />
     </div>
   )
 }

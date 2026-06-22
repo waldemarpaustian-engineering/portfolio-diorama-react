@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import PageNav from './PageNav.jsx'
+import Footer from '../components/Footer.jsx'
 import ContactLetterArt from '../components/ContactLetterArt.jsx'
 import SocialLink from '../components/SocialLink.jsx'
 import { CONTACT } from '../data/contact.js'
@@ -84,6 +85,7 @@ export default function Contact() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

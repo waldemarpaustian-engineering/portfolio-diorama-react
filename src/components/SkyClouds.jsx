@@ -11,8 +11,9 @@ export default function SkyClouds() {
     <group position={[0, 1.5, -6]}>
       <pointLight position={[2, 10, -12]} intensity={0.55} color="#fff3dc" distance={42} decay={2} />
       <pointLight position={[-10, 7, -14]} intensity={0.35} color="#ffe8c8" distance={36} decay={2} />
-      <Clouds limit={140} range={52} material={THREE.MeshBasicMaterial}>
+      <Clouds limit={140} range={52} material={THREE.MeshBasicMaterial} texture="/cloud.png">
         <Cloud
+          texture="/cloud.png"
           seed={1}
           segments={22}
           bounds={[16, 3.2, 2]}
@@ -25,6 +26,7 @@ export default function SkyClouds() {
           position={[0, 5, -16]}
         />
         <Cloud
+          texture="/cloud.png"
           seed={2}
           segments={20}
           bounds={[12, 2.8, 2]}
@@ -37,6 +39,7 @@ export default function SkyClouds() {
           position={[-14, 4.5, -12]}
         />
         <Cloud
+          texture="/cloud.png"
           seed={3}
           segments={20}
           bounds={[13, 2.4, 2]}
@@ -49,6 +52,7 @@ export default function SkyClouds() {
           position={[15, 3.8, -14]}
         />
         <Cloud
+          texture="/cloud.png"
           seed={4}
           segments={18}
           bounds={[10, 2.2, 2]}
@@ -61,6 +65,7 @@ export default function SkyClouds() {
           position={[-7, 7, -18]}
         />
         <Cloud
+          texture="/cloud.png"
           seed={5}
           segments={16}
           bounds={[9, 2, 2]}

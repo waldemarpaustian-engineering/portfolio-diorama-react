@@ -47,6 +47,8 @@ const staticRoutes = [
   { path: '/work', priority: '0.7' },
   { path: '/blog', priority: '0.9' },
   { path: '/contact', priority: '0.6' },
+  { path: '/impressum', priority: '0.2' },
+  { path: '/datenschutz', priority: '0.2' },
 ]
 
 // --- sitemap.xml ---

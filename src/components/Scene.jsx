@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, useProgress } from '@react-three/drei'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as THREE from 'three'
 import Model from './Model.jsx'
@@ -257,6 +257,8 @@ function FloatingWorld({ disabled, onSelect }) {
 
 export default function Scene() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const homePrefix = /^\/de(\/|$)/.test(location.pathname) ? '/de' : ''
   const controlsRef = useRef()
   const [flyTarget, setFlyTarget] = useState(null)
   const [portal, setPortal] = useState(0)
@@ -295,6 +297,11 @@ export default function Scene() {
       <div className="intro" style={{ ...uiStyle, pointerEvents: uiFade < 0.05 ? 'none' : undefined }}>
         <h1>{t('nav.title')}</h1>
         <p>{t('nav.subtitle')}</p>
+      </div>
+
+      <div className="home-legal" style={{ opacity: uiFade, pointerEvents: uiFade < 0.05 ? 'none' : undefined }}>
+        <Link to={`${homePrefix}/impressum`}>Impressum</Link>
+        <Link to={`${homePrefix}/datenschutz`}>Datenschutz</Link>
       </div>
 
       <div className="stage-canvas">

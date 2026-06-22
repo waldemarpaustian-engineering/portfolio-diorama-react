@@ -8,6 +8,8 @@ import Works from './pages/Works.jsx'
 import Blog from './pages/Blog.jsx'
 import BlogPost from './pages/BlogPost.jsx'
 import Contact from './pages/Contact.jsx'
+import Impressum from './pages/Impressum.jsx'
+import Datenschutz from './pages/Datenschutz.jsx'
 
 // Lazy-load the 3D home scene so three.js is a separate chunk — it then stays
 // out of the (text-only) blog routes, which keeps them light for SEO/perf.
@@ -38,6 +40,8 @@ export default function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/impressum" element={<Impressum />} />
+          <Route path="/datenschutz" element={<Datenschutz />} />
           <Route path="/journey" element={<Navigate to="/work" replace />} />
           <Route path="/works" element={<Navigate to="/work" replace />} />
 
@@ -49,6 +53,8 @@ export default function App() {
             <Route path="blog" element={<Blog />} />
             <Route path="blog/:slug" element={<BlogPost />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="impressum" element={<Impressum />} />
+            <Route path="datenschutz" element={<Datenschutz />} />
           </Route>
         </Routes>
       </Suspense>
